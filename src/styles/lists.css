@@ -1,0 +1,50 @@
+.ump-settings-nav .nav-item .active {
+    border-left: 2px solid #3D80DC !important;
+    background-color: transparent !important;
+    color: #373A3C !important;
+}
+
+.ump-settings-nav a:hover {
+    background-color: #E2E4E8 !important;
+    color: black !important;
+}
+
+.ump-settings-nav a:focus {
+    outline: none !important;
+}
+
+
+.ump-border-rounded-bottom {
+    border-radius: 0px 0px 5px 5px !important;
+    border: 1px solid #E2E4E8 !important;
+}
+
+.ump-border-rounded-top {
+    border-radius: 5px 5px 0px 0px !important;
+    border: 1px solid #E2E4E8 !important;
+}
+
+.ump-border-top-0 {
+    border-left: 1px solid #E2E4E8 !important;
+    border-right: 1px solid #E2E4E8 !important;
+    border-bottom: 1px solid #E2E4E8 !important;
+}
+
+
+.ump-sub-nav a {
+    color: #878E95 !important;
+}
+
+.ump-sub-nav a:hover {
+    color:#373A3C !important;
+}
+
+.ump-sub-nav a:focus{
+    outline: none !important;
+}
+
+.ump-sub-nav .nav-item .active {
+    border-bottom: 2px solid #3D80DC !important;
+    color: #373A3C !important;
+    font-weight: bold;
+}
