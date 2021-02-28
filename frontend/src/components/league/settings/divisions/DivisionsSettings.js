@@ -7,7 +7,7 @@ import { TsRedirect } from "common/Api"
 import Loader from "common/components"
 import SettingsContainer from "../SettingsContainer"
 
-import TsDivisions from "./ts/TsDivisions"
+import TsDivisions from "./teamsnap/TsDivisions"
 import DivisionsCol from "./divisions/SortDivisions"
 import AddDivisionButton from "./divisions/AddDivisionButton"
 
