@@ -8,6 +8,10 @@ media
 static/
 .DS_Store
 .idea/
+
+# Docker #
+docker-compose.override.yml
+
 # Backup files #
 *.bak
 
