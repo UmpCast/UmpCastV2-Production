@@ -28,12 +28,13 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = [
-    'umpcastv2-backend.herokuapp.com'
+    'umpcastv2-backend.herokuapp.com',
+    'localhost'
 ]
 
 CORS_ORIGIN_WHITELIST = [
     "https://localhost:8000",
-    "https://localhost:9000",
+    "https://localhost:3000",
     "https://umpcast-test.web.app"
 ]
 # Application definition
@@ -109,7 +110,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'api_db'
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': config('AWS_DB_HOST'),
+        'PORT': '5432'
     }
 }
 
@@ -282,4 +287,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
