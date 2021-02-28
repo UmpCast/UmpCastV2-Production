@@ -27,7 +27,7 @@ export default function CalendarGame({ game, handleDeleteGame }) {
 
     const onDeleteConfirm = () =>
         // TODO Manager does not have permission to delete game
-        Api.Submit(() => Api.deleteGame(game.pk))
+        Api.Submit(() => Api.deleteGame(game))
             .then(() => setShow(false))
             .finally(() => handleDeleteGame(game))
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 
 import { useApi, useMountEffect } from "common/hooks"
@@ -7,54 +7,119 @@ import Loader, { PageNav } from "common/components"
 import UmpiresContainer from "components/league/umpires/UmpiresContainer"
 
 import UmpireRow from "./Umpire/UmpireRow"
+import ApplyLevelDropdown from "./ApplyLevelDropdown"
 
-import { Row, Col, Table, Card } from "react-bootstrap"
+import { Row, Col, Table, Card, Button } from "react-bootstrap"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-const page_size = 10
+const page_size = 1
 
 export default function ManageUmpires() {
-
     const { pk } = useParams()
 
     const Api = useApi(requests)
 
     const useUls = useState()
     const useLeague = useState()
+    const [selected, setSelected] = useState([])
 
     const [uls, setUls] = useUls
     const [league, setLeague] = useLeague
+    const [loading, setLoading] = useState(true)
 
     useMountEffect(() => {
-        Promise.all([Api.fetchLeague(pk), Api.fetchUls(pk)])
-            .then(res => {
-                setLeague(res[0].data)
-                setUls(res[1].data)
-            })
+        Promise.all([Api.fetchLeague(pk), Api.fetchUls(pk)]).then((res) => {
+            setLeague(res[0].data)
+            setUls(res[1].data)
+            setLoading(false)
+        })
     })
 
     const setPage = (page) => {
-        Api.fetchUls(pk, page)
-            .then(res => setUls(res.data))
+        Api.fetchUls(pk, page).then((res) => {
+             setUls(res.data)
+        })
     }
 
+    const onStatusSelected = ({ pk }) => {
+        if (!selected.includes(pk)) setSelected(selected.concat(pk))
+    }
+
+    const onStatusDeselected = ({ pk }) => {
+        setSelected(selected.filter(status_pk => status_pk !== pk))
+    }
+
+    const resetSelected = () => setSelected([])
+
+    const onStatusChange = (new_status) => {
+        const i = uls.results.findIndex(status => status.pk = new_status.pk)
+        uls[i] = new_status
+        setUls(uls)
+    }
+
+    const renderedRows = (uls, league) => {
+        const existing = uls.results.map((status) => {
+            const isSelected = selected.includes(status.pk)
+            
+            return (
+                <UmpireRow
+                    status={status}
+                    league={league}
+                    isSelected={isSelected}
+                    onStatusSelected={onStatusSelected}
+                    onStatusDeselected={onStatusDeselected}
+                    onStatusChange={onStatusChange}
+                    key={status.pk}
+                />
+            )
+        })
+
+        return <tbody>{existing}</tbody>
+    }
+    
     return (
         <UmpiresContainer league={league} active="existing">
-            <Loader dep={[uls, league]}>
+            <Loader dep={!loading}>
+                <Row
+                    className={`mb-2 mx-1 ${
+                        selected.length > 0 ? "visible" : "invisible"
+                    }`}
+                    style={{ fontSize: "14px" }}
+                >
+                    {!loading ? (
+                        <ApplyLevelDropdown
+                            selected={selected}
+                            levels={league.levels}
+                            onLevelApplied={() => {
+                                resetSelected()
+                            }}
+                        />
+                    ) : null}
+                    <Button
+                        variant="outline-danger rounded"
+                        className="mx-1 py-1 px-2"
+                        onClick={resetSelected}
+                    >
+                        <FontAwesomeIcon
+                            icon={["fa", "minus-square"]}
+                            className="mr-1 fa-xs"
+                        />
+                        {selected.length}<FontAwesomeIcon icon="user" className="fa-xs ml-1"/>
+                    </Button>
+                </Row>
                 <Row className="mb-3">
                     <Col>
-                        <Card className="border">
-                            <Table className="mb-0 border-0">
+                        <Card>
+                            <Table className="mb-0">
                                 <TableHead />
-                                <ListExisting
-                                    {...{ uls, league }} />
+                                {!loading ? renderedRows(uls, league) : null}
                             </Table>
                         </Card>
                     </Col>
                 </Row>
                 <Row>
                     <Col className="d-flex w-100">
-                        <PageNav
-                            {...{ list: uls, setPage, page_size }} />
+                        <PageNav {...{ list: uls, setPage, page_size }} />
                     </Col>
                 </Row>
             </Loader>
@@ -64,31 +129,15 @@ export default function ManageUmpires() {
 
 const TableHead = () => (
     <thead>
-        <tr className="bg-light text-muted border-0">
-            <th className="text-center">
-                Umpires
-            </th>
+        <tr className="bg-light text-muted ump-head-border-0">
+            <th className="text-center">Select</th>
+            <th className="text-center">Umpires</th>
             <th>Casts</th>
             <th>Backups</th>
-            <th className="text-center">
-                Visibility
-            </th>
+            <th className="text-center">Visibility</th>
         </tr>
     </thead>
 )
-
-const ListExisting = ({ uls, league }) => {
-    const existing = (
-        uls.results.map(status =>
-            <UmpireRow
-                status={status}
-                league={league}
-                key={status.user.pk} />
-        )
-    )
-
-    return <tbody>{existing}</tbody>
-}
 
 const requests = {
     fetchLeague: (league_pk) => [

@@ -55,3 +55,7 @@
     border: 1px solid #3D80DC !important;
     line-height: 1.7;
 }
+
+tr.ump-head-border-0 > th {
+    border: none
+}
