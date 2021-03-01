@@ -65,7 +65,9 @@ INSTALLED_APPS = [
     'games',
     'notifications',
     # 'notifications.apps.NotificationsConfig',
-    'teamsnap'
+    'teamsnap',
+
+    'schedules'
 ]
 
 MIDDLEWARE = [
