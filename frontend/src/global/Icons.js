@@ -42,7 +42,9 @@ export {
     faBullhorn,
     faSync,
     faSearch,
-    faEllipsisH
+    faEllipsisH,
+    faMinusSquare,
+    faInfoCircle
 } from "@fortawesome/free-solid-svg-icons"
 
 export {
@@ -50,6 +52,7 @@ export {
     faPlusSquare as farFaPlusSquare,
     faPaperPlane as farFaPaperPlane,
     faCalendarCheck as farFaCalendarCheck,
+    faMinusSquare as farFaMinusSquare
 } from "@fortawesome/free-regular-svg-icons"
 
 export {
