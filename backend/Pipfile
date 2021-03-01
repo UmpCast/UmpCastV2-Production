@@ -20,6 +20,7 @@ django-sslserver = "*"
 django-storages = "*"
 pillow = "*"
 gunicorn = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
