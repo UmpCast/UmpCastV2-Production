@@ -15,3 +15,5 @@ RUN yarn global add react-scripts@3.4.1
 
 # add app
 COPY . /code/
+
+CMD [ "yarn", "start" ]
