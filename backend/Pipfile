@@ -18,8 +18,9 @@ django-rest-framework-social-oauth2 = "*"
 django-cors-headers = "*"
 django-sslserver = "*"
 django-storages = "*"
-django-heroku = "*"
 pillow = "*"
+gunicorn = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
