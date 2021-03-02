@@ -44,8 +44,8 @@ export const UserJoinDescription = ({account_type}) => {
 
 export const JoinRequestPending = () => (
     <span>
-        Sit tight! Your join request has been sent and will be reviewed by Palo Alto
-        Little League. We will let you know when they respond.
+        Sit tight! Your join request has been sent and will be reviewed by the league
+        We will let you know when they respond.
     </span>
 )
 
