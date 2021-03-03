@@ -5,9 +5,9 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
+    container_name: backend
   frontend:
     build:
       context: frontend
       dockerfile: Dockerfile.prod
-    depends_on: 
-      - backend      
+    container_name: frontend     
