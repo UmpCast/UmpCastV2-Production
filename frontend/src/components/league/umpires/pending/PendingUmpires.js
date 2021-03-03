@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useParams } from "react-router-dom";
+import React, { useState } from "react"
+import { useParams } from "react-router-dom"
 
 import { useApi, useMountEffect } from "common/hooks"
 
@@ -9,11 +9,13 @@ import UmpiresContainer from "components/league/umpires/UmpiresContainer"
 
 import PendingRow from "./PendingRow"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Card, Table, Dropdown } from "react-bootstrap"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Card, Row, Table, Dropdown } from "react-bootstrap"
+import InvitUmpiresButton from "./InviteUmpiresButton"
+
+const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL
 
 export default function PendingUmpires() {
-
     const { pk } = useParams()
 
     const Api = useApi(requests)
@@ -25,55 +27,63 @@ export default function PendingUmpires() {
     const [pending, setPending] = usePending
 
     useMountEffect(() => {
-        Promise.all([Api.fetchLeague(pk), Api.fetchPending(pk)])
-            .then(res => {
-                setLeague(res[0].data)
-                setPending(res[1].data)
-            })
+        Promise.all([Api.fetchLeague(pk), Api.fetchPending(pk)]).then((res) => {
+            setLeague(res[0].data)
+            setPending(res[1].data)
+        })
     })
+
+    const inviteLink = league
+        ? `${FRONTEND_URL}/league/${league.pk}`
+        : FRONTEND_URL
 
     return (
         <UmpiresContainer league={league} active="pending">
             <Loader dep={[pending]}>
-                <Card>
-                    <Table className="mb-0 table-borderless">
-                        <thead>
-                            <tr className="bg-light border-bottom text-muted">
-                                <td className="float-right">
-                                    <Dropdown>
-                                        <Dropdown.Toggle as={CustomToggle}>
-                                            <span className="mr-1">
-                                                Sort
-                                            </span>
-                                            <FontAwesomeIcon
-                                                className="pb-1"
-                                                icon={['fas', 'sort-down']} />
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ListPending usePending={usePending} />
-                        </tbody>
-                    </Table>
-                </Card>
+                    <Row>
+                        <InvitUmpiresButton inviteLink={inviteLink} />
+                    </Row>
+                    <Row>
+                        <Card className="mt-2 w-100">
+                            <Table className="mb-0 table-borderless">
+                                <thead>
+                                    <tr className="bg-light border-bottom text-muted">
+                                        <td className="float-right">
+                                            <Dropdown>
+                                                <Dropdown.Toggle
+                                                    as={CustomToggle}
+                                                >
+                                                    <span className="mr-1">
+                                                        Sort
+                                                    </span>
+                                                    <FontAwesomeIcon
+                                                        className="pb-1"
+                                                        icon={[
+                                                            "fas",
+                                                            "sort-down"
+                                                        ]}
+                                                    />
+                                                </Dropdown.Toggle>
+                                                <Dropdown.Menu></Dropdown.Menu>
+                                            </Dropdown>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ListPending usePending={usePending} />
+                                </tbody>
+                            </Table>
+                        </Card>
+                    </Row>
             </Loader>
         </UmpiresContainer>
     )
 }
 
-const ListPending = ({ usePending }) => (
-    usePending[0].results.map(status =>
-        <PendingRow
-            status={status}
-            usePending={usePending}
-            key={status.pk}
-        />
-    )
-)
+const ListPending = ({ usePending }) =>
+    usePending[0].results.map((status) => (
+        <PendingRow status={status} usePending={usePending} key={status.pk} />
+    ))
 
 const requests = {
     fetchLeague: (league_pk) => [
