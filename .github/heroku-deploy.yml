@@ -1,7 +1,7 @@
-name: 'heroku-deploy'
+name: heroku-deploy
 on:
   push:
-    branches: [*]
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
