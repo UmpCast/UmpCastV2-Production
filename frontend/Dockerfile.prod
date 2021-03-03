@@ -2,14 +2,14 @@
 FROM node:12.16.1-alpine3.9 as build
 WORKDIR /code
 ENV PATH /code/node_modules/.bin:$PATH
-ENV REACT_APP_FRONTEND_URL=$REACT_APP_FRONTEND_URL
-ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
-ENV REACT_APP_DB_CLIENT_ID=$REACT_APP_DB_CLIENT_ID
-ENV REACT_APP_DB_CLIENT_SECRET=$REACT_APP_DB_CLIENT_SECRET
-ENV REACT_APP_GOOGLE_ID=$REACT_APP_GOOGLE_ID
-ENV REACT_APP_FACEBOOK_ID=$REACT_APP_FACEBOOK_ID
-ENV REACT_APP_TS_CLIENT_ID=$REACT_APP_TS_CLIENT_ID
-ENV REACT_APP_TS_CLIENT_SECRET=$REACT_APP_TS_CLIENT_SECRET
+ENV REACT_APP_FRONTEND_URL="$REACT_APP_FRONTEND_URL"
+ENV REACT_APP_BACKEND_URL="$REACT_APP_BACKEND_URL"
+ENV REACT_APP_DB_CLIENT_ID="$REACT_APP_DB_CLIENT_ID"
+ENV REACT_APP_DB_CLIENT_SECRET="$REACT_APP_DB_CLIENT_SECRET"
+ENV REACT_APP_GOOGLE_ID="$REACT_APP_GOOGLE_ID"
+ENV REACT_APP_FACEBOOK_ID="$REACT_APP_FACEBOOK_ID"
+ENV REACT_APP_TS_CLIENT_ID="$REACT_APP_TS_CLIENT_ID"
+ENV REACT_APP_TS_CLIENT_SECRET="$REACT_APP_TS_CLIENT_SECRET"
 COPY package.json /code/
 COPY yarn.lock /code/
 RUN yarn --silent
@@ -19,7 +19,5 @@ RUN yarn build
 # stage 2 - build the final image and copy the react build files
 FROM nginx:1.19.6
 COPY --from=build /code/build /usr/share/nginx/html
-COPY nginx/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-
-CMD /bin/bash -c "envsubst '\$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf" && nginx -g 'daemon off;'
+CMD /bin/bash -c "envsubst '\$PORT' > /etc/nginx/conf.d/default.conf" && nginx -g 'daemon off;'
