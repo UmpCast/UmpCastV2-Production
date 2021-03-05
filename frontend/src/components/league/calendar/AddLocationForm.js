@@ -13,8 +13,8 @@ export default function AddLocationForm({
     const Api = useApi(requests)
 
     const onSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
-        // Api.Submit(() => Api.createLocation({ ...values, league: league_pk }))
-        Api.Submit(() => Promise.resolve({data: {pk: 4, title: "New location"}}))
+        Api.Submit(() => Api.createLocation({ ...values, league: league_pk }))
+        // Api.Submit(() => Promise.resolve({data: {pk: 4, title: "New location"}}))
             .then((res) => {
                 resetForm()
                 setSubmitting(false)

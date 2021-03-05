@@ -10,6 +10,7 @@ import { TextInput, SelectionInput, DateTimeInput } from "common/Input"
 export default function AddGameForm({
     cached = {},
     locations,
+    onLocationDelete,
     onCancle,
     onNewLocation,
     handleNewGame,
@@ -75,20 +76,46 @@ export default function AddGameForm({
                         <SelectionInput
                             label="Location"
                             name="location"
-                            addons={
-                                <InputGroup.Prepend>
-                                    <Button
-                                        variant="outline-success"
-                                        className="rounded-left"
-                                        onClick={() =>
-                                            onNewLocation(formik.values)
-                                        }
-                                    >
-                                        Add New
-                                    </Button>
-                                </InputGroup.Prepend>
+                            wrapper={(formControl) => (
+                                <InputGroup className="rounded">
+                                    <InputGroup.Prepend>
+                                        <Button
+                                            variant="outline-success"
+                                            className="rounded-left"
+                                            onClick={() =>
+                                                onNewLocation(formik.values)
+                                            }
+                                        >
+                                            Add New
+                                        </Button>
+                                    </InputGroup.Prepend>
+                                    {formControl}
+                                    {formik.values.location !== "" ? (
+                                        <InputGroup.Append>
+                                            <Button
+                                                variant="outline-danger"
+                                                className="rounded-right"
+                                                onClick={() =>
+                                                    onLocationDelete(
+                                                        parseInt(
+                                                            formik.values
+                                                                .location
+                                                        ),
+                                                        formik.values
+                                                    )
+                                                }
+                                            >
+                                                Delete
+                                            </Button>
+                                        </InputGroup.Append>
+                                    ) : null}
+                                </InputGroup>
+                            )}
+                            className={
+                                formik.values.location === ""
+                                    ? "rounded-right"
+                                    : ""
                             }
-                            className="rounded-right"
                         >
                             <option value="">Select Location</option>
                             {locationOptions}

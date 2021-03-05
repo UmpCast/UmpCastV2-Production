@@ -99,25 +99,26 @@ export const SelectionInput = ({
     label,
     groupClass,
     noError,
-    addons,
+    wrapper,
     ...props
 }) => {
     const [field, meta] = useField(props)
 
+    const formControl = (
+        <Form.Control
+            as="select"
+            {...field}
+            {...props}
+            isInvalid={noError ? false : meta.error}
+        >
+            {children}
+        </Form.Control>
+    )
+
     return (
         <Form.Group>
             {label ? <Form.Label>{label}</Form.Label> : null}
-            <InputGroup className={groupClass}>
-                {addons}
-                <Form.Control
-                    as="select"
-                    {...field}
-                    {...props}
-                    isInvalid={noError ? false : meta.error}
-                >
-                    {children}
-                </Form.Control>
-            </InputGroup>
+            {wrapper ? wrapper(formControl) : formControl}
             {noError ? null : (
                 <Form.Control.Feedback type="invalid">
                     {meta.error}
