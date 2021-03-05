@@ -4,7 +4,7 @@ import Moment from "moment"
 import momentLocalizer from "react-widgets-moment"
 import DateTimePicker from "react-widgets/lib/DateTimePicker"
 
-import { Form } from "react-bootstrap"
+import { Form, InputGroup } from "react-bootstrap"
 
 export const TextInput = ({ label, groupClass, noError, ...props }) => {
     const [field, meta] = useField(props)
@@ -55,7 +55,7 @@ export const DateTimeInput = ({ label, groupClass, noError, ...props }) => {
     momentLocalizer()
 
     const [field, meta, helpers] = useField(props)
-    
+
     return (
         <Form.Group className={groupClass}>
             {label ? <Form.Label>{label}</Form.Label> : null}
@@ -99,21 +99,25 @@ export const SelectionInput = ({
     label,
     groupClass,
     noError,
+    addons,
     ...props
 }) => {
     const [field, meta] = useField(props)
 
     return (
-        <Form.Group className={groupClass}>
+        <Form.Group>
             {label ? <Form.Label>{label}</Form.Label> : null}
-            <Form.Control
-                as="select"
-                {...field}
-                {...props}
-                isInvalid={noError ? false : meta.error}
-            >
-                {children}
-            </Form.Control>
+            <InputGroup className={groupClass}>
+                {addons}
+                <Form.Control
+                    as="select"
+                    {...field}
+                    {...props}
+                    isInvalid={noError ? false : meta.error}
+                >
+                    {children}
+                </Form.Control>
+            </InputGroup>
             {noError ? null : (
                 <Form.Control.Feedback type="invalid">
                     {meta.error}
