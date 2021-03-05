@@ -6,6 +6,7 @@ import Feed from "./feed/Feed"
 import History from "./history/History"
 import Visibility from "./visibility/Visibility"
 import Upcoming from "./upcoming/Upcoming"
+import Availability from './availability/Availability'
 
 import { Container, Row, Col, Tabs, Tab } from "react-bootstrap"
 
@@ -16,7 +17,7 @@ export default function Dashboard() {
         <Container fluid={"lg"} className="mt-4">
             <Row>
                 <Col className="order-xs-last mt-3">
-                    <Tabs defaultActiveKey="feed">
+                    <Tabs defaultActiveKey="availability">
                         <Tab eventKey="feed" title="Feed">
                             <Feed />
                         </Tab>
@@ -28,6 +29,11 @@ export default function Dashboard() {
                         {user.account_type === "umpire" ? (
                             <Tab eventKey="visibility" title="Visibility">
                                 <Visibility />
+                            </Tab>
+                        ) : null}
+                        {user.account_type === "umpire" ? (
+                            <Tab eventKey="availability" title="Availability">
+                                <Availability />
                             </Tab>
                         ) : null}
                     </Tabs>
