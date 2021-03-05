@@ -2,11 +2,28 @@ import React, { useState } from "react"
 
 import useUser, { useMountEffect, useApi } from "common/hooks"
 
-import { Accordion, Card, Button, Alert, Tab, Nav } from "react-bootstrap"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Accordion, Card, Button, Tab, Nav } from "react-bootstrap"
 
 import TimeAvailability from "./TimeAvailability"
 import LocationAvailability from "./LocationAvailability"
+import AvailabilityStatus from "./AvailabilityStatus"
+
+const requests = {
+    getTimeRanges(user_pk) {
+        return [
+            "api/schedule-timeranges/",
+            {
+                params: {
+                    user: user_pk,
+                    page_size: 200
+                }
+            }
+        ]
+    },
+    getUserLocations(user_pk) {
+        return [`api/users/${user_pk}/locations`, {}]
+    }
+}
 
 export default function Availability() {
     const { user } = useUser()
@@ -28,7 +45,15 @@ export default function Availability() {
     const setLocation = (location) =>
         setState({
             ...state,
-            location
+            user_locations: {
+                ...state.user_locations,
+                locations: {
+                    ...state.user_locations.locations,
+                    [location.pk]: {
+                        ...location
+                    }
+                }
+            }
         })
 
     const setType = (type) =>
@@ -37,13 +62,63 @@ export default function Availability() {
             type
         })
 
+    const to_object = (arr, values) =>
+        arr.reduce(
+            (obj, item) => ({
+                ...obj,
+                [item.pk]: {
+                    ...item,
+                    ...values
+                }
+            }),
+            {}
+        )
+
     useMountEffect(() => {
         Promise.all([
             Api.getTimeRanges(user.pk),
             Api.getUserLocations(user.pk)
         ]).then(([res1, res2]) => {
             const current = res1.data.results
-            const leagues = res2.data
+            const user_locations = res2.data.results.reduce(
+                (
+                    obj,
+                    { league, accepted_locations, not_accepted_locations }
+                ) => {
+                    const available = to_object(accepted_locations, {
+                        available: true,
+                        league: league.pk
+                    })
+                    const unavailable = to_object(not_accepted_locations, {
+                        available: false,
+                        league: league.pk
+                    })
+
+                    return {
+                        leagues: {
+                            ...obj.leagues,
+                            [league.pk]: league
+                        },
+                        locations: {
+                            ...obj.locations,
+                            ...available,
+                            ...unavailable
+                        },
+                        leagues_by_pk: obj.leagues_by_pk.concat(league.pk),
+                        locations_by_pk: [
+                            ...obj.locations_by_pk,
+                            ...accepted_locations.map((item) => item.pk),
+                            ...not_accepted_locations.map((item) => item.pk)
+                        ]
+                    }
+                },
+                {
+                    leagues: {},
+                    locations: {},
+                    leagues_by_pk: [],
+                    locations_by_pk: []
+                }
+            )
 
             setState({
                 ...state,
@@ -51,9 +126,7 @@ export default function Availability() {
                     current,
                     adding: false
                 },
-                locations: {
-                    locations
-                },
+                user_locations,
                 loading: false
             })
         })
@@ -96,16 +169,7 @@ export default function Availability() {
                                 By providing what times you are available
                                 throughout the week, your manager will be able
                                 to automatically assign you games.
-                                {state.schedule.current.length === 0 ? (
-                                    <Alert variant="danger" className="mt-4">
-                                        <FontAwesomeIcon
-                                            icon="exclamation-circle"
-                                            className="mr-2"
-                                        />
-                                        Your location availability is empty. Managers
-                                        cannot auto-assign games to you.
-                                    </Alert>
-                                ) : null}
+                                <AvailabilityStatus availability={state} />
                             </Card.Body>
                         </Accordion.Collapse>
                     ) : null}
@@ -121,29 +185,12 @@ export default function Availability() {
                     </Tab.Pane>
                     <Tab.Pane active={state.type === "location"}>
                         <LocationAvailability
-                            locations={state.locations}
-                            setLocations={setLocations}
+                            user_locations={state.user_locations}
+                            setLocation={setLocation}
                         />
                     </Tab.Pane>
                 </Tab.Content>
             ) : null}
         </Tab.Container>
     )
-}
-
-const requests = {
-    getTimeRanges(user_pk) {
-        return [
-            "api/schedule-timeranges/",
-            {
-                params: {
-                    user: user_pk,
-                    page_size: 200
-                }
-            }
-        ]
-    },
-    getUserLocations(user_pk) {
-        return [`api/users/${user_pk}/locations`, {}]
-    }
 }
