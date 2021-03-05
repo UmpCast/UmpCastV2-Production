@@ -5,9 +5,7 @@ import { ProfilePicture } from "common/components"
 import {Card } from "react-bootstrap"
 import darkMeteor from "assets/dark_meteor.png"
 
-export default function LeagueVis({status, children}) {
-    const { league } = status
-
+export default function LeagueCard({league, children}) {
     return (
         <Card className="mt-3">
             <Card.Header className="px-3 pb-1">

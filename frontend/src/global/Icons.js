@@ -44,7 +44,7 @@ export {
     faSearch,
     faEllipsisH,
     faMinusSquare,
-    faInfoCircle
+    faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons"
 
 export {

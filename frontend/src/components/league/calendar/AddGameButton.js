@@ -1,39 +1,90 @@
-import React, { useState } from "react"
-import { Formik, Form as FormikForm } from "formik"
+import React, { useState, Fragment } from "react"
 
-import * as Yup from "yup"
+import { useApi, useMountEffect } from "common/hooks"
 
-import { useApi } from "common/hooks"
-
-import { Button, Modal } from "react-bootstrap"
+import { Modal, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { TextInput, SelectionInput, DateTimeInput } from "common/Input"
-import { Fragment } from "react"
+import AddGameForm from "./AddGameForm"
+import AddLocationForm from "./AddLocationForm"
 
 export default function AddGameButton({ handleNewGame, league }) {
     const Api = useApi(requests)
 
-    const [show, setShow] = useState(false)
+    const [state, setState] = useState({
+        locations: null,
+        loading: true,
 
-    const onSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
-        Api.Submit(() => Api.createGame(values))
-            .then((res) => {
-                handleNewGame(res.data)
-                resetForm()
-            })
-            .catch((err) => {
-                setErrors(err.response.data)
-            })
-            .finally(() => {
-                setSubmitting(false)
-            })
+        show: false,
+        form: "game",
+        cached: {}
+    })
+
+    useMountEffect(() => {
+        Api.getLocations(league.pk).then((res) =>
+            setState({ ...state, locations: res.data.results, loading: false })
+        )
+    })
+
+    const setShow = (show) => setState({ ...state, show })
+    const setForm = (form) => setState({ ...state, form })
+
+    const onLocationCancel = () => {
+        setForm("game")
     }
 
-    const divisionOptions = league.divisions.map((div) => (
-        <option value={div.pk} key={div.pk}>
-            {div.title}
-        </option>
-    ))
+    const onLocationAdded = (location) => {
+        setState({
+            ...state,
+            form: "game",
+            locations: [...state.locations, location]
+        })
+    }
+
+    const onNewLocation = (values) => {
+        setState({
+            ...state,
+            form: "location",
+            cached: { ...state.cached, game: values }
+        })
+    }
+
+    const onLocationDelete = (location_pk, values) => {
+        values.location = ""
+        Api.Submit(() => Api.deleteLocation(location_pk)).then(() =>{
+            setState({
+                ...state,
+                cached: { ...state.cached, game: values },
+                locations: state.locations.filter(({ pk }) => pk !== location_pk)
+            })
+        })
+    }
+
+    const RenderForm = ({ type }) => {
+        switch (type) {
+            case "game":
+                return (
+                    <AddGameForm
+                        league={league}
+                        locations={state.locations}
+                        cached={state.cached.game}
+                        onCancle={() => setShow(false)}
+                        handleNewGame={handleNewGame}
+                        onNewLocation={onNewLocation}
+                        onLocationDelete={onLocationDelete}
+                    />
+                )
+            case "location":
+                return (
+                    <AddLocationForm
+                        league_pk={league.pk}
+                        onLocationCancel={onLocationCancel}
+                        onLocationAdded={onLocationAdded}
+                    />
+                )
+            default:
+                return null
+        }
+    }
 
     return (
         <Fragment>
@@ -45,101 +96,30 @@ export default function AddGameButton({ handleNewGame, league }) {
                 <FontAwesomeIcon icon="plus" className="mr-1 fa-sm" />
                 Add Games
             </Button>
-            <Modal show={show} onHide={() => setShow(false)} size="md">
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={onSubmit}
-                    validateOnChange={false}
-                    validateOnBlur={false}
-                    onChange={console.log}
-                >
-                    {(formik) => (
-                        <FormikForm noValidate>
-                            <Modal.Header
-                                closeButton
-                                className="no-border py-3"
-                            >
-                                <Modal.Title>Create Game</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body className="no-border py-0">
-                                <TextInput
-                                    label="Game title"
-                                    name="title"
-                                    type="text"
-                                    className="rounded"
-                                />
-                                <SelectionInput
-                                    label="Division"
-                                    name="division"
-                                    className="rounded"
-                                >
-                                    <option>Select Division</option>
-                                    {divisionOptions}
-                                </SelectionInput>
-                                <DateTimeInput
-                                    label="Start Time"
-                                    name="date_time"
-                                />
-                                <TextInput
-                                    label="Location"
-                                    name="location"
-                                    type="text"
-                                    className="rounded"
-                                />
-                                <TextInput
-                                    label="Description (optional)"
-                                    name="description"
-                                    type="text"
-                                    className="rounded"
-                                />
-                            </Modal.Body>
-                            <Modal.Footer className="no-border pt-0">
-                                <Button
-                                    type="button"
-                                    variant="secondary rounded py-1"
-                                    onClick={() => setShow(false)}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    disabled={formik.isSubmitting}
-                                    type="submit"
-                                    variant="primary"
-                                    className="rounded py-1"
-                                >
-                                    Create
-                                </Button>
-                            </Modal.Footer>
-                        </FormikForm>
-                    )}
-                </Formik>
+            <Modal show={state.show} onHide={() => setShow(false)} size="md">
+                {!state.loading ? <RenderForm type={state.form} /> : null}
             </Modal>
         </Fragment>
     )
 }
 
-const initialValues = {
-    title: "",
-    division: "",
-    date_time: new Date(),
-    location: "",
-    description: ""
-}
-
-const validationSchema = Yup.object({
-    title: Yup.string().required("Required"),
-    division: Yup.number().required("Required"),
-    date_time: Yup.string().required("Required"),
-    location: Yup.string().required("Required")
-})
-
 const requests = {
-    createGame: (values) => [
-        "api/games/",
+    getLocations(league_pk) {
+        return [
+            "api/locations/",
+            {
+                params: {
+                    league: league_pk,
+                    page_size: 200
+                }
+            }
+        ]
+    },
+    deleteLocation: (location_pk) => [
+        "api/locations/",
         {
-            data: values
+            pk: location_pk
         },
-        "POST"
+        "DELETE"
     ]
 }
