@@ -41,7 +41,7 @@ export default function Visibility() {
 
 const ListVis = ({ uls }) => (
     uls.map(status =>
-        <LeagueCard status={status} key={status.pk}>
+        <LeagueCard league={status.league} key={status.pk}>
             <VisTable
                 status={status}
                 key={status.pk} />
