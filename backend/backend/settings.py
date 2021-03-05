@@ -39,8 +39,7 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:8000",
     "http://localhost:2000",
     "https://umpcast-test.web.app",
-    "http://umpcastv2-staging.herokuapp.com",
-    "https://umpcastv2-staging-frontend.herokuapp.com"
+    "https://umpcastv2-frontend-staging.herokuapp.com"
 ]
 # Application definition
 
