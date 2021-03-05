@@ -28,6 +28,7 @@ from rest_framework.decorators import action
 from leagues.models import Level
 from rest_framework.response import Response
 from games.api.serializers.location import LocationSerializer
+from games.models import Location
 
 
 class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
@@ -74,7 +75,7 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
     action_permissions = {
         permissions.AllowAny: ['create'],
         permissions.IsAuthenticated & IsLeagueMember: ['list'],
-        permissions.IsAuthenticated & IsUserOwner: ['update', 'partial_update', 'retrieve', 'locations'],
+        permissions.IsAuthenticated & IsUserOwner: ['update', 'partial_update', 'retrieve', 'locations', 'apply_location'],
     }
 
     def get_object(self):  # custom get object for /me endpoint
@@ -82,6 +83,22 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
         if pk == 'me':
             return self.request.user
         return super().get_object()
+
+    @action(detail=True, methods=['patch'])
+    def apply_location(self, request, pk):
+        user = self.get_object()
+        location_pk = request.data.get('location', None)
+
+        if location_pk is None:
+            return Response({"error": "missing parameters"}, status=status.HTTP_400_BAD_REQUEST)
+
+        location_obj = Location.objects.get(pk=int(location_pk))
+
+        if location_obj.league not in user.leagues.accepted():
+            return Response({"error": "location in invalid league"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.locations.add(location_obj)
+        return Response(status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['get'])
     def locations(self, request, pk):
