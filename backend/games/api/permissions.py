@@ -1,4 +1,4 @@
-from ..models import Application, Post, Game
+from ..models import Application, Post, Game, Location
 from rest_framework import permissions
 from leagues.models import Division, League
 from users.models import User
@@ -35,6 +35,19 @@ class IsPostLeague(permissions.BasePermission):
 
 # class IsUserFilter(permissions.BasePermission):
     # def has_permission(self, request, view):
+
+
+class IsLocationLeague(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return Location.objects.get(pk=view.kwargs['pk']).league in request.user.leagues.accepted()
+
+
+class IsLocationFilter(permissions.BasePermission):
+    def has_permission(self, request, view):
+        league_pk = request.query_params.get('league', None)
+        if league_pk is None:
+            return False
+        return League.objects.get(pk=league_pk) in request.user.leagues.accepted()
 
 
 class IsGameLeague(permissions.BasePermission):

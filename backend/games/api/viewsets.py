@@ -10,10 +10,15 @@ from .serializers.post import (
     PostSerializer
 )
 
+from .serializers.location import (
+    LocationSerializer
+)
+
 from .permissions import (
     IsApplicationLeague, IsPostLeague, IsGameLeague, ApplicationFilterPermission,
     GameFilterDivision, GameFilterDivisionIn, GameFilterUser,
-    GameFilterDivisionManager, GameFilterDivisionInManager
+    GameFilterDivisionManager, GameFilterDivisionInManager,
+    IsLocationLeague, IsLocationFilter
 )
 
 from backend.permissions import (
@@ -30,7 +35,7 @@ from backend.mixins import (
 )
 
 from rest_framework import viewsets, permissions, mixins, status
-from ..models import Application, Post, Game
+from ..models import Application, Post, Game, Location
 from rest_framework.decorators import action
 from .filters import GameFilter, ApplicationFilter
 from drf_multiple_serializer import ActionBaseSerializerMixin
@@ -118,6 +123,20 @@ class PostViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.Ge
         # manager of league requirement enforced on serializer level
         IsManager: ["create"],
         IsManager & IsPostLeague: ["destroy"]
+    }
+
+
+class LocationViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+    permission_classes = (IsSuperUser | (
+        permissions.IsAuthenticated & ActionBasedPermission), )
+    filter_fields = ('league', )
+    action_permissions = {
+        # manager of league requirement enforced on serializer level
+        IsManager: ["create"],
+        IsLocationLeague & IsManager: ["destroy"],
+        IsLocationFilter: ["list"]
     }
 
 

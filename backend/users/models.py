@@ -27,6 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Custom User Model"""
     leagues = models.ManyToManyField(
         League, blank=True, through='UserLeagueStatus')
+    locations = models.ManyToManyField('games.Location', blank=True)
     email = models.EmailField(max_length=64, unique=True)
 
     first_name = models.CharField(max_length=32)

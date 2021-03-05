@@ -2,13 +2,19 @@ from django.db import models
 from django.db.models.signals import post_save
 from ordered_model.models import OrderedModel
 from django.utils import timezone
-from users.models import UserLeagueStatus
-
+from leagues.models import League
 from backend.mixins import OrderedModelUpdateMixin
+
+
+class Location(models.Model):
+    league = models.ForeignKey(League, on_delete=models.CASCADE)
+    title = models.CharField(max_length=128)
 
 
 class Game(models.Model):
     division = models.ForeignKey('leagues.Division', on_delete=models.CASCADE)
+    location_object = models.ForeignKey(
+        Location, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=128)
     date_time = models.DateTimeField()
     is_active = models.BooleanField(default=True)
