@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from decouple import config
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,13 +29,18 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = [
     'umpcastv2-backend.herokuapp.com',
+    'umpcastv2-backend-staging.herokuapp.com',
     'localhost'
 ]
 
 CORS_ORIGIN_WHITELIST = [
     "https://localhost:8000",
     "https://localhost:3000",
-    "https://umpcast-test.web.app"
+    "http://localhost:8000",
+    "http://localhost:2000",
+    "https://localhost:2000",
+    "https://umpcast-test.web.app",
+    "https://umpcastv2-frontend-staging.herokuapp.com"
 ]
 # Application definition
 
@@ -157,10 +163,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/images/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
@@ -287,3 +291,6 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+
+django_heroku.settings(locals(), databases=False)

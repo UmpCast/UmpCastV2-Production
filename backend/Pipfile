@@ -21,6 +21,7 @@ django-storages = "*"
 pillow = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
+django-heroku = "*"
 
 [dev-packages]
 

@@ -1,10 +1,18 @@
 from django.contrib import admin
-from .models import Game, Post, Application
+from .models import Game, Post, Application, Location
+
+
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'title', 'league')
+    list_display_links = ('pk',)
+    search_fields = ('pk', 'title')
+    list_per_page = 25
 
 
 class GameAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'date_time', 'division', 'is_active', 'location', 'description')
-    list_display_links = ('pk', 'title')
+    list_display = ('pk', 'title', 'date_time', 'division',
+                    'is_active', 'location', 'description', 'location_object')
+    list_display_links = ('pk', 'title', 'location_object')
     search_fields = ('pk', 'title')
     list_per_page = 25
 
@@ -18,7 +26,7 @@ class GameAdmin(admin.ModelAdmin):
             obj.save(update_fields=update_fields)
         else:
             obj.save()
-            
+
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('pk', 'game', 'role')
@@ -32,6 +40,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     list_per_page = 25
 
 
+admin.site.register(Location, LocationAdmin)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Application, ApplicationAdmin)

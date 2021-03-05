@@ -1,6 +1,6 @@
 from users.api.viewsets import UserViewSet, UserLeagueStatusViewSet
 from leagues.api.viewsets import LeagueViewSet, RoleViewSet, DivisionViewSet, LevelViewSet
-from games.api.viewsets import GameViewSet, PostViewSet, ApplicationViewSet
+from games.api.viewsets import GameViewSet, PostViewSet, ApplicationViewSet, LocationViewSet
 from notifications.api.viewsets import UmpCastNotificationViewSet, LeagueNotificationViewSet, GameNotificationViewSet, ApplicationNotificationViewSet
 from teamsnap.api.viewsets import TeamSnapNoteViewSet
 from schedules.api.viewsets import TimeRangeViewSet
@@ -15,6 +15,7 @@ router.register('divisions', DivisionViewSet, basename='division')
 router.register('roles', RoleViewSet, basename='role')
 router.register('levels', LevelViewSet, basename='level')
 router.register('games', GameViewSet, basename='game')
+router.register('locations', LocationViewSet, basename='location')
 router.register('posts', PostViewSet, basename='post')
 router.register('applications', ApplicationViewSet, basename='application')
 router.register('ump-cast-notifications',

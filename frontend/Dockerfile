@@ -11,7 +11,9 @@ ENV PATH /code/node_modules/.bin:$PATH
 COPY package.json /code/
 COPY yarn.lock /code/
 RUN yarn install --silent
-RUN yarn global add react-scripts@3.4.1
+RUN yarn global add react-scripts@3.4.0
 
 # add app
 COPY . /code/
+
+CMD [ "yarn", "start" ]
