@@ -29,6 +29,7 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = [
     'umpcastv2-backend.herokuapp.com',
+    'umpcastv2-backend-staging.herokuapp.com',
     'localhost'
 ]
 
