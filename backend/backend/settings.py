@@ -38,6 +38,7 @@ CORS_ORIGIN_WHITELIST = [
     "https://localhost:3000",
     "http://localhost:8000",
     "http://localhost:2000",
+    "https://localhost:2000",
     "https://umpcast-test.web.app",
     "https://umpcastv2-frontend-staging.herokuapp.com"
 ]
@@ -292,4 +293,4 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 
-# django_heroku.settings(locals(), databases=False)
+django_heroku.settings(locals(), databases=False)
