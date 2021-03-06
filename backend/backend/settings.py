@@ -43,7 +43,8 @@ CORS_ORIGIN_WHITELIST = [
     "https://umpcast-test.web.app",
     "https://umpcastv2-frontend-production.herokuapp.com",
     "https://umpcastv2-frontend-staging.herokuapp.com",
-    "https://www.umpirecast.com"
+    "https://www.umpirecast.com",
+    "http://www.umpirecast.com"
 ]
 # Application definition
 
