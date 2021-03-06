@@ -18,6 +18,7 @@ export default function LocationAvailability({ user_locations, setLocation }) {
 
         const onLocationToggled = (location_pk) => {
             const location = locations[location_pk]
+            // TODO: Persist Location toggle to API
             setLocation({
                 ...location,
                 available: !location.available

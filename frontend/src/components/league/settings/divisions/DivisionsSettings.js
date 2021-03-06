@@ -56,7 +56,7 @@ export default function DivisionsSettings() {
                             variant="success rounded my-2 font-weight-bold"
                             href={TsRedirect(pk)}
                         >
-                            Sync
+                            Sync Teamsnap
                         </Button>
                         <small className="form-text text-muted mb-3 mb-md-4">
                             <LeagueSyncFeatures />
