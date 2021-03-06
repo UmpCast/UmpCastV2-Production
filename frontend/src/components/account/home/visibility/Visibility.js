@@ -4,7 +4,7 @@ import useUser, { useApi, useMountEffect } from "common/hooks"
 import Loader from "common/components"
 import { searchPks } from "common/Utils"
 
-import LeagueVis from "./LeagueVis"
+import LeagueCard from "./LeagueCard"
 import VisTable from "./VisTable"
 
 export default function Visibility() {
@@ -41,11 +41,11 @@ export default function Visibility() {
 
 const ListVis = ({ uls }) => (
     uls.map(status =>
-        <LeagueVis status={status} key={status.pk}>
+        <LeagueCard league={status.league} key={status.pk}>
             <VisTable
                 status={status}
                 key={status.pk} />
-        </LeagueVis>
+        </LeagueCard>
     )
 )
 
