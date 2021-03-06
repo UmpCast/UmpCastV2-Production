@@ -12,7 +12,7 @@ import ApplyLevelDropdown from "./ApplyLevelDropdown"
 import { Row, Col, Table, Card, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-const page_size = 1
+const page_size = 10
 
 export default function ManageUmpires() {
     const { pk } = useParams()
