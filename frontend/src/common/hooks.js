@@ -82,13 +82,15 @@ export const useApi = (requests) => {
     const ret = {}
 
     ret.Generic = (request, shouldLoad) => {
-        setDisplay({ ...display, isLoading: shouldLoad })
+        if(shouldLoad)
+            setDisplay({ ...display, isLoading: true })
 
         return (
             request()
-                .finally(() =>
+                .finally(() => {
+                if(shouldLoad)
                     setDisplay({ ...display, isLoading: false })
-                )
+                })
         )
     }
 

@@ -29,6 +29,7 @@ from leagues.models import Level
 from rest_framework.response import Response
 from games.api.serializers.location import LocationSerializer
 from games.models import Location
+from leagues.api.serializers.league import LeaguePublicSerializer
 
 
 class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
@@ -104,11 +105,28 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
     def locations(self, request, pk):
         user = self.get_object()
         locations = user.locations.all()
-        response_dict = {}
+        response_list = []
         for league in user.leagues.accepted():
-            locations_qs = locations.filter(league=league)
-            serializer = LocationSerializer(locations_qs, many=True)
-            response_dict[league.title] = serializer.data
+            league_serializer = LeaguePublicSerializer(league)
+
+            in_location_qs = locations.filter(league=league)
+            in_location_serializer = LocationSerializer(
+                in_location_qs, many=True)
+
+            all_location_qs = Location.objects.filter(league=league)
+            out_location_qs = all_location_qs.difference(in_location_qs)
+            out_location_serializer = LocationSerializer(
+                out_location_qs, many=True)
+
+            league_dict = {
+                "league": league_serializer.data,
+                "accepted_locations": in_location_serializer.data,
+                "not_accepted_locations": out_location_serializer.data
+            }
+            response_list.append(league_dict)
+        response_dict = {
+            'results': response_list
+        }
         return Response(response_dict)
 
 
