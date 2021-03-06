@@ -53,7 +53,7 @@ export default function DivisionsSettings() {
                             Sync Divisions & Games
                         </h5>
                         <Button
-                            variant="success rounded my-2 font-weight-bold"
+                            variant="warning rounded my-2 font-weight-bold"
                             href={TsRedirect(pk)}
                         >
                             Sync Teamsnap
