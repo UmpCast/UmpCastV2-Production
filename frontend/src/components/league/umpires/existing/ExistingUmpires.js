@@ -8,9 +8,9 @@ import UmpiresContainer from "components/league/umpires/UmpiresContainer"
 
 import UmpireRow from "./Umpire/UmpireRow"
 import ApplyLevelDropdown from "./ApplyLevelDropdown"
+import RemoveUmpiresButton from "./RemoveUmpiresButton"
 
 import { Row, Col, Table, Card, Button } from "react-bootstrap"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const page_size = 10
 
@@ -106,18 +106,10 @@ export default function ManageUmpires() {
                             }}
                         />
                     ) : null}
-                    <Button
-                        variant="outline-danger rounded"
-                        className="mx-1 py-1 px-2"
-                        onClick={onDeleteUsers}
-                    >
-                        <FontAwesomeIcon
-                            icon={["fa", "minus-square"]}
-                            className="mr-1 fa-xs"
-                        />
-                        Remove {selected.length}
-                        <FontAwesomeIcon icon="user" className="fa-xs ml-1" />
-                    </Button>
+                    <RemoveUmpiresButton
+                        onDeleteUsers={onDeleteUsers}
+                        umpiresCount={selected.length}
+                    />
                     <Button
                         variant="outline-muted rounded"
                         className="ml-auto"

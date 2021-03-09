@@ -19,6 +19,8 @@ export default function AddGameForm({
     const Api = useApi(requests)
 
     const onSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+        values.location = parseInt(values.location)
+        values.division = parseInt(values.division)
         Api.Submit(() => Api.createGame(values))
             .then((res) => {
                 handleNewGame(res.data)
