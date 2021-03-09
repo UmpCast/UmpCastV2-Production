@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 export default function CancelButton(props) {
 
-    const { app, game_status, useGame } = props
+    const { app, game_status, useGame, isManager } = props
 
     const [game, setGame] = useGame
 
@@ -42,7 +42,8 @@ export default function CancelButton(props) {
             <BasicConfirm
                 action={`Cancel ${status}`}
                 action_text="Confirm"
-                consequences={
+                consequences={ isManager ?
+                    "This umpire will be uncasted from this role" :
                     <CancelAppConseq
                         status={status} />
                 }
