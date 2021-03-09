@@ -11,8 +11,8 @@ class LocationAdmin(admin.ModelAdmin):
 
 class GameAdmin(admin.ModelAdmin):
     list_display = ('pk', 'title', 'date_time', 'division',
-                    'is_active', 'location', 'description', 'location_object')
-    list_display_links = ('pk', 'title', 'location_object')
+                    'is_active', 'location', 'description')
+    list_display_links = ('pk', 'title')
     search_fields = ('pk', 'title')
     list_per_page = 25
 

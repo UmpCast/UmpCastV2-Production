@@ -77,7 +77,7 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
     action_permissions = {
         permissions.AllowAny: ['create', 'reset_password'],
         permissions.IsAuthenticated & IsLeagueMember: ['list'],
-        permissions.IsAuthenticated & IsUserOwner: ['update', 'partial_update', 'retrieve', 'locations', 'apply_location'],
+        permissions.IsAuthenticated & IsUserOwner: ['update', 'partial_update', 'retrieve', 'locations', 'toggle_location'],
     }
 
     def get_object(self):  # custom get object for /me endpoint
@@ -115,19 +115,27 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
             return Response({"success": user.email}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['patch'])
-    def apply_location(self, request, pk):
+    def toggle_location(self, request, pk):
         user = self.get_object()
         location_pk = request.data.get('location', None)
+        toggle = request.data.get('toggle', None)
 
-        if location_pk is None:
+        if location_pk is None or toggle is None:
             return Response({"error": "missing parameters"}, status=status.HTTP_400_BAD_REQUEST)
 
-        location_obj = Location.objects.get(pk=int(location_pk))
+        if toggle != 'on' and toggle != 'off':
+            return Response({"toggle": "invalid toggle"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if location_obj.league not in user.leagues.accepted():
-            return Response({"error": "location in invalid league"}, status=status.HTTP_400_BAD_REQUEST)
+        location_obj = Location.objects.get(pk=location_pk)
 
-        user.locations.add(location_obj)
+        if toggle == 'on':
+            if location_obj.league not in user.leagues.accepted():
+                return Response({"location": "location in invalid league"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                user.locations.add(location_obj)
+        elif toggle == 'off':
+            user.locations.remove(location_obj)
+
         return Response(status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['get'])
