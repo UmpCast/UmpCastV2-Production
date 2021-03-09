@@ -21,7 +21,7 @@ const requests = {
         ]
     },
     getUserLocations(user_pk) {
-        return [`api/users/${user_pk}/locations`, {}]
+        return [`api/users/${user_pk}/locations/`, {params: {}}]
     }
 }
 

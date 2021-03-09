@@ -110,7 +110,7 @@ export default function ManageUmpires() {
                 <Row className="mb-3">
                     <Col>
                         <Card>
-                            <Table className="mb-0">
+                            <Table className="mb-0 table-responsive">
                                 <TableHead />
                                 {!loading ? renderedRows(uls, league) : null}
                             </Table>
