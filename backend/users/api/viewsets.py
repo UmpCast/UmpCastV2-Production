@@ -118,22 +118,25 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
     def toggle_location(self, request, pk):
         user = self.get_object()
         location_pk = request.data.get('location', None)
-        toggle = request.data.get('toggle', None)
+        available = request.data.get('available', None)
 
-        if location_pk is None or toggle is None:
+        if location_pk is None or available is None:
             return Response({"error": "missing parameters"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if toggle != 'on' and toggle != 'off':
-            return Response({"toggle": "invalid toggle"}, status=status.HTTP_400_BAD_REQUEST)
+        if type(available) != bool:
+            return Response({"available": "invalid available type, expected bool"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if type(location_pk) != int:
+            return Respnose({"location": "invalid location type, expected int"}, status=status.HTTP_400_BAD_REQUEST)
 
         location_obj = Location.objects.get(pk=location_pk)
 
-        if toggle == 'on':
+        if available:
             if location_obj.league not in user.leagues.accepted():
                 return Response({"location": "location in invalid league"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 user.locations.add(location_obj)
-        elif toggle == 'off':
+        else:
             user.locations.remove(location_obj)
 
         return Response(status=status.HTTP_200_OK)
@@ -157,8 +160,8 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
 
             league_dict = {
                 "league": league_serializer.data,
-                "accepted_locations": in_location_serializer.data,
-                "not_accepted_locations": out_location_serializer.data
+                "available_locations": in_location_serializer.data,
+                "not_available_locations": out_location_serializer.data
             }
             response_list.append(league_dict)
         response_dict = {
