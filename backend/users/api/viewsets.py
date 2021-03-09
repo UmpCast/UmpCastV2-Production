@@ -30,6 +30,7 @@ from rest_framework.response import Response
 from games.api.serializers.location import LocationSerializer
 from games.models import Location
 from leagues.api.serializers.league import LeaguePublicSerializer
+from users.tasks import reset_password_sms_task, reset_password_email_task
 
 
 class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
@@ -74,7 +75,7 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
 
     permission_classes = (IsSuperUser | ActionBasedPermission,)
     action_permissions = {
-        permissions.AllowAny: ['create'],
+        permissions.AllowAny: ['create', 'reset_password'],
         permissions.IsAuthenticated & IsLeagueMember: ['list'],
         permissions.IsAuthenticated & IsUserOwner: ['update', 'partial_update', 'retrieve', 'locations', 'apply_location'],
     }
@@ -84,6 +85,34 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
         if pk == 'me':
             return self.request.user
         return super().get_object()
+
+    @action(detail=False, methods=['post'])
+    def reset_password(self, request):
+        email = request.data.get('email', None)
+        reset_type = request.data.get('reset_type', None)
+        if (email is None) or (reset_type is None):
+            return Response({"error": "missing parameters"}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email=email).count() == 0:
+            return Response({"error": "invalid email"}, status=status.HTTP_400_BAD_REQUEST)
+        if reset_type != 'sms' and reset_type != 'email':
+            return Response({"error": "invalid reset_type"}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(email=email)
+        if reset_type == 'sms':
+            if len(user.phone_number) != 10:
+                return Response({"error": "no phone number on file"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                password = User.objects.make_random_password()
+                user.set_password(password)
+                user.save()
+                reset_password_sms_task.delay(
+                    user.email, user.phone_number, password)
+                return Response({"success": user.phone_number}, status=status.HTTP_200_OK)
+        elif reset_type == 'email':
+            password = User.objects.make_random_password()
+            user.set_password(password)
+            user.save()
+            reset_password_email_task.delay(user.email, password)
+            return Response({"success": user.email}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['patch'])
     def apply_location(self, request, pk):
