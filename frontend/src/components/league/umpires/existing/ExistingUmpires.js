@@ -37,7 +37,7 @@ export default function ManageUmpires() {
 
     const setPage = (page) => {
         Api.fetchUls(pk, page).then((res) => {
-             setUls(res.data)
+            setUls(res.data)
         })
     }
 
@@ -46,13 +46,13 @@ export default function ManageUmpires() {
     }
 
     const onStatusDeselected = ({ pk }) => {
-        setSelected(selected.filter(status_pk => status_pk !== pk))
+        setSelected(selected.filter((status_pk) => status_pk !== pk))
     }
 
     const resetSelected = () => setSelected([])
 
     const onStatusChange = (new_status) => {
-        const i = uls.results.findIndex(status => status.pk = new_status.pk)
+        const i = uls.results.findIndex((status) => (status.pk = new_status.pk))
         uls[i] = new_status
         setUls(uls)
     }
@@ -60,7 +60,7 @@ export default function ManageUmpires() {
     const renderedRows = (uls, league) => {
         const existing = uls.results.map((status) => {
             const isSelected = selected.includes(status.pk)
-            
+
             return (
                 <UmpireRow
                     status={status}
@@ -76,7 +76,18 @@ export default function ManageUmpires() {
 
         return <tbody>{existing}</tbody>
     }
-    
+
+    const onDeleteUsers = () => {
+        Api.Submit(() =>
+            Promise.all(selected.map((uls_pk) => Api.deleteUls(uls_pk))).then(
+                () => {
+                    setPage(1)
+                    resetSelected()
+                }
+            )
+        )
+    }
+
     return (
         <UmpiresContainer league={league} active="existing">
             <Loader dep={!loading}>
@@ -98,22 +109,34 @@ export default function ManageUmpires() {
                     <Button
                         variant="outline-danger rounded"
                         className="mx-1 py-1 px-2"
-                        onClick={resetSelected}
+                        onClick={onDeleteUsers}
                     >
                         <FontAwesomeIcon
                             icon={["fa", "minus-square"]}
                             className="mr-1 fa-xs"
                         />
-                        {selected.length}<FontAwesomeIcon icon="user" className="fa-xs ml-1"/>
+                        Remove {selected.length}
+                        <FontAwesomeIcon icon="user" className="fa-xs ml-1" />
+                    </Button>
+                    <Button
+                        variant="outline-muted rounded"
+                        className="ml-auto"
+                        onClick={resetSelected}
+                    >
+                        Deselect All
                     </Button>
                 </Row>
                 <Row className="mb-3">
                     <Col>
                         <Card>
-                            <Table className="mb-0 table-responsive">
-                                <TableHead />
-                                {!loading ? renderedRows(uls, league) : null}
-                            </Table>
+                            <div className="table-responsive">
+                                <Table className="mb-0">
+                                    <TableHead />
+                                    {!loading
+                                        ? renderedRows(uls, league)
+                                        : null}
+                                </Table>
+                            </div>
                         </Card>
                     </Col>
                 </Row>
@@ -157,5 +180,12 @@ const requests = {
                 page: page
             }
         }
+    ],
+    deleteUls: (status_pk) => [
+        "api/user-league-status/",
+        {
+            pk: status_pk
+        },
+        "DELETE"
     ]
 }
