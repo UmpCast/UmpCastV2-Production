@@ -13,12 +13,11 @@ class Location(models.Model):
 
 class Game(models.Model):
     division = models.ForeignKey('leagues.Division', on_delete=models.CASCADE)
-    location_object = models.ForeignKey(
+    location = models.ForeignKey(
         Location, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=128)
     date_time = models.DateTimeField()
     is_active = models.BooleanField(default=True)
-    location = models.CharField(max_length=128)
     description = models.TextField(blank=True, max_length=1028, null=True)
 
     # ts
