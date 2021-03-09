@@ -93,13 +93,13 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
         if (email is None) or (reset_type is None):
             return Response({"error": "missing parameters"}, status=status.HTTP_400_BAD_REQUEST)
         if User.objects.filter(email=email).count() == 0:
-            return Response({"error": "invalid email"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"email": "invalid email"}, status=status.HTTP_400_BAD_REQUEST)
         if reset_type != 'sms' and reset_type != 'email':
-            return Response({"error": "invalid reset_type"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"reset_type": "invalid reset_type"}, status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.get(email=email)
         if reset_type == 'sms':
             if len(user.phone_number) != 10:
-                return Response({"error": "no phone number on file"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"reset_type": "no phone number on file"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 password = User.objects.make_random_password()
                 user.set_password(password)
