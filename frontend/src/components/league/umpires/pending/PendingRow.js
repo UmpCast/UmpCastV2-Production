@@ -62,11 +62,8 @@ export default function PendingRow(props) {
 const UserProfile = ({ user }) => {
     const { first_name, last_name } = user
 
-    const name = (
-        first_name.charAt(0).toUpperCase() + first_name.slice(1) + " " +
-        last_name.charAt(0) + "."
-    )
-
+    const name = `${first_name} ${last_name}`
+    
     return (
         <div className="d-inline-flex">
             <div className="d-inline-flex flex-wrap bg-primary rounded p-1 mr-2 my-auto">
