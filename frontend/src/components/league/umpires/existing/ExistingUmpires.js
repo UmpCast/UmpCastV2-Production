@@ -121,14 +121,14 @@ export default function ManageUmpires() {
                 <Row className="mb-3">
                     <Col>
                         <Card>
-                            <div className="table-responsive">
+                            <Card.Body className="p-0 flex-row card-scroll">
                                 <Table className="mb-0">
                                     <TableHead />
                                     {!loading
                                         ? renderedRows(uls, league)
                                         : null}
                                 </Table>
-                            </div>
+                            </Card.Body>
                         </Card>
                     </Col>
                 </Row>

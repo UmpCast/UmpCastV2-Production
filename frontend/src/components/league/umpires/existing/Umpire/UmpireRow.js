@@ -14,7 +14,7 @@ export default function UmpireRow(props) {
 
     const { user } = status
     const { first_name, last_name, profile_picture } = user
-    const umpire_name = new Name(first_name, last_name).fullFirst
+    const umpire_name = `${first_name} ${last_name}`
     
     const onToggleChange = () => {
         if (isSelected)
