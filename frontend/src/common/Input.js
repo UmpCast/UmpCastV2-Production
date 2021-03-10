@@ -11,7 +11,7 @@ export const TextInput = ({ label, groupClass, noError, ...props }) => {
 
     return (
         <Form.Group className={groupClass}>
-            {label ? <Form.Label>{label}</Form.Label> : null}
+            {label ? <Form.Label className="w-100">{label}</Form.Label> : null}
             <Form.Control
                 autoComplete="off"
                 {...field}

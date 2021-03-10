@@ -5,6 +5,10 @@ from django.db.models.signals import post_save
 from django.utils import timezone
 
 from games.models import Application, Game
+from notifications.tasks import send_notification_email_task, send_notification_sms_task
+from users.models import User, UserLeagueStatus
+
+import itertools
 
 
 class BaseNotification(models.Model):
@@ -58,49 +62,23 @@ ADVANCED_NOTIFICATION_DAYS = 1
 
 
 def game_handle_creation(instance):
-    if instance.is_active:
-        GameNotification.objects.create(
-            game=instance,
-            was_reminded=False,
-            notification_date_time=instance.date_time -
-            timedelta(days=ADVANCED_NOTIFICATION_DAYS),
-            subject=f"{instance.title} Game Reminder",
-            message=f"Reminder for {instance.title}: Date Time {str(instance.date_time)}, Location {instance.location}"
-        )
+    pass
 
 
 def game_handle_update(instance, **kwargs):
-    verbose_dict = {
-        'date_time': 'Date and Time',
-        'location': 'Location',
-        'description': 'Details'
-    }
-    game_dict = {
-        'game': instance,
-        'was_reminded': True,
-        'notification_date_time': timezone.now()
-    }
+    location = "N/A"
+    if instance.location:
+        location = instance.location.title
 
-    if kwargs['update_fields'] is None:
-        print("It doesn't appear that any fields were updated")
-        return
-
-    fields = ('title', 'date_time', 'location', 'description')
-    for field in fields:
-        if field in kwargs['update_fields'] and instance.is_active:
-            GameNotification.objects.create(**dict(game_dict,
-                                                   subject=f"{instance.title} {verbose_dict.get(field)} updated",
-                                                   message=f"{verbose_dict.get(field)} for {instance.title} has been updated to: {str(getattr(instance,field))}"))
-
-    if 'is_active' in kwargs['update_fields']:
-        if instance.is_active:
-            GameNotification.objects.create(**dict(game_dict,
-                                                   subject=f"{instance.title} uncancelled",
-                                                   message=f"{instance.title} has been uncancelled. Here are the details: Date Time {str(instance.date_time)}, Location {instance.location}"))
-        else:
-            GameNotification.objects.create(**dict(game_dict,
-                                                   subject=f"{instance.title} cancelled",
-                                                   message=f"{instance.title} has been cancelled"))
+    gn = GameNotification.objects.create(
+        notification_date_time=timezone.now(),
+        was_reminded=True,  # no need to delay
+        game=instance,
+        subject=f"Game: {instance.title} has updated information",
+        message=f"""Title: {instance.title} \nDate & Time (in UTC): {instance.date_time.strftime("%m/%d/%Y, %H:%M:%S")} \nLocation: {location} \nIs Active: {instance.is_active}
+                """
+    )
+    return gn
 
 # API Create Endpoint, Admin Create/Update, TS Create/Update
 
@@ -109,8 +87,27 @@ def game_notification_receiver(sender, instance, *args, **kwargs):
     if kwargs['created']:
         game_handle_creation(instance)
     else:
-        # update_fields (title, date_time, is_active, location, description)
-        game_handle_update(instance, **kwargs)
+        gn = game_handle_update(instance, **kwargs)
+        user_ids = Application.objects.filter(
+            post__game__pk=instance.pk).values_list('user__pk', flat=True)
+        manager_ids = UserLeagueStatus.objects.filter(
+            user__account_type='manager', league=instance.division.league).values_list('user__pk', flat=True)
+        for user_id in itertools.chain(user_ids, manager_ids):
+            user = User.objects.get(pk=user_id)
+            if user.game_notifications and user.phone_notifications:
+                if len(user.phone_number) == 10:
+                    send_notification_sms_task.delay(
+                        user.phone_number,
+                        gn.subject,
+                        gn.pk
+                    )
+            if user.game_notifications and user.email_notifications:
+                send_notification_email_task.delay(
+                    user.email,
+                    gn.subject,
+                    gn.message,
+                    gn.pk
+                )
 
 
 post_save.connect(game_notification_receiver, sender=Game)
@@ -135,7 +132,7 @@ def notify_application(application):
                                                       message=f"You are currently now a backup for {application.post.game.title}"))
 
 
-def application_notification_receiver(sender, instance, *args, **kwargs):
+def application_receiver(sender, instance, *args, **kwargs):
     # check the application set for applications which require updates
     if kwargs['created']:
         notify_application(instance)
@@ -150,21 +147,25 @@ def application_notification_receiver(sender, instance, *args, **kwargs):
             notify_application(casted)
 
 
-post_save.connect(application_notification_receiver, sender=Application)
+post_save.connect(application_receiver, sender=Application)
 
 
-def print_game_notification(sender, instance, *args, **kwargs):
-    pass
-    # print(instance)
+def application_notification_receiver(sender, instance, *args, **kwargs):
+    if instance.application.user.application_notifications and instance.application.user.phone_notifications:
+        if len(instance.application.user.phone_number) == 10:
+            send_notification_sms_task.delay(
+                instance.application.user.phone_number,
+                instance.subject,
+                instance.pk
+            )
+    if instance.application.user.application_notifications and instance.application.user.email_notifications:
+        send_notification_email_task.delay(
+            instance.application.user.email,
+            instance.subject,
+            instance.message,
+            instance.pk
+        )
 
 
-post_save.connect(print_game_notification, sender=GameNotification)
-
-
-def print_application_notification(sender, instance, *args, **kwargs):
-    pass
-    # print(instance)
-
-
-post_save.connect(print_application_notification,
+post_save.connect(application_notification_receiver,
                   sender=ApplicationNotification)

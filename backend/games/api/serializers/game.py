@@ -9,7 +9,8 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('pk', 'title', 'division', 'posts', 'date_time', 'is_active', 'location', 'description', 'league')
+        fields = ('pk', 'title', 'division', 'posts', 'date_time',
+                  'is_active', 'location', 'description', 'league')
         read_only_fields = ('pk', 'league')
 
     def get_league(self, instance):

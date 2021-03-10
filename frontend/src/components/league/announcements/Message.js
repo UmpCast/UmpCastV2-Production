@@ -14,7 +14,7 @@ export default function Message({ msg }) {
     const relative_date = dayjs(notification_date_time).fromNow()
 
     return (
-        <Card className="mb-3">
+        <Card className="mb-3 w-100">
             <Card.Header>
                 {relative_date}
             </Card.Header>
