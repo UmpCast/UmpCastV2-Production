@@ -25,7 +25,6 @@ export default function AddDivisionButton(props) {
                 setShow(false)
             })
             .catch((err) => {
-                console.log(err)
                 setErrors(err.response.data)
             })
             .finally(() => setSubmitting(false))

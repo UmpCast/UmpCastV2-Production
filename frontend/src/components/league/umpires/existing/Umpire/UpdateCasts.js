@@ -22,10 +22,10 @@ export default function UpdateCasts(props) {
     }
 
     return (
-        <Form.Group className="my-0 text-center">
+        <div className="my-0 text-center">
             <small className="text-muted">
                 Max {max}
-            </small>
+            </small><br/>
             <Form.Control
                 type="range"
                 min="0"
@@ -34,7 +34,7 @@ export default function UpdateCasts(props) {
                 onChange={e => setMax(e.target.value)}
                 onMouseUp={onMouseUp}
                 custom />
-        </Form.Group>
+        </div>
     )
 }
 

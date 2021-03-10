@@ -65,7 +65,10 @@ INSTALLED_APPS = [
     'drf_yasg',
     'ordered_model',
     'sslserver',
-    # 'django_celery_results',
+    'django_celery_results',
+
+    # amazon SES
+    'django_ses',
 
     # amazon aws s3
     'storages',
@@ -288,13 +291,19 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_SES_REGION_NAME = 'us-west-1'
+AWS_SES_REGION_ENDPOINT = 'email.us-west-1.amazonaws.com'
+
+# error reporting
+ADMINS = [('jkao97', 'jkao97@yahoo.com')]
+SERVER_EMAIL = config('EMAIL_HOST_USER')
+
+# SMS
+SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
+TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = config('TWILIO_PHONE_NUMBER')
 
 
 django_heroku.settings(locals(), databases=False)

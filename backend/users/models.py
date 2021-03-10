@@ -101,4 +101,4 @@ class UserLeagueStatus(models.Model):
     visibilities = models.ManyToManyField(Role, blank=True)
 
     class Meta:
-        ordering = ['-pk']
+        ordering = ['user__first_name']

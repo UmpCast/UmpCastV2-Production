@@ -30,6 +30,7 @@ from rest_framework.response import Response
 from games.api.serializers.location import LocationSerializer
 from games.models import Location
 from leagues.api.serializers.league import LeaguePublicSerializer
+from users.tasks import reset_password_sms_task, reset_password_email_task
 
 
 class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
@@ -74,9 +75,9 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
 
     permission_classes = (IsSuperUser | ActionBasedPermission,)
     action_permissions = {
-        permissions.AllowAny: ['create'],
+        permissions.AllowAny: ['create', 'reset_password'],
         permissions.IsAuthenticated & IsLeagueMember: ['list'],
-        permissions.IsAuthenticated & IsUserOwner: ['update', 'partial_update', 'retrieve', 'locations', 'apply_location'],
+        permissions.IsAuthenticated & IsUserOwner: ['update', 'partial_update', 'retrieve', 'locations', 'toggle_location'],
     }
 
     def get_object(self):  # custom get object for /me endpoint
@@ -85,20 +86,59 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
             return self.request.user
         return super().get_object()
 
+    @action(detail=False, methods=['post'])
+    def reset_password(self, request):
+        email = request.data.get('email', None)
+        reset_type = request.data.get('reset_type', None)
+        if (email is None) or (reset_type is None):
+            return Response({"error": "missing parameters"}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email=email).count() == 0:
+            return Response({"email": "invalid email"}, status=status.HTTP_400_BAD_REQUEST)
+        if reset_type != 'sms' and reset_type != 'email':
+            return Response({"reset_type": "invalid reset_type"}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(email=email)
+        if reset_type == 'sms':
+            if len(user.phone_number) != 10:
+                return Response({"reset_type": "no phone number on file"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                password = User.objects.make_random_password()
+                user.set_password(password)
+                user.save()
+                reset_password_sms_task.delay(
+                    user.email, user.phone_number, password)
+                return Response({"success": user.phone_number}, status=status.HTTP_200_OK)
+        elif reset_type == 'email':
+            password = User.objects.make_random_password()
+            user.set_password(password)
+            user.save()
+            reset_password_email_task.delay(user.email, password)
+            return Response({"success": user.email}, status=status.HTTP_200_OK)
+
     @action(detail=True, methods=['patch'])
-    def apply_location(self, request, pk):
+    def toggle_location(self, request, pk):
         user = self.get_object()
         location_pk = request.data.get('location', None)
+        available = request.data.get('available', None)
 
-        if location_pk is None:
+        if location_pk is None or available is None:
             return Response({"error": "missing parameters"}, status=status.HTTP_400_BAD_REQUEST)
 
-        location_obj = Location.objects.get(pk=int(location_pk))
+        if type(available) != bool:
+            return Response({"available": "invalid available type, expected bool"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if location_obj.league not in user.leagues.accepted():
-            return Response({"error": "location in invalid league"}, status=status.HTTP_400_BAD_REQUEST)
+        if type(location_pk) != int:
+            return Respnose({"location": "invalid location type, expected int"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user.locations.add(location_obj)
+        location_obj = Location.objects.get(pk=location_pk)
+
+        if available:
+            if location_obj.league not in user.leagues.accepted():
+                return Response({"location": "location in invalid league"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                user.locations.add(location_obj)
+        else:
+            user.locations.remove(location_obj)
+
         return Response(status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['get'])
@@ -120,8 +160,8 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
 
             league_dict = {
                 "league": league_serializer.data,
-                "accepted_locations": in_location_serializer.data,
-                "not_accepted_locations": out_location_serializer.data
+                "available_locations": in_location_serializer.data,
+                "not_available_locations": out_location_serializer.data
             }
             response_list.append(league_dict)
         response_dict = {

@@ -65,10 +65,6 @@ export default function UserSecurity() {
                                     <div className="d-inline-flex">
                                         <SubmitButton
                                             {...{ formik }} />
-
-                                        <a href="/" className="ml-1 my-auto">
-                                            Forgot your password?
-                                        </a>
                                     </div>
                                 </FormikForm>
                             )}

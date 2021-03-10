@@ -45,6 +45,8 @@ export {
     faEllipsisH,
     faMinusSquare,
     faInfoCircle,
+    faPhone,
+    faExclamationTriangle
 } from "@fortawesome/free-solid-svg-icons"
 
 export {

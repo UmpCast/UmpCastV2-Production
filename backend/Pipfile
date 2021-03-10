@@ -23,6 +23,12 @@ gunicorn = "*"
 psycopg2-binary = "*"
 django-heroku = "*"
 boto3 = "*"
+celery = "*"
+django-celery-results = "*"
+redis = "*"
+django-ses = "*"
+django-sms = "*"
+twilio = ">=6.0.0,<6.51.0"
 
 [dev-packages]
 

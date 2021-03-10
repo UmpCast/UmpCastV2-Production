@@ -8,9 +8,9 @@ import UmpiresContainer from "components/league/umpires/UmpiresContainer"
 
 import UmpireRow from "./Umpire/UmpireRow"
 import ApplyLevelDropdown from "./ApplyLevelDropdown"
+import RemoveUmpiresButton from "./RemoveUmpiresButton"
 
 import { Row, Col, Table, Card, Button } from "react-bootstrap"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const page_size = 10
 
@@ -37,7 +37,7 @@ export default function ManageUmpires() {
 
     const setPage = (page) => {
         Api.fetchUls(pk, page).then((res) => {
-             setUls(res.data)
+            setUls(res.data)
         })
     }
 
@@ -46,21 +46,23 @@ export default function ManageUmpires() {
     }
 
     const onStatusDeselected = ({ pk }) => {
-        setSelected(selected.filter(status_pk => status_pk !== pk))
+        setSelected(selected.filter((status_pk) => status_pk !== pk))
     }
 
     const resetSelected = () => setSelected([])
 
     const onStatusChange = (new_status) => {
-        const i = uls.results.findIndex(status => status.pk = new_status.pk)
-        uls[i] = new_status
-        setUls(uls)
+        const new_results = uls.results.reduce((arr, item) => {
+            if (item.pk === new_status.pk) return arr.concat(new_status)
+            return arr.concat(item)
+        }, [])
+        setUls({ ...uls, results: new_results })
     }
 
     const renderedRows = (uls, league) => {
         const existing = uls.results.map((status) => {
             const isSelected = selected.includes(status.pk)
-            
+
             return (
                 <UmpireRow
                     status={status}
@@ -76,7 +78,18 @@ export default function ManageUmpires() {
 
         return <tbody>{existing}</tbody>
     }
-    
+
+    const onDeleteUsers = () => {
+        Api.Submit(() =>
+            Promise.all(selected.map((uls_pk) => Api.deleteUls(uls_pk))).then(
+                () => {
+                    setPage(1)
+                    resetSelected()
+                }
+            )
+        )
+    }
+
     return (
         <UmpiresContainer league={league} active="existing">
             <Loader dep={!loading}>
@@ -95,25 +108,29 @@ export default function ManageUmpires() {
                             }}
                         />
                     ) : null}
+                    <RemoveUmpiresButton
+                        onDeleteUsers={onDeleteUsers}
+                        umpiresCount={selected.length}
+                    />
                     <Button
-                        variant="outline-danger rounded"
-                        className="mx-1 py-1 px-2"
+                        variant="outline-muted rounded"
+                        className="ml-auto"
                         onClick={resetSelected}
                     >
-                        <FontAwesomeIcon
-                            icon={["fa", "minus-square"]}
-                            className="mr-1 fa-xs"
-                        />
-                        {selected.length}<FontAwesomeIcon icon="user" className="fa-xs ml-1"/>
+                        Deselect All
                     </Button>
                 </Row>
                 <Row className="mb-3">
                     <Col>
                         <Card>
-                            <Table className="mb-0">
-                                <TableHead />
-                                {!loading ? renderedRows(uls, league) : null}
-                            </Table>
+                            <Card.Body className="p-0 flex-row card-scroll">
+                                <Table className="mb-0">
+                                    <TableHead />
+                                    {!loading
+                                        ? renderedRows(uls, league)
+                                        : null}
+                                </Table>
+                            </Card.Body>
                         </Card>
                     </Col>
                 </Row>
@@ -157,5 +174,12 @@ const requests = {
                 page: page
             }
         }
+    ],
+    deleteUls: (status_pk) => [
+        "api/user-league-status/",
+        {
+            pk: status_pk
+        },
+        "DELETE"
     ]
 }

@@ -13,15 +13,17 @@ export default function AddGameForm({
     onLocationDelete,
     onCancle,
     onNewLocation,
-    handleNewGame,
+    onNewGame,
     league
 }) {
     const Api = useApi(requests)
 
     const onSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+        values.location = parseInt(values.location)
+        values.division = parseInt(values.division)
         Api.Submit(() => Api.createGame(values))
             .then((res) => {
-                handleNewGame(res.data)
+                onNewGame(res.data)
                 resetForm()
             })
             .catch((err) => {

@@ -21,7 +21,7 @@ const requests = {
         ]
     },
     getUserLocations(user_pk) {
-        return [`api/users/${user_pk}/locations`, {}]
+        return [`api/users/${user_pk}/locations/`, {}]
     }
 }
 
@@ -83,16 +83,21 @@ export default function Availability() {
             const user_locations = res2.data.results.reduce(
                 (
                     obj,
-                    { league, accepted_locations, not_accepted_locations }
+                    { league, available_locations, not_available_locations }
                 ) => {
-                    const available = to_object(accepted_locations, {
+                    const available = to_object(available_locations, {
                         available: true,
                         league: league.pk
                     })
-                    const unavailable = to_object(not_accepted_locations, {
+                    const unavailable = to_object(not_available_locations, {
                         available: false,
                         league: league.pk
                     })
+
+                    const all_pks = available_locations
+                        .concat(not_available_locations)
+                        .sort((el1, el2) => el1.title.localeCompare(el2.title))
+                        .map((item) => item.pk)
 
                     return {
                         leagues: {
@@ -105,11 +110,7 @@ export default function Availability() {
                             ...unavailable
                         },
                         leagues_by_pk: obj.leagues_by_pk.concat(league.pk),
-                        locations_by_pk: [
-                            ...obj.locations_by_pk,
-                            ...accepted_locations.map((item) => item.pk),
-                            ...not_accepted_locations.map((item) => item.pk)
-                        ]
+                        locations_by_pk: [...obj.locations_by_pk, ...all_pks]
                     }
                 },
                 {
