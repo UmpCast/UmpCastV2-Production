@@ -4,7 +4,7 @@ from datetime import datetime
 import jmespath
 import requests
 
-from games.models import Game
+from games.models import Game, Location
 from leagues.models import Division, League
 
 
@@ -225,15 +225,20 @@ class TeamSnapSyncer(TeamSnapBaseMixin):
             return
         location = self.get_location_title(
             info['division_location_id'], info['division_location_link'], info['location_id'], info['location_link'])[:128]  # enforce character limit
+        location_obj, created = Location.objects.get_or_create(
+            title=location,
+            league=division.league
+        )
+        is_active = not info['is_canceled']  # opposite bools
         if Game.objects.filter(ts_id=info['id']).exists():
             game = Game.objects.get(ts_id=info['id'])
             self.exception_notes += game.sync(title=title, date_time=date_time,
-                                              location=location, division=division, is_active=info['is_canceled'])
+                                              location=location_obj, division=division, is_active=is_active)
         else:
             game = Game.objects.create(
                 division=division, title=title,
-                date_time=date_time, is_active=info['is_canceled'],
-                location=location, ts_id=info['id']
+                date_time=date_time, is_active=is_active,
+                location=location_obj, ts_id=info['id']
             )
             self.exception_notes.append(
                 f"{game.title} was discovered by UmpCast"
@@ -255,14 +260,20 @@ class TeamSnapSyncer(TeamSnapBaseMixin):
         ])
         query = f"collection.items[*].{{ {data_query} , {links_query} }}"
         events = jmespath.search(query, events_json)
-        for event in events:
-            try:
-                self.sync_game(event, division)
-            except Exception as e:
-                self.exception_notes.append(
-                    f"An unexpected error occured while syncing {event['id']}. Other games unaffected"
-                )
-                self.exception_notes.append(e)
+        if events != None:
+            for event in events:
+                try:
+                    self.sync_game(event, division)
+                except Exception as e:
+                    print(e)
+                    self.exception_notes.append(
+                        f"An unexpected error occured while syncing {event['id']}. Other games unaffected"
+                    )
+                    self.exception_notes.append(e)
+        else:
+            self.exception_notes.append(
+                f"{division.title} was not synced by UmpCast since there were no games inside"
+            )
 
     def sync(self):
         tree_components = self.get_tree_components()
@@ -272,7 +283,8 @@ class TeamSnapSyncer(TeamSnapBaseMixin):
             if division.ts_id != 0 and division.ts_id in mappings:
                 try:
                     self.sync_division(mappings[division.ts_id], division)
-                except:
+                except Exception as e:
+                    print(e)
                     self.exception_notes.append(
                         f"An unexpected error occured while syncing {division.title}. Certain games in the division may not have been synced"
                     )
