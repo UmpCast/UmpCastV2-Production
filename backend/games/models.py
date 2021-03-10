@@ -51,7 +51,7 @@ class Game(models.Model):
         for attr in attrs:
             if getattr(self, attr) != kwargs[attr]:
                 update_fields.append(attr)
-                self.attr = kwargs[attr]
+                setattr(self, attr, kwargs[attr])
         if update_fields:
             self.save(update_fields=update_fields)
             exception_notes.append(
