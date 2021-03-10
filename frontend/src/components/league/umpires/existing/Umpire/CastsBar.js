@@ -46,8 +46,7 @@ export default function CastsBar(props) {
                 </Loader>
             </Dropdown.Toggle>
             <Dropdown.Menu
-                className="mt-1 py-0 px-2 ump-centered-dropdown-menu"
-                style={{ "width": "250px" }}>
+                className="mt-1 py-0 px-2">
                 <UpdateCasts
                     status={status}
                     type={type}

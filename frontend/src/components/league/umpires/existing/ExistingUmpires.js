@@ -52,9 +52,11 @@ export default function ManageUmpires() {
     const resetSelected = () => setSelected([])
 
     const onStatusChange = (new_status) => {
-        const i = uls.results.findIndex((status) => (status.pk = new_status.pk))
-        uls[i] = new_status
-        setUls(uls)
+        const new_results = uls.results.reduce((arr, item) => {
+            if (item.pk === new_status.pk) return arr.concat(new_status)
+            return arr.concat(item)
+        }, [])
+        setUls({ ...uls, results: new_results })
     }
 
     const renderedRows = (uls, league) => {
@@ -121,14 +123,14 @@ export default function ManageUmpires() {
                 <Row className="mb-3">
                     <Col>
                         <Card>
-                            <div className="table-responsive">
+                            <Card.Body className="p-0 flex-row card-scroll">
                                 <Table className="mb-0">
                                     <TableHead />
                                     {!loading
                                         ? renderedRows(uls, league)
                                         : null}
                                 </Table>
-                            </div>
+                            </Card.Body>
                         </Card>
                     </Col>
                 </Row>
