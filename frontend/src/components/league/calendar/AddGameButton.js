@@ -1,28 +1,25 @@
 import React, { useState, Fragment } from "react"
 
-import { useApi, useMountEffect } from "common/hooks"
+import { useApi } from "common/hooks"
 
 import { Modal, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import AddGameForm from "./AddGameForm"
 import AddLocationForm from "./AddLocationForm"
 
-export default function AddGameButton({ handleNewGame, league }) {
+export default function AddGameButton({
+    handleNewGame,
+    locations,
+    handleNewLocation,
+    handleDeleteLocation,
+    league
+}) {
     const Api = useApi(requests)
 
     const [state, setState] = useState({
-        locations: null,
-        loading: true,
-
         show: false,
         form: "game",
         cached: {}
-    })
-
-    useMountEffect(() => {
-        Api.getLocations(league.pk).then((res) =>
-            setState({ ...state, locations: res.data.results, loading: false })
-        )
     })
 
     const setShow = (show) => setState({ ...state, show })
@@ -30,14 +27,6 @@ export default function AddGameButton({ handleNewGame, league }) {
 
     const onLocationCancel = () => {
         setForm("game")
-    }
-
-    const onLocationAdded = (location) => {
-        setState({
-            ...state,
-            form: "game",
-            locations: [...state.locations, location]
-        })
     }
 
     const onNewLocation = (values) => {
@@ -48,14 +37,24 @@ export default function AddGameButton({ handleNewGame, league }) {
         })
     }
 
+    const onNewGame = (game) => {
+        setState({...state, cached: {}})
+        handleNewGame(game)
+    }
+
+    const onLocationAdded = (location) => {
+        setState({
+            ...state,
+            form: "game"
+        })
+
+        handleNewLocation(location)
+    }
+
     const onLocationDelete = (location_pk, values) => {
         values.location = ""
-        Api.Submit(() => Api.deleteLocation(location_pk)).then(() =>{
-            setState({
-                ...state,
-                cached: { ...state.cached, game: values },
-                locations: state.locations.filter(({ pk }) => pk !== location_pk)
-            })
+        Api.Submit(() => Api.deleteLocation(location_pk)).then(() => {
+            handleDeleteLocation(location_pk)
         })
     }
 
@@ -65,10 +64,10 @@ export default function AddGameButton({ handleNewGame, league }) {
                 return (
                     <AddGameForm
                         league={league}
-                        locations={state.locations}
+                        locations={locations}
                         cached={state.cached.game}
                         onCancle={() => setShow(false)}
-                        handleNewGame={handleNewGame}
+                        onNewGame={onNewGame}
                         onNewLocation={onNewLocation}
                         onLocationDelete={onLocationDelete}
                     />
@@ -97,24 +96,13 @@ export default function AddGameButton({ handleNewGame, league }) {
                 Add Games
             </Button>
             <Modal show={state.show} onHide={() => setShow(false)} size="md">
-                {!state.loading ? <RenderForm type={state.form} /> : null}
+                <RenderForm type={state.form} />
             </Modal>
         </Fragment>
     )
 }
 
 const requests = {
-    getLocations(league_pk) {
-        return [
-            "api/locations/",
-            {
-                params: {
-                    league: league_pk,
-                    page_size: 200
-                }
-            }
-        ]
-    },
     deleteLocation: (location_pk) => [
         "api/locations/",
         {

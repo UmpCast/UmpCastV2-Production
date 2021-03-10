@@ -6,6 +6,8 @@ import AuthRoute from "common/auth/AuthRoute"
 import Login from "./auth/login/Login"
 import Register from "./auth/register/Register"
 import Configure from "./auth/register/Configure"
+import ResetPassword from './auth/login/ResetPassword'
+import ResetSuccess from './auth/login/ResetSuccess'
 import Home from "./home/Home"
 
 import SettingsRouter from "./settings/SettingsRouter"
@@ -30,6 +32,18 @@ export default function accountRouter() {
                 is="public"
                 not="authenticated"
                 component={Register} />
+            
+            <AuthRoute
+                path={"/reset-password/success"}
+                is="public"
+                not="authenticated"
+                component={ResetSuccess} />
+
+            <AuthRoute
+                path="/reset-password"
+                is="public"
+                not="authenticated"
+                component={ResetPassword} />
 
             <Route
                 path="/settings"

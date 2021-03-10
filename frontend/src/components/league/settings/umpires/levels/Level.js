@@ -35,11 +35,10 @@ export default function Level(props) {
             index={index}>
             {provided => (
                 <ListGroup.Item
-                    className="border-top-0"
+                    className="border-top-0 d-inline-flex"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                 >
-                    <div className="d-inline-flex justify-content-between w-100">
                         <div className="d-inline-flex">
                             <LevelName
                                 level={level}
@@ -65,7 +64,6 @@ export default function Level(props) {
                             level={level}
                             useShow={useShow}
                             onDelete={onDelete} />
-                    </div>
                 </ListGroup.Item>
             )}
         </Draggable>
@@ -76,7 +74,7 @@ export const LevelName = ({ level, provided }) => {
     return (
         <div
             {...provided.dragHandleProps}
-            className="my-auto">
+            className="my-auto flex-shrink-0">
             <FontAwesomeIcon
                 icon={'bars'}
                 className="mr-3" />

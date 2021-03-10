@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import dayjs from "dayjs"
 
@@ -12,7 +12,6 @@ import Post from "./Post"
 import { Row, Col, Tabs, Tab } from "react-bootstrap"
 
 export default function GamePage() {
-
     const { pk } = useParams()
 
     const Api = useApi(requests)
@@ -25,49 +24,52 @@ export default function GamePage() {
     const [game, setGame] = useGame
 
     useMountEffect(() => {
-        Api.fetchGame(pk).then(res => {
-            const myGame = res.data
+        ;(async () => {
+            const myGame = (await Api.fetchGame(pk)).data
 
+            const [
+                { data: myLeague },
+                {
+                    data: { results: myLocations }
+                }
+            ] = await Promise.all([
+                Api.fetchLeague(myGame.league),
+                Api.fetchLocations(myGame.league)
+            ])
+
+            myGame.location = myLocations.find(
+                (loc) => loc.pk === myGame.location
+            ).title
             setGame(myGame)
 
-            return Promise.all([
-                Api.fetchLeague(myGame.league),
-                myGame.division
-            ])
-        }).then(res => {
-            const myLeague = res[0].data
-            const division_pk = res[1]
-
             const { divisions } = myLeague
-
-            const myDivision = divisions.find(division =>
-                division.pk === division_pk
+            const myDivision = divisions.find(
+                (division) => division.pk === myGame.division
             )
 
             setDivision(myDivision)
 
             delete myLeague.divisions
             setLeague(myLeague)
-        })
+        })()
     })
 
     return (
         <div className="m-3 mx-xl-5 mt-xl-5 mb-xl-0">
             <Loader dep={[game, division, league]}>
-                <GameBanner
-                    game={game}
-                    division={division} />
+                <GameBanner game={game} division={division} />
                 <Row>
                     <Col>
                         <ListPosts
                             useGame={useGame}
                             division={division}
                             league={league}
-                            user={user} />
+                            user={user}
+                        />
                     </Col>
                 </Row>
             </Loader>
-        </div >
+        </div>
     )
 }
 
@@ -82,43 +84,32 @@ const ListPosts = (props) => {
     const userApp = findUserApp(user.pk, posts)
     const gameStatus = getGameStatus(game, league, userApp)
 
-    const list_posts = posts.map(post =>
-        <Tab
-            title={post.role.title}
-            eventKey={post.pk}
-            key={post.pk}>
-            <Post
-                post={post}
-                useGame={useGame}
-                game_status={gameStatus} />
+    const list_posts = posts.map((post) => (
+        <Tab title={post.role.title} eventKey={post.pk} key={post.pk}>
+            <Post post={post} useGame={useGame} game_status={gameStatus} />
         </Tab>
-    )
+    ))
 
-    return (
-        <Tabs>
-            {list_posts}
-        </Tabs>
-    )
+    return <Tabs>{list_posts}</Tabs>
 }
 
-const getRolesDict = division => {
+const getRolesDict = (division) => {
     const roles = {}
-    division.roles.map(role => roles[role.pk] = role)
+    division.roles.map((role) => (roles[role.pk] = role))
 
     return roles
 }
 
-const getDetailedPosts = (game, roles) => (
-    game.posts.map(post => ({
+const getDetailedPosts = (game, roles) =>
+    game.posts.map((post) => ({
         ...post,
         role: roles[post.role]
     }))
-)
 
 const findUserApp = (user_pk, posts) => {
     for (const post of posts) {
-        const index = post.applications.findIndex(app =>
-            app.user.pk === user_pk
+        const index = post.applications.findIndex(
+            (app) => app.user.pk === user_pk
         )
 
         if (index !== -1) {
@@ -157,7 +148,6 @@ const getGameStatus = (game, league, user_app) => {
             role: post.role.title,
             cancel_expired: cancel_expired
         }
-
     }
 
     return { status: "signups_open" }
@@ -168,6 +158,16 @@ const requests = {
         "api/games/",
         {
             pk: game_pk
+        }
+    ],
+    fetchLocations: (league_pk) => [
+        "api/locations/",
+        {
+            params: {
+                league: league_pk,
+                page: 1,
+                page_size: 200
+            }
         }
     ],
     fetchLeague: (league_pk) => [

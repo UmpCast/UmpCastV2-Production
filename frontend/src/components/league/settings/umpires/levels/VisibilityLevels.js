@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
 import arrayMove from "array-move"
 import { DragDropContext, Droppable } from "react-beautiful-dnd"
 
@@ -8,10 +8,9 @@ import CreateLevel from "./CreateLevel"
 import Level from "./Level"
 
 import { Card, Button } from "react-bootstrap"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 export default function UmpireLevels(props) {
-
     const { league } = props
 
     const { divisions } = league
@@ -23,15 +22,15 @@ export default function UmpireLevels(props) {
     const [, setShow] = useShow
     const [levels, setLevels] = useLevels
 
-    const onChange = new_level => {
+    const onChange = (new_level) => {
         setLevels(
-            levels.map(level =>
+            levels.map((level) =>
                 level.pk === new_level.pk ? new_level : level
             )
         )
     }
 
-    const onDragEnd = result => {
+    const onDragEnd = (result) => {
         const { destination, source } = result
 
         if (!destination || !source) return
@@ -43,11 +42,9 @@ export default function UmpireLevels(props) {
             return
         }
 
-        Api.reorderLevel(levels[start].pk, end)
-            .then(() =>
-                setLevels(arrayMove(levels, start, end)
-                )
-            )
+        Api.reorderLevel(levels[start].pk, end).then(() =>
+            setLevels(arrayMove(levels, start, end))
+        )
     }
 
     return (
@@ -59,24 +56,25 @@ export default function UmpireLevels(props) {
                     </h5>
                     <Button
                         variant="success rounded p-1 px-3"
-                        onClick={() => setShow(true)}>
-                        <FontAwesomeIcon
-                            icon="layer-group"
-                            className="mr-1" />
+                        onClick={() => setShow(true)}
+                    >
+                        <FontAwesomeIcon icon="layer-group" className="mr-1" />
                         New
                     </Button>
                     <CreateLevel
                         useShow={useShow}
                         useLevels={useLevels}
-                        league_pk={league.pk} />
+                        league_pk={league.pk}
+                    />
                 </Card.Header>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="umpire-levels">
-                        {provided => (
+                        {(provided) => (
                             <Card.Body
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
-                                className="p-0">
+                                className="p-0 flex-row card-scroll"
+                            >
                                 <ListLevels
                                     useLevels={useLevels}
                                     divisions={divisions}
@@ -92,20 +90,20 @@ export default function UmpireLevels(props) {
     )
 }
 
-
-const ListLevels = props => {
+const ListLevels = (props) => {
     const { useLevels, divisions, onChange } = props
     const [levels] = useLevels
 
-    return levels.map((level, index) =>
+    return levels.map((level, index) => (
         <Level
             level={level}
             useLevels={useLevels}
             divisions={divisions}
             onChange={onChange}
             index={index}
-            key={level.pk} />
-    )
+            key={level.pk}
+        />
+    ))
 }
 
 const requests = {
