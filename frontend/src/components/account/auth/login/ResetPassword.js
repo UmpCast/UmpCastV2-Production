@@ -40,7 +40,6 @@ export default function ResetPassword() {
     let history = useHistory()
 
     const onSubmit = (values, { setSubmitting, setErrors }) => {
-        console.log(values)
         Api.Submit(() => Api.resetPasword(values))
             .then(() => {
                 history.push(`/reset-password/success?reset_type=${values.reset_type}`)

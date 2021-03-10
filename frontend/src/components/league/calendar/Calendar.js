@@ -40,6 +40,14 @@ export default function Calendar() {
         }
     }
 
+    const handleNewLocation = (location) => {
+        setLocations(locations.concat(location))
+    }
+
+    const handleDeleteLocation = (location_pk) => {
+        setLocations(locations.filter(({ pk }) => pk !== location_pk))
+    }
+
     const handleDeleteGame = ({ pk }) => {
         setGames(games.filter((game) => game.pk !== pk))
     }
@@ -74,6 +82,9 @@ export default function Calendar() {
                     week_start={week_start}
                     handleGames={handleGames}
                     handleNewGame={handleNewGame}
+                    handleNewLocation={handleNewLocation}
+                    handleDeleteLocation={handleDeleteLocation}
+                    locations={locations}
                     league={league}
                 />
             </Loader>

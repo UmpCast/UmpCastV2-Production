@@ -15,7 +15,15 @@ export default function CalendarHeader(props) {
 
     const isManager = user.account_type === "manager"
 
-    const { week_start, handleGames, handleNewGame, league } = props
+    const {
+        week_start,
+        handleGames,
+        handleNewGame,
+        locations,
+        handleNewLocation,
+        handleDeleteLocation,
+        league
+    } = props
 
     const last_week = week_start.add(-7, "day")
     const next_week = week_start.add(7, "day")
@@ -67,6 +75,9 @@ export default function CalendarHeader(props) {
                         <AddGameButton
                             league={league}
                             handleNewGame={handleNewGame}
+                            handleNewLocation={handleNewLocation}
+                            handleDeleteLocation={handleDeleteLocation}
+                            locations={locations}
                         />
                     </div>
                 </Loader>

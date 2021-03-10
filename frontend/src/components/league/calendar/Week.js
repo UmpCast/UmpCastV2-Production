@@ -1,4 +1,4 @@
-import React, { Fragment, createElement } from "react";
+import React, { Fragment, createElement } from "react"
 import dayjs from "dayjs"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 
@@ -10,33 +10,30 @@ import ListDay from "./ListDay"
 import ColumnDay from "./ColumnDay"
 import NoGame from "./NoGame"
 
-import {Row, Col} from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
 
 dayjs.extend(localizedFormat)
 
 export default function Week(props) {
-
     const { league, start, games, handleDeleteGame, locations } = props
-    console.log(locations)
 
-    for(const game of games)
-        game.location = locations.find(loc => loc.pk === game.location).title
+    const formattedGames = games.map((game) => ({
+        ...game,
+        location: locations.find((loc) => loc.pk === game.location).title
+    }))
 
     const { divisions } = league
 
-    const weekGames = binByDay(expandGames(games, divisions))
+    const weekGames = binByDay(expandGames(formattedGames, divisions))
 
-    const weekViews = [ColumnDay, ListDay].map(
-        component => weekGames.map(
-            (day_games, index) => createElement(
-                component,
-                {
-                    games: day_games,
-                    date: start.add(index, "day"),
-                    key: index,
-                    handleDeleteGame: handleDeleteGame
-                }
-            )
+    const weekViews = [ColumnDay, ListDay].map((component) =>
+        weekGames.map((day_games, index) =>
+            createElement(component, {
+                games: day_games,
+                date: start.add(index, "day"),
+                key: index,
+                handleDeleteGame: handleDeleteGame
+            })
         )
     )
 
@@ -47,18 +44,12 @@ export default function Week(props) {
     return (
         <Fragment>
             <div className="d-none d-lg-block">
-                <Row>
-                    {weekViews[0]}
-                </Row>
+                <Row>{weekViews[0]}</Row>
             </div>
             <div className="d-lg-none">
-                <Col>
-                    {weekViews[1]}
-                </Col>
-                <Loader dep={!thisWeek && games.length === 0}>
-                    <NoGame>
-                        No Games This Week
-                    </NoGame>
+                <Col>{weekViews[1]}</Col>
+                <Loader dep={!thisWeek && formattedGames.length === 0}>
+                    <NoGame>No Games This Week</NoGame>
                 </Loader>
             </div>
         </Fragment>
