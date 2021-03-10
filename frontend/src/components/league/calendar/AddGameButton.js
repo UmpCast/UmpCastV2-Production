@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react"
 
-import { useApi, useMountEffect } from "common/hooks"
+import { useApi } from "common/hooks"
 
 import { Modal, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -37,6 +37,11 @@ export default function AddGameButton({
         })
     }
 
+    const onNewGame = (game) => {
+        setState({...state, cached: {}})
+        handleNewGame(game)
+    }
+
     const onLocationAdded = (location) => {
         setState({
             ...state,
@@ -62,7 +67,7 @@ export default function AddGameButton({
                         locations={locations}
                         cached={state.cached.game}
                         onCancle={() => setShow(false)}
-                        handleNewGame={handleNewGame}
+                        onNewGame={onNewGame}
                         onNewLocation={onNewLocation}
                         onLocationDelete={onLocationDelete}
                     />

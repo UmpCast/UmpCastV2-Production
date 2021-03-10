@@ -13,7 +13,7 @@ export default function AddGameForm({
     onLocationDelete,
     onCancle,
     onNewLocation,
-    handleNewGame,
+    onNewGame,
     league
 }) {
     const Api = useApi(requests)
@@ -23,7 +23,7 @@ export default function AddGameForm({
         values.division = parseInt(values.division)
         Api.Submit(() => Api.createGame(values))
             .then((res) => {
-                handleNewGame(res.data)
+                onNewGame(res.data)
                 resetForm()
             })
             .catch((err) => {
