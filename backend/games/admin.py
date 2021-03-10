@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Game, Post, Application, Location
+from ordered_model.admin import OrderedModelAdmin
 
 
 class LocationAdmin(admin.ModelAdmin):
@@ -34,8 +35,8 @@ class PostAdmin(admin.ModelAdmin):
     list_per_page = 25
 
 
-class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'post', 'user', 'comments')
+class ApplicationAdmin(OrderedModelAdmin):
+    list_display = ('pk', 'post', 'user', 'comments', 'move_up_down_links')
     list_display_links = ('pk', )
     list_per_page = 25
 
