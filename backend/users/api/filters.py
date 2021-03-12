@@ -18,8 +18,6 @@ class UserLeagueStatusFilter(filters.FilterSet):
         return queryset.annotate(
             similarity=Greatest(
                 TrigramSimilarity('user__first_name', value),
-                TrigramSimilarity('user__last_name', value),
-                TrigramSimilarity('user__first_name', value) +
                 TrigramSimilarity('user__last_name', value)
             )
         ).filter(similarity__gt=0.15)  # first, last, or both
