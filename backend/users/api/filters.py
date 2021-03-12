@@ -20,4 +20,4 @@ class UserLeagueStatusFilter(filters.FilterSet):
                 TrigramSimilarity('user__first_name', value),
                 TrigramSimilarity('user__last_name', value)
             )
-        ).filter(similarity__gt=0.15)  # first, last, or both
+        ).filter(similarity__gt=0.15).order_by('-similarity')  # first, last, or both, negative for descending
