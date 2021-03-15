@@ -15,6 +15,10 @@ export default function AuthContainer({ children }) {
 
         if (token) {
             tokenLogin(token)
+                .catch((err) => {
+                    if (err.response && err.response.status.code === 400)
+                        localStorage.removeItem("token")
+                })
                 .finally(() => setFetched(true))
         } else {
             setFetched(true)

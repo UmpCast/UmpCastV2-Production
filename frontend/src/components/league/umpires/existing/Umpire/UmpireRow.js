@@ -1,7 +1,6 @@
 import React from "react"
 
 import { ProfilePicture } from "common/components"
-import { Name } from "common/Utils"
 
 import CastsBar from "./CastsBar"
 import UmpireVisibility from "../Visibility/UmpireVisibility"

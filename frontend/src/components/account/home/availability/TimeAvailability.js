@@ -1,8 +1,10 @@
-import React, { useState } from "react"
+import React from "react"
 import ScheduleSelector from "react-schedule-selector"
 import dayjs from "dayjs"
-
 import useUser, { useApi } from "common/hooks"
+
+var utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
 
 const timeRangeToDate = (startDate, time_range) => {
     const { day_type, start } = time_range
@@ -27,7 +29,7 @@ const timeRangeToDate = (startDate, time_range) => {
 }
 
 const dateToTimeRange = (date) => {
-    const jsDate = dayjs(date)
+    const jsDate = dayjs(date).utc()
 
     return {
         start: jsDate.format("HH:mm:ss"),
