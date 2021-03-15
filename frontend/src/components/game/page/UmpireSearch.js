@@ -14,6 +14,7 @@ const requests = (league_pk) => ({
             "api/user-league-status/",
             {
                 params: {
+                    name: query,
                     league: league_pk,
                     request_status: "accepted",
                     account_type: "umpire",
