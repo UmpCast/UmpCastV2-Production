@@ -27,6 +27,8 @@ export default function Dashboard() {
                 return <Visibility />
             case "availability":
                 return <Availability />
+            default:
+                return null
         }
     }
 

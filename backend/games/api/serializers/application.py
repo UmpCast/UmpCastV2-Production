@@ -16,7 +16,7 @@ class ApplicationBaseSerializer(serializers.ModelSerializer):
 
 class ApplicationCreateSerializer(ApplicationBaseSerializer):
     def validate_user(self, user):
-        if not user.is_manager() and user != self.context['request'].user:
+        if not self.context['request'].user.is_manager() and user != self.context['request'].user:
             raise ValidationError(
                 "must either be the requesting user, or a manager")
         return user

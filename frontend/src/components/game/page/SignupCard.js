@@ -1,55 +1,64 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useCallback, useState } from "react"
 
 import useUser, { useApi } from "common/hooks"
 
 import { ProfilePicture } from "common/components"
 import { BasicConfirm } from "common/forms"
 import { GameSignupConseq } from "components/game/Text"
+import UmpireSearch from "./UmpireSearch"
 
-import { Card } from "react-bootstrap";
+import { Card } from "react-bootstrap"
 import PrimaryBaseball from "assets/primary_baseball.png"
 
 const SignupCard = (props) => {
+    const { post, useGame, league } = props
 
-    const { post, useGame } = props
-
-    const { pk } = post
     const apps = post.applications
-    const [game, setGame] = useGame
+    const [, setGame] = useGame
 
     const Api = useApi(requests)
     const { user } = useUser()
 
     const useShow = useState(false)
 
-    const [, setShow] = useShow
+    const [show, setShow] = useShow
+
+    const onUmpireSelect = useCallback(
+        (umpire_pk) => {
+            Api.Submit(() => Api.gameSignup(umpire_pk, post.pk)).then((res) => {
+                const new_apps = post.applications.concat(res.data)
+
+                setGame((game) => {
+                    const new_posts = game.posts.map((item) =>
+                        item.pk === post.pk
+                            ? { ...item, applications: new_apps }
+                            : item
+                    )
+
+                    return {
+                        ...game,
+                        posts: new_posts
+                    }
+                })
+            })
+        },
+        [Api, post.pk, post.applications, setGame]
+    )
 
     const onSubmit = () => {
-        Api.Submit(() =>
-            Api.gameSignup(user.pk, post.pk)
-        ).then(res => {
-            const new_apps = apps.concat(res.data)
-
-            const new_posts = game.posts.map(post =>
-                post.pk === pk ?
-                    { ...post, applications: new_apps } : post
-            )
-
-            setGame({
-                ...game,
-                posts: new_posts
-            })
-        })
+        onUmpireSelect(user.pk)
     }
 
     return (
         <Fragment>
             <div
                 className="border-secondary-dashed"
-                style={{ cursor: "pointer" }}>
+                style={{ cursor: "pointer" }}
+            >
                 <Card
                     className="text-center border-0 text-muted list-group-item-action"
-                    onClick={() => setShow(true)}>
+                    onClick={() => setShow(true)}
+                >
                     <Card.Body>
                         <Card.Title>
                             <strong>+ Click to add</strong>
@@ -58,24 +67,34 @@ const SignupCard = (props) => {
                         <ProfilePicture
                             src={user.profile_picture}
                             alt={PrimaryBaseball}
-                            className="rounded-circle img-thumbnail border-0 mt-2 mb-3 p-4" />
+                            className="rounded-circle img-thumbnail border-0 mt-2 mb-3 p-4"
+                        />
 
                         <Card.Text>
-                            You
+                            {user.account_type === "manager"
+                                ? "Search Umpire"
+                                : "You"}
                         </Card.Text>
                     </Card.Body>
                 </Card>
             </div>
-            <BasicConfirm
-                action={`Signup for ${post.role.title}`}
-                action_text="Confirm"
-                consequences={
-                    <GameSignupConseq
-                        order={apps.length} />
-                }
-                useShow={useShow}
-                onConfirm={onSubmit}
-            />
+            {user.account_type === "manager" ? (
+                <UmpireSearch
+                    league={league}
+                    show={show}
+                    setShow={setShow}
+                    role={post.role}
+                    onUmpireSelect={onUmpireSelect}
+                />
+            ) : (
+                <BasicConfirm
+                    action={`Signup for ${post.role.title}`}
+                    action_text="Confirm"
+                    consequences={<GameSignupConseq order={apps.length} />}
+                    useShow={useShow}
+                    onConfirm={onSubmit}
+                />
+            )}
         </Fragment>
     )
 }
@@ -93,4 +112,4 @@ const requests = {
     ]
 }
 
-export default SignupCard;
+export default SignupCard

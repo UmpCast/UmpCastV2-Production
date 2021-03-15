@@ -158,7 +158,7 @@ const ApiSubmit = myDisplay => request => {
                         case 400:
                             const { non_field_errors } = response.data
                             if (non_field_errors)
-                                alertInfo.msg = non_field_errors
+                                return JSON.stringify(non_field_errors)
                             return null
                         case 401:
                             return "Please sign-in first"

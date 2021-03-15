@@ -13,6 +13,7 @@ const getEmptyLeagues = (user_locations) => {
         .filter(
             (pk) =>
                 !locations_by_pk.some(
+                    
                     (_pk) =>
                         locations[_pk].available && locations[_pk].league === pk
                 )

@@ -17,9 +17,6 @@ dayjs.extend(localizedFormat)
 export default function Week(props) {
     const { league, start, games, handleDeleteGame, locations } = props
 
-    console.log(games)
-    console.log(locations)
-
     const formattedGames = games.map((game) => {
         const loc = locations.find((loc) => loc.pk === game.location)
         return {

@@ -94,7 +94,7 @@ export const requests = {
     fetchToken: ({ username, password }) => {
         return [
             "api/auth/token/",
-            { data: OauthUserValidate(username, password) },
+            { data: OauthUserValidate(username.toLowerCase(), password) },
             "POST"
         ]
     }
