@@ -18,9 +18,12 @@ export default function RegisterDetails(props) {
 
     const onSubmit = (values, { setSubmitting, setErrors }) => {
 
-        const new_values = handlePhone(values)
+        let new_values = handlePhone(values)
 
-        Api.register(new_values)
+        Api.register({
+            ...new_values,
+            email: new_values.email.toLowerCase()
+        })
             .then(() =>
                 Api.fetchToken(values)
             )

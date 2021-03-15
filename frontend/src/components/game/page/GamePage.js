@@ -58,6 +58,7 @@ export default function GamePage() {
         <div className="m-3 mx-xl-5 mt-xl-5 mb-xl-0">
             <Loader dep={[game, division, league]}>
                 <GameBanner game={game} division={division} />
+                
                 <Row>
                     <Col>
                         <ListPosts
@@ -86,7 +87,7 @@ const ListPosts = (props) => {
 
     const list_posts = posts.map((post) => (
         <Tab title={post.role.title} eventKey={post.pk} key={post.pk}>
-            <Post post={post} useGame={useGame} game_status={gameStatus} />
+            <Post post={post} useGame={useGame} game_status={gameStatus} league={league}/>
         </Tab>
     ))
 

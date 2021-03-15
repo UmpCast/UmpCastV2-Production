@@ -4,7 +4,7 @@ import Moment from "moment"
 import momentLocalizer from "react-widgets-moment"
 import DateTimePicker from "react-widgets/lib/DateTimePicker"
 
-import { Form, InputGroup } from "react-bootstrap"
+import { Form } from "react-bootstrap"
 
 export const TextInput = ({ label, groupClass, noError, ...props }) => {
     const [field, meta] = useField(props)
