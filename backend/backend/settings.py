@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'ordered_model',
     'sslserver',
     'django_celery_results',
+    'django_celery_beat',
 
     # amazon SES
     'django_ses',

@@ -28,4 +28,11 @@ services:
     volumes:
       - ./backend:/code
     command: celery -A backend worker -l info
+  celery_beat:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/code
+    command: celery -A backend beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     
