@@ -40,9 +40,21 @@ class ApplicationCreateSerializer(ApplicationBaseSerializer):
         if not UserLeagueStatus.objects.filter(user=user, league=post.role.division.league).exists():
             raise ValidationError(
                 "this error should not occur: user not in relevant league to apply for this game")
-        if not user.is_manager() and post.role not in UserLeagueStatus.objects.get(user=user, league=post.role.division.league).visibilities.all():
+        if not self.context['request'].user.is_manager() and post.role not in UserLeagueStatus.objects.get(user=user, league=post.role.division.league).visibilities.all():
             raise ValidationError(
                 "this error should not occur: user does not have visibility to apply for this post")
+
+        uls = UserLeagueStatus.objects.get(
+            user=user, league=post.role.division.league)
+        num_casts, num_backups = uls.get_num_casts_backups()
+        if not self.context['request'].user.is_manager():
+            if post.application_set.all().count() == 0:  # attempting to cast
+                if num_casts >= uls.max_casts:
+                    raise ValidationError("over cast limit")
+            else:
+                if num_backups >= uls.max_backups:
+                    raise ValidationError("over backup cast limit")
+
         # user can only create
         if Application.objects.filter(post=post, user=user).exists():
             raise ValidationError("already applied to this post!")

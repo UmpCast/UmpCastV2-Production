@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.utils.timezone import now
+from django.utils import timezone
 from leagues.models import League, Role
+from games.models import Application
 
 
 class UserModelManager(BaseUserManager):
@@ -38,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     profile_picture = models.ImageField(
         upload_to='profile_pics/%Y/%m/', null=True, blank=True)
-    date_joined = models.DateTimeField(default=now)
+    date_joined = models.DateTimeField(default=timezone.now)
 
     # notification settings
     phone_notifications = models.BooleanField(default=True)
@@ -83,8 +84,8 @@ class UserLeagueStatus(models.Model):
     """Information relevant to a user for a specific league"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     league = models.ForeignKey(League, on_delete=models.CASCADE)
-    date_pending = models.DateTimeField(default=now)
-    date_joined = models.DateTimeField(default=now)
+    date_pending = models.DateTimeField(default=timezone.now)
+    date_joined = models.DateTimeField(default=timezone.now)
 
     REQUEST_STATUS_CHOICES = (
         ('accepted', 'accepted'),
@@ -102,3 +103,18 @@ class UserLeagueStatus(models.Model):
 
     class Meta:
         ordering = ['user__first_name']
+
+    def get_num_casts_backups(self):
+        apps = Application.objects.filter(
+            user=self.user,
+            post__game__division__league=self.league,
+            post__game__date_time__gt=timezone.now()
+        )
+        casts = 0
+        backups = 0
+        for app in apps:
+            if app.is_casted():
+                casts += 1
+            else:
+                backups += 1
+        return casts, backups

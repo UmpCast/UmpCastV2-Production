@@ -4,12 +4,13 @@ from leagues.api.serializers.league import LeaguePublicSerializer
 from users.api.serializers.user import UserProfilePublicSerializer
 from rest_framework import serializers
 
+
 class UserLeagueStatusBaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserLeagueStatus
         fields = ('pk', 'user', 'league', 'date_pending', 'date_joined',
-                    'request_status', 'max_casts', 'max_backups', 'visibilities')
+                  'request_status', 'max_casts', 'max_backups', 'visibilities')
         read_only_fields = ('pk', 'date_pending')
 
 
@@ -17,14 +18,16 @@ class UserLeagueStatusCreateSerializer(UserLeagueStatusBaseSerializer):
 
     def validate_user(self, user):
         if user != self.context['request'].user:
-            raise ValidationError("UserLeagueStatus user can only be defined on creation/must be with current user")
+            raise ValidationError(
+                "UserLeagueStatus user can only be defined on creation/must be with current user")
         return user
 
     def validate(self, validated_data):
         user = validated_data.get('user', None)
         league = validated_data.get('league', None)
         if UserLeagueStatus.objects.filter(user=user, league=league).exists():
-            raise ValidationError("this user/league combo already exists, cannot create")
+            raise ValidationError(
+                "this user/league combo already exists, cannot create")
         return validated_data
 
     def create(self, validated_data):
@@ -33,11 +36,11 @@ class UserLeagueStatusCreateSerializer(UserLeagueStatusBaseSerializer):
         if not user or not league:
             raise ValidationError('missing parameters')
         return UserLeagueStatus.objects.create(
-            user = user,
-            league = league,
-            request_status = 'pending',
-            max_casts = league.default_max_casts,
-            max_backups = league.default_max_backups
+            user=user,
+            league=league,
+            request_status='pending',
+            max_casts=league.default_max_casts,
+            max_backups=league.default_max_backups
         )
 
 
@@ -45,11 +48,13 @@ class UserLeagueStatusRetrieveSerializer(serializers.ModelSerializer):
     user = UserProfilePublicSerializer(many=False, read_only=True)
     league = LeaguePublicSerializer(many=False, read_only=True)
     division_visibilities = serializers.SerializerMethodField()
+    num_casts = serializers.SerializerMethodField()
+    num_backups = serializers.SerializerMethodField()
 
     class Meta:  # have to redefine Meta since division_visibilities is a new field
         model = UserLeagueStatus
         fields = ('pk', 'user', 'league', 'date_pending', 'date_joined',
-                    'request_status', 'max_casts', 'max_backups', 'visibilities', 'division_visibilities')
+                  'request_status', 'max_casts', 'max_backups', 'visibilities', 'division_visibilities', 'num_casts', 'num_backups')
         read_only_fields = ('pk', 'date_pending')
 
     def get_division_visibilities(self, instance):
@@ -58,6 +63,14 @@ class UserLeagueStatusRetrieveSerializer(serializers.ModelSerializer):
             if not visibility.division.pk in division_visibilities:
                 division_visibilities.append(visibility.division.pk)
         return division_visibilities
+
+    def get_num_casts(self, instance):
+        casts, _ = instance.get_num_casts_backups()
+        return casts
+
+    def get_num_backups(self, instance):
+        _, backups = instance.get_num_casts_backups()
+        return backups
 
 
 class UserLeagueStatusUpdateSerializer(UserLeagueStatusBaseSerializer):
