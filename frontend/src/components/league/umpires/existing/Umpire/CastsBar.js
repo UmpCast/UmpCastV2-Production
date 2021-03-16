@@ -11,7 +11,7 @@ export default function CastsBar(props) {
 
     const { onChange, status, type } = props
     const max = status[`max_${type}`]
-    const casted = 0
+    const casted = status[`num_${type}`]
 
     const bar = []
 
