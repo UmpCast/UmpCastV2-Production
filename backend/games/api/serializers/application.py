@@ -31,7 +31,7 @@ class ApplicationCreateSerializer(ApplicationBaseSerializer):
         post = validated_data.get('post', None)
         user = validated_data.get('user', None)
         adv_scheduling = post.game.division.league.adv_scheduling_limit
-        if (post.game.date_time - timezone.now()).days > adv_scheduling:
+        if not self.context['request'].user.is_manager() and (post.game.date_time - timezone.now()).days > adv_scheduling:
             raise ValidationError(
                 ' '.join(['cannot apply', str(adv_scheduling), 'days before game']))
         if post.game.division.league not in user.leagues.accepted():
