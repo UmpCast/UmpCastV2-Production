@@ -17,11 +17,14 @@ class AssignmentItemSerializer(serializers.ModelSerializer):
     game = serializers.SerializerMethodField()
     post = PostSerializer(many=False)
     user = UserProfilePublicSerializer(many=False)
-    assignment = AssignmentSerializer()
+    is_completed = serializers.SerializerMethodField()
 
     class Meta:
         model = AssignmentItem
-        fields = ('pk', 'user', 'post', 'game', 'assignment')
+        fields = ('pk', 'user', 'post', 'game', 'is_completed')
+
+    def get_is_completed(self, instance):
+        return instance.assignment.is_completed
 
     def get_game(self, instance):
         return GameSerializer(instance.post.game).data
