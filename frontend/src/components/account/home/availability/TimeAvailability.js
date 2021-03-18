@@ -1,10 +1,22 @@
-import React, { useState } from "react"
+import React from "react"
 import ScheduleSelector from "react-schedule-selector"
 import dayjs from "dayjs"
-
 import useUser, { useApi } from "common/hooks"
 
-const timeRangeToDate = (startDate, time_range) => {
+dayjs.extend(require("dayjs/plugin/utc"))
+
+function getMonday(d) {
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    var day = d.getDay(),
+        diff = d.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
+    return new Date(d.setDate(diff));
+  }
+  
+const start_date = dayjs(getMonday(new Date()))
+
+const timeRangeToDate = (time_range) => {
     const { day_type, start } = time_range
 
     const days = [
@@ -19,15 +31,21 @@ const timeRangeToDate = (startDate, time_range) => {
     const hours = parseInt(start.slice(0, 2))
     const minutes = parseInt(start.slice(3, 5))
 
-    return dayjs(startDate)
-        .add(days, "days")
-        .add(hours, "hours")
-        .add(minutes, "minutes")
-        .toDate()
+    const date = dayjs
+        .utc(start_date.format("YYYY-MM-DD"))
+        .add(days, "d")
+        .add(hours, "h")
+        .add(minutes, "m")
+
+    let w_delta = 0
+    if (date.isBefore(start_date)) w_delta = 1
+    else if (date.isAfter(start_date.add(1, "w"))) w_delta = -1
+
+    return date.add(w_delta, "w").toDate()
 }
 
 const dateToTimeRange = (date) => {
-    const jsDate = dayjs(date)
+    const jsDate = dayjs.utc(date)
 
     return {
         start: jsDate.format("HH:mm:ss"),
@@ -63,8 +81,6 @@ const requests = {
 }
 
 export default function TimeAvailability({ schedule, setSchedule }) {
-    const startDate = new Date("March 1, 2021")
-
     const Api = useApi(requests)
     const { user } = useUser()
 
@@ -123,11 +139,12 @@ export default function TimeAvailability({ schedule, setSchedule }) {
     return (
         <div className="mt-3">
             <ScheduleSelector
-                startDate={startDate}
+                selectionScheme="square"
+                startDate={start_date.toDate()}
                 dateFormat="ddd"
                 timeFormat="h:mm a"
                 selection={schedule.current.map((range) =>
-                    timeRangeToDate(startDate, range)
+                    timeRangeToDate(range)
                 )}
                 numDays={7}
                 minTime={6}

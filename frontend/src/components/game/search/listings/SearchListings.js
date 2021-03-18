@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 import useLeague from "./hooks/useLeague"
 import useGames from "./hooks/useGames"
-
 import Loader from "common/components"
 
 import SearchFilters from "./filters/SearchFilters"
@@ -11,7 +10,6 @@ import GameListing from "./GameListing"
 import { Row, Container, ListGroup } from "react-bootstrap"
 
 export default function SearchListings() {
-
     const useFilters = useState()
 
     const myLeague = useLeague(useFilters)
@@ -21,10 +19,9 @@ export default function SearchListings() {
     const myGames = useGames(useFilters[0], setHistory)
 
     const [games] = myGames
-    const [league] = myLeague
 
     return (
-        <Loader dep={games}>
+        <Loader dep={[games]}>
             <Container>
                 <SearchFilters
                     useLeague={myLeague}
@@ -35,7 +32,7 @@ export default function SearchListings() {
                     <ListGames
                         games={games}
                         history={history}
-                        league={league} />
+                        />
                 </ListGroup>
                 <Row className="mt-3">
                     <NextPageLink
@@ -55,7 +52,7 @@ const GamesFound = ({ games }) => (
     </ListGroup.Item>
 )
 
-const ListGames = ({ history, games, league }) => {
+const ListGames = ({ history, games }) => {
 
     const all_games = history.concat(games.results)
 
