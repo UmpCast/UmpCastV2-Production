@@ -130,7 +130,7 @@ export default function TimeAvailability({ schedule, setSchedule }) {
     return (
         <div className="mt-3">
             <ScheduleSelector
-                selectionScheme="linear"
+                selectionScheme="square"
                 startDate={dayjs(start_date)}
                 dateFormat="ddd"
                 timeFormat="h:mm a"
