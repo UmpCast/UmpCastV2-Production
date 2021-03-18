@@ -7,15 +7,11 @@ from datetime import timedelta
 
 
 class AutoAssign(object):
-    def __init__(self, league, start_date, end_date):
+    def __init__(self, league, start_date, end_date, assignment):
         self.league = league
         self.start_date = start_date
         self.end_date = end_date
-        self.assignment = Assignment.objects.create(
-            league=league,
-            start_date=start_date,
-            end_date=end_date
-        )
+        self.assignment = assignment
 
     def get_sorted_roles(self):
         return Role.objects.filter(
@@ -121,4 +117,5 @@ class AutoAssign(object):
         games = self.get_games()
         for role in roles:
             self.match_role(role, games)
-        return self.assignment
+        self.assignment.is_completed = True
+        self.assignment.save()

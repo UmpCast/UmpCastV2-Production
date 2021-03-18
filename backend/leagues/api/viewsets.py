@@ -32,9 +32,10 @@ from django.urls import reverse
 from rest_framework.decorators import action
 from backend.mixins import MoveOrderedModelMixin
 from .filters import LeagueFilter
-from schedules.api.serializers import AssignmentItemSerializer
-from schedules.auto_assign import AutoAssign
+from schedules.api.serializers import AssignmentSerializer
 from datetime import datetime
+from schedules.tasks import run_auto_assign_task
+from schedules.models import Assignment
 
 
 class LevelViewSet(ActionBaseSerializerMixin, MoveOrderedModelMixin, mixins.CreateModelMixin,
@@ -239,9 +240,10 @@ class LeagueViewSet(ActionBaseSerializerMixin, viewsets.ModelViewSet):
             request.data.get('start'), "%Y-%m-%dT%H:%M:%S.%f%z")
         end = datetime.strptime(request.data.get(
             'end'), "%Y-%m-%dT%H:%M:%S.%f%z")
-        print(start, end)
-        asl = AutoAssign(league, start, end)
-        assignment = asl.match_all()
-        serializer = AssignmentItemSerializer(
-            assignment.assignmentitem_set.all(), many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        assignment = Assignment.objects.create(
+            league=league,
+            start_date=start,
+            end_date=end
+        )
+        run_auto_assign_task.delay(assignment.pk)
+        return Response(AssignmentSerializer(assignment).data, status=status.HTTP_200_OK)
