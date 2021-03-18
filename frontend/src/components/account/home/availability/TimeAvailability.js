@@ -5,7 +5,16 @@ import useUser, { useApi } from "common/hooks"
 
 dayjs.extend(require("dayjs/plugin/utc"))
 
-const start_date = "2021-03-01"
+function getMonday(d) {
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    var day = d.getDay(),
+        diff = d.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
+    return new Date(d.setDate(diff));
+  }
+  
+const start_date = dayjs(getMonday(new Date()))
 
 const timeRangeToDate = (time_range) => {
     const { day_type, start } = time_range
@@ -23,14 +32,14 @@ const timeRangeToDate = (time_range) => {
     const minutes = parseInt(start.slice(3, 5))
 
     const date = dayjs
-        .utc(start_date)
+        .utc(start_date.format("YYYY-MM-DD"))
         .add(days, "d")
         .add(hours, "h")
         .add(minutes, "m")
 
     let w_delta = 0
-    if (date.isBefore(dayjs(start_date))) w_delta = 1
-    else if (date.isAfter(dayjs("2021-03-08"))) w_delta = -1
+    if (date.isBefore(start_date)) w_delta = 1
+    else if (date.isAfter(start_date.add(1, "w"))) w_delta = -1
 
     return date.add(w_delta, "w").toDate()
 }
@@ -131,7 +140,7 @@ export default function TimeAvailability({ schedule, setSchedule }) {
         <div className="mt-3">
             <ScheduleSelector
                 selectionScheme="square"
-                startDate={dayjs(start_date)}
+                startDate={start_date.toDate()}
                 dateFormat="ddd"
                 timeFormat="h:mm a"
                 selection={schedule.current.map((range) =>
