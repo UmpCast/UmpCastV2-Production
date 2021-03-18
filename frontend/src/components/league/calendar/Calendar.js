@@ -41,7 +41,11 @@ export default function Calendar() {
     }
 
     const handleNewLocation = (location) => {
-        setLocations(locations.concat(location))
+        const new_locations = locations
+            .concat(location)
+            .sort((el1, el2) => el1.title.localeCompare(el2.title))
+        
+        setLocations(new_locations)
     }
 
     const handleDeleteLocation = (location_pk) => {
@@ -56,11 +60,13 @@ export default function Calendar() {
         ;(async () => {
             const [
                 { data: myLeague },
-                { data: {results: myLocations }}
+                {
+                    data: { results: myLocations }
+                }
             ] = await Promise.all([Api.fetchLeague(pk), Api.fetchLocations(pk)])
 
             setLeague(myLeague)
-            setLocations(myLocations)
+            setLocations(myLocations.sort((el1, el2) => el1.title.localeCompare(el2.title)))
 
             const divVis =
                 user.account_type === "umpire"

@@ -1,10 +1,13 @@
-import React, { useState } from "react"
+import React from "react"
 import ScheduleSelector from "react-schedule-selector"
 import dayjs from "dayjs"
-
 import useUser, { useApi } from "common/hooks"
 
-const timeRangeToDate = (startDate, time_range) => {
+dayjs.extend(require("dayjs/plugin/utc"))
+
+const start_date = "2021-03-01"
+
+const timeRangeToDate = (time_range) => {
     const { day_type, start } = time_range
 
     const days = [
@@ -19,15 +22,21 @@ const timeRangeToDate = (startDate, time_range) => {
     const hours = parseInt(start.slice(0, 2))
     const minutes = parseInt(start.slice(3, 5))
 
-    return dayjs(startDate)
-        .add(days, "days")
-        .add(hours, "hours")
-        .add(minutes, "minutes")
-        .toDate()
+    const date = dayjs
+        .utc(start_date)
+        .add(days, "d")
+        .add(hours, "h")
+        .add(minutes, "m")
+
+    let w_delta = 0
+    if (date.isBefore(dayjs(start_date))) w_delta = 1
+    else if (date.isAfter(dayjs("2021-03-08"))) w_delta = -1
+
+    return date.add(w_delta, "w").toDate()
 }
 
 const dateToTimeRange = (date) => {
-    const jsDate = dayjs(date)
+    const jsDate = dayjs.utc(date)
 
     return {
         start: jsDate.format("HH:mm:ss"),
@@ -63,8 +72,6 @@ const requests = {
 }
 
 export default function TimeAvailability({ schedule, setSchedule }) {
-    const startDate = new Date("March 1, 2021")
-
     const Api = useApi(requests)
     const { user } = useUser()
 
@@ -123,11 +130,12 @@ export default function TimeAvailability({ schedule, setSchedule }) {
     return (
         <div className="mt-3">
             <ScheduleSelector
-                startDate={startDate}
+                selectionScheme="linear"
+                startDate={dayjs(start_date)}
                 dateFormat="ddd"
                 timeFormat="h:mm a"
                 selection={schedule.current.map((range) =>
-                    timeRangeToDate(startDate, range)
+                    timeRangeToDate(range)
                 )}
                 numDays={7}
                 minTime={6}
