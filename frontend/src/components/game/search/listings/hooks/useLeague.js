@@ -17,7 +17,8 @@ export default function useLeague(useFilters) {
         
         Promise.all([
             Api.fetchLeague(league),
-            Api.fetchUls(User.user.pk, league)
+            Api.fetchUls(User.user.pk, league),
+            Api.fetchLocations(league)
         ]).then(res => {
             const isManager = User.user.account_type === "manager"
 
@@ -25,6 +26,8 @@ export default function useLeague(useFilters) {
 
             const uls = res[1].data.results[0]
             const divVis = uls.division_visibilities
+
+            const {results: locations} = res[2].data
 
             const divFilters = (
                 divisions.map(div => {
@@ -41,7 +44,8 @@ export default function useLeague(useFilters) {
 
             setFilters({
                 divisions: divFilters,
-                start_date: dayjs()
+                start_date: dayjs(),
+                locations
             })
         })
     }, [league, Api, User, setFilters])
@@ -66,6 +70,16 @@ const requests = {
                 league: league_pk,
                 request_status: "accepted",
                 page_size: 1
+            }
+        }
+    ],
+    fetchLocations: (league_pk) => [
+        "api/locations/",
+        {
+            params: {
+                league: league_pk,
+                page: 1,
+                page_size: 200
             }
         }
     ]
