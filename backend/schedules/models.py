@@ -1,5 +1,7 @@
 from django.db import models
 from users.models import User
+from leagues.models import League
+from games.models import Post
 
 
 class TimeRange(models.Model):
@@ -19,3 +21,15 @@ class TimeRange(models.Model):
 
     day_type = models.CharField(
         max_length=9, choices=DAY_CHOICES, blank=False, null=False)
+
+
+class Assignment(models.Model):
+    league = models.ForeignKey(League, on_delete=models.CASCADE)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+
+
+class AssignmentItem(models.Model):
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
