@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useState } from "react"
 
 import { useApi } from "common/hooks"
 import { ListGroup } from "react-bootstrap"

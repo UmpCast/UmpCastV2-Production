@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 
 import { Switch } from "react-router-dom"
 
@@ -7,6 +7,7 @@ import AuthRoute from "common/auth/AuthRoute"
 import Announcements from "./announcements/Announcements"
 import JoinLeague from "./join/JoinLeague"
 import Calendar from "./calendar/Calendar"
+import AutoAssign from "./assignment/Assignment"
 import Urgent from "./urgent/Urgent"
 
 import UmpiresRouter from "./umpires/UmpiresRouter"
@@ -19,50 +20,64 @@ export default function LeagueRouter() {
                 path="/league/:pk/join"
                 is="configured"
                 not="league_member"
-                component={JoinLeague} />
-            
+                component={JoinLeague}
+            />
+
             <AuthRoute
                 path="/league/:pk/announcements"
                 is="league_member"
                 auth="league"
-                component={Announcements} />
-            
+                component={Announcements}
+            />
+
             <AuthRoute
                 path="/league/:pk/calendar/:date"
                 is="league_member"
                 auth="league"
-                component={Calendar} />
+                component={Calendar}
+            />
 
             <AuthRoute
                 path="/league/:pk/calendar"
                 is="league_member"
                 auth="league"
-                component={Calendar} />
+                component={Calendar}
+            />
+            
+            <AuthRoute
+                path="/league/:pk/assignment"
+                is="league_manager"
+                auth="league"
+                component={AutoAssign}
+            />
 
             <AuthRoute
                 path="/league/:pk/urgent"
                 is="league_member"
                 auth="league"
-                component={Urgent} />
+                component={Urgent}
+            />
 
             <AuthRoute
                 path="/league/:pk/umpires"
                 is="league_member"
                 auth="league"
-                component={UmpiresRouter} />
+                component={UmpiresRouter}
+            />
 
             <AuthRoute
                 path="/league/:pk/settings"
                 is="league_manager"
                 auth="league"
-                component={SettingsRouter} />
+                component={SettingsRouter}
+            />
 
             <AuthRoute
                 path="/league/:pk"
                 is="league_member"
                 not="league_member"
-                component={null} />
-
+                component={null}
+            />
         </Switch>
     )
 }
