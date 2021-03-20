@@ -62,6 +62,7 @@ class AutoAssign(object):
     def check_assignment_availability(self, uls, post):
         return AssignmentItem.objects.filter(
             assignment=self.assignment,
+            user=uls.user,
             post__game__date_time__gt=post.game.date_time - timedelta(hours=2),
             post__game__date_time__lt=post.game.date_time + timedelta(hours=2)
         ).count() == 0
