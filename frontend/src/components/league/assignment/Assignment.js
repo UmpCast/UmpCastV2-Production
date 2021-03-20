@@ -5,6 +5,7 @@ import { Row, Col, Card } from "react-bootstrap"
 import Loader from "common/components"
 import { useApi, useFetchLeague } from "common/hooks"
 import LeagueContainer from "components/league/LeagueContainer"
+import StartAssignmentStep from "./StartAssignmentStep"
 import SelectDateRangeStep from "./SelectDateRangeStep"
 import ResolveAssignmentsStep from "./ResolveAssignmentsStep"
 import AssignmentsCompleteStep from "./AssignmentsCompleteStep"
@@ -16,6 +17,7 @@ import AssignmentTable, {
 } from "./AssignmentTable"
 
 const steps = {
+    ABORT: 0,
     SELECT_DATE_RANGE: 1,
     RESOLVE_ASSIGNMENTS: 2,
     ASSIGNMENTS_COMPLETE: 3
@@ -49,10 +51,14 @@ const Assignment = () => {
 
     const [state, setState] = useState(initialState)
 
-    const resetSteps = () => setState(initialState)
+    const resetSteps = () => {
+        setState({ initialState, step: steps.SELECT_DATE_RANGE })
+    }
 
     const renderStep = (step) => {
         switch (step) {
+            case steps.ABORT:
+                return <StartAssignmentStep onStart={resetSteps} />
             case steps.SELECT_DATE_RANGE:
                 const onAssignmentBegin = () => {
                     setState({
@@ -71,6 +77,7 @@ const Assignment = () => {
 
                 return (
                     <SelectDateRangeStep
+                        resetSteps={() => setState({...initialState, step: steps.ABORT})}
                         league={league}
                         onAssignmentBegin={onAssignmentBegin}
                         onAssignmentComplete={onAssignmentComplete}

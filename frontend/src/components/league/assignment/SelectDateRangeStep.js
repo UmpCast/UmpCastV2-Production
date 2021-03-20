@@ -5,6 +5,7 @@ import dayjs from "dayjs"
 
 import DateRangeInput from "./DateRangeInput"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useCountDown, useTimeout, useInterval } from "./useTask"
 
 import { useApi } from "common/hooks"
 
@@ -46,12 +47,17 @@ const requests = {
 }
 
 const SelectDateRangeStep = ({
+    resetSteps,
     onAssignmentBegin,
     onAssignmentComplete,
     league
 }) => {
     const Api = useApi(requests)
     const [submitting, setSubmitting] = useState(false)
+
+    const [countDownTimeout] = useTimeout()
+    const [countDown, startCountDown] = useCountDown()
+    const [assignmentInterval] = useInterval()
 
     const onSubmit = async (data) => {
         setSubmitting(true)
@@ -62,7 +68,9 @@ const SelectDateRangeStep = ({
         } = await Api.makeAssignments(league.pk, data)
         let checking = false
 
-        const assignment_progress = setInterval(async () => {
+        countDownTimeout(() => startCountDown(resetSteps, 10), 600000)
+
+        assignmentInterval(async () => {
             if (!checking) {
                 checking = true
 
@@ -78,7 +86,6 @@ const SelectDateRangeStep = ({
                         )
                     )
 
-                    clearInterval(assignment_progress)
                     onAssignmentComplete(
                         all_res.reduce(
                             (arr, res) => arr.concat(res.data.results),
@@ -101,38 +108,60 @@ const SelectDateRangeStep = ({
 
     const { handleSubmit } = hookForm
 
+    const renderFooter = () => {
+        if (!submitting) {
+            return (
+                <Button
+                    variant="primary"
+                    className="rounded"
+                    type="submit"
+                    block
+                >
+                    Submit
+                </Button>
+            )
+        } else if (countDown === undefined) {
+            return (
+                <Alert variant="secondary mt-2 px-3">
+                    <span className="text-muted">
+                        <FontAwesomeIcon
+                            icon="exclamation-circle"
+                            className="mr-1"
+                        />
+                    </span>
+                    Matching may abort after 10 min
+                </Alert>
+            )
+        } else {
+            return (
+                <Alert variant="danger mt-2 px-3">
+                    Time limit exceed. Aborting in {countDown}s
+                </Alert>
+            )
+        }
+    }
+
     return (
         <>
             <Card.Subtitle className="mb-2 text-muted">
                 <strong>Step 1: </strong>Make Assignments
             </Card.Subtitle>
-            <Card.Text>
-                Games within the date range will be matched to available
-                umpires. You will be able to review assignments before
-                committing.
-            </Card.Text>
+            <ol style={{paddingLeft: "1em"}}>
+                <li>
+                    Games within the date range will be matched to available
+                    umpires.
+                </li>
+                <li>
+                    Umpires without availability settings set will not be
+                    considered!
+                </li>
+                <li>
+                    You will be able to review assignments before committing.
+                </li>
+            </ol>
             <Form noValidate onSubmit={handleSubmit(onSubmit)}>
                 <DateRangeInput hookForm={hookForm} />
-                {!submitting ? (
-                    <Button
-                        variant="primary"
-                        className="rounded"
-                        type="submit"
-                        block
-                    >
-                        Submit
-                    </Button>
-                ) : (
-                    <Alert variant="secondary mt-2 px-3">
-                        <span className="text-muted">
-                            <FontAwesomeIcon
-                                icon="exclamation-circle"
-                                className="mr-1"
-                            />
-                        </span>
-                        Matching takes up to 5 minutes
-                    </Alert>
-                )}
+                {renderFooter()}
             </Form>
         </>
     )

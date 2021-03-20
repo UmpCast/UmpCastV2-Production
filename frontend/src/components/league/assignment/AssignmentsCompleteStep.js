@@ -2,7 +2,7 @@ import React from "react"
 
 import { Card } from "react-bootstrap"
 
-const AssignmentsCompleteStep = ({ resetSteps }) => {
+const AssignmentsCompleteStep = () => {
     return (
         <>
             <Card.Subtitle className="mb-2 text-muted">
