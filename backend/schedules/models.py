@@ -27,9 +27,13 @@ class Assignment(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+    is_completed = models.BooleanField(default=False)
 
 
 class AssignmentItem(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['post__role__pk']
