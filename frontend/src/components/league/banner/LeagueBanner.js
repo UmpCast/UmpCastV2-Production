@@ -23,6 +23,7 @@ export default function LeagueBanner(props) {
     if (isManager)
         subjects.push.apply(subjects, [
             // TODO "urgent",
+            "assignment",
             "umpires",
             "settings"
         ])
