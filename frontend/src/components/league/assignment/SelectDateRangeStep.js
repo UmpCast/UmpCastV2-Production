@@ -9,6 +9,7 @@ import { useCountDown, useTimeout, useInterval } from "./useTask"
 
 import { useApi } from "common/hooks"
 
+const page_size = 10
 const requests = {
     makeAssignments(league_pk, data) {
         return [
@@ -37,7 +38,7 @@ const requests = {
                 params: {
                     assignment: assignment_pk,
                     page,
-                    page_size: 200
+                    page_size
                 }
             },
             "GET",
@@ -79,7 +80,7 @@ const SelectDateRangeStep = ({
                 } = await Api.checkAssignmentsComplete(pk)
 
                 if (results.length && results[0].is_completed) {
-                    const pages = Math.ceil(count / 200)
+                    const pages = Math.ceil(count / page_size)
                     const all_res = await Promise.all(
                         [...Array(pages).keys()].map((i) =>
                             Api.fetchAssignments(pk, i + 1)

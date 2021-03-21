@@ -39,7 +39,8 @@ const requests = {
                 post: post_pk
             }
         },
-        "POST"
+        "POST",
+        false
     ]
 }
 
@@ -77,7 +78,9 @@ const Assignment = () => {
 
                 return (
                     <SelectDateRangeStep
-                        resetSteps={() => setState({...initialState, step: steps.ABORT})}
+                        resetSteps={() =>
+                            setState({ ...initialState, step: steps.ABORT })
+                        }
                         league={league}
                         onAssignmentBegin={onAssignmentBegin}
                         onAssignmentComplete={onAssignmentComplete}
@@ -99,9 +102,11 @@ const Assignment = () => {
                 else return <DateRangeMissing />
             case steps.RESOLVE_ASSIGNMENTS:
                 const onAssign = async (assignments) => {
-                    await Promise.all(
-                        assignments.map(({ user, post }) =>
-                            Api.gameSignup(user.pk, post.pk)
+                    await Api.Submit(
+                        () => Promise.all(
+                            assignments.map(({ user, post }) =>
+                                Api.gameSignup(user.pk, post.pk)
+                            )
                         )
                     )
 
