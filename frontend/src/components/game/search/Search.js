@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react"
 import dayjs from "dayjs"
-import { Container } from "react-bootstrap"
+import { Container, Col } from "react-bootstrap"
 
 import useUser, { useApi } from "common/hooks"
-import ListPagination from "common/component/ListPagination"
-import GameListing from "./GameListing"
+import usePagination from "./usePagination"
+import GamePagination from "./GamePagination"
 import { LeagueFilter, DivisionFilter, DateFilter } from "./Filters"
 
 const requests = {
@@ -123,7 +123,6 @@ export default function Search() {
                 data: { count, page_size, results }
             } = await Api.fetchGames(page, filters)
 
-            const page_count = Math.ceil(count / page_size)
             const items = results.map((game) => {
                 return {
                     ...game,
@@ -134,12 +133,22 @@ export default function Search() {
             })
 
             return {
-                page_count,
+                count,
+                page_size,
                 items
             }
         },
         [state.filters, Api]
     )
+
+    const {
+        items,
+        itemCount,
+        pageCount,
+        pageNumber,
+        loading: page_loading,
+        nextPage
+    } = usePagination(state.loading ? null : fetchPage)
 
     const onLeagueSelect = (league) => {
         if (league.pk !== selectedLeague.pk) setSelectedLeague(league)
@@ -197,21 +206,24 @@ export default function Search() {
                             onDateSelect={onDateSelect}
                         />
                     </div>
-                    <ListPagination
-                        fetchPage={fetchPage}
-                        render={(item) => (
-                            <GameListing game={item} key={item.pk} />
-                        )}
-                    />
+                    <Col>
+                        {!page_loading ? (
+                            <GamePagination
+                                items={items}
+                                canNextPage={pageNumber < pageCount}
+                                nextPage={nextPage}
+                            />
+                        ) : null}
+                    </Col>
                 </Container>
             ) : null}
         </>
     )
 }
 
-{
-    /* <ListGroup.Item>
-<strong>{games.count} </strong>
-games found
-</ListGroup.Item> */
-}
+// {
+//     /* <ListGroup.Item>
+// <strong>{games.count} </strong>
+// games found
+// </ListGroup.Item> */
+// }
