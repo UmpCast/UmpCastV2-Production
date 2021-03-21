@@ -29,7 +29,7 @@ const App = () => {
     })
 
     const useDisplay = useState({
-        isLoading: 0,
+        loading: 0,
         alert: null
     })
 

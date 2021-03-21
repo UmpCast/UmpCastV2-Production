@@ -16,9 +16,9 @@ export default function DisplayContainer({ children }) {
             {Display.alert}
             < Container
                 fluid
-                className={`p-0 no-select ${Display.isLoading ? "ump-loading-container" : null}`}>
+                className={`p-0 no-select ${Display.loading > 0 ? "ump-loading-container" : null}`}>
                 {children}
-                <Loader dep={[Display.isLoading]}>
+                <Loader dep={[Display.loading > 0]}>
                     <div className="ump-loading-spinner">
                         <ClipLoader
                             size={75}

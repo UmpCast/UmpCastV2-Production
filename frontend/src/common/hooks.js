@@ -77,19 +77,19 @@ export const useApi = (requests) => {
     const { token } = useUser()
     const myDisplay = useDisplay()
 
-    const [display, setDisplay] = myDisplay
+    const [, setDisplay] = myDisplay
 
     const ret = {}
 
     ret.Generic = (request, shouldLoad) => {
         if(shouldLoad)
-            setDisplay({ ...display, isLoading: true })
+            setDisplay(prevState => ({ ...prevState, loading: prevState.loading + 1 }))
 
         return (
             request()
                 .finally(() => {
                 if(shouldLoad)
-                    setDisplay({ ...display, isLoading: false })
+                    setDisplay(prevState => ({ ...prevState, loading: prevState.loading - 1 }) )
                 })
         )
     }
