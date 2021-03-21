@@ -30,6 +30,7 @@ django-ses = "*"
 django-sms = "*"
 twilio = ">=6.0.0,<6.51.0"
 django-celery-beat = "*"
+serpy = "*"
 
 [dev-packages]
 
