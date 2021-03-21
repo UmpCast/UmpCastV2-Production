@@ -22,3 +22,13 @@ class TimeRangeFilterPermissions(permissions.BasePermission):
                 if league in request.user.leagues.accepted():  # if manager of correct league
                     return True
         return False
+
+
+class InLeague(permissions.BasePermission):
+    """
+    Checks to see if a given user has access rights to a given league
+    """
+
+    def has_permission(self, request, view):
+        league = League.objects.get(pk=view.kwargs['pk'])
+        return league in request.user.leagues.accepted()

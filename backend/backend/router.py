@@ -3,7 +3,7 @@ from leagues.api.viewsets import LeagueViewSet, RoleViewSet, DivisionViewSet, Le
 from games.api.viewsets import GameViewSet, PostViewSet, ApplicationViewSet, LocationViewSet
 from notifications.api.viewsets import UmpCastNotificationViewSet, LeagueNotificationViewSet, GameNotificationViewSet, ApplicationNotificationViewSet
 from teamsnap.api.viewsets import TeamSnapNoteViewSet
-from schedules.api.viewsets import TimeRangeViewSet, AssignmentItemViewSet
+from schedules.api.viewsets import TimeRangeViewSet, AssignmentItemViewSet, AssignmentViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -32,6 +32,7 @@ router.register('schedule-timeranges', TimeRangeViewSet,
                 basename='schedule-timerange')
 router.register('assignment-items', AssignmentItemViewSet,
                 basename='assignment-item')
+router.register('assignments', AssignmentViewSet, basename='assignment')
 
 for url in router.urls:
     print(url)
