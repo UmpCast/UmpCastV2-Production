@@ -18,7 +18,7 @@ class GameFilter(filters.FilterSet):
 
     class Meta:
         model = Game
-        fields = ['division', 'date_time']
+        fields = ['division', 'date_time', 'location']
 
     def game_filter_by_user(self, queryset, name, value):
         game_ids = Application.objects.filter(
