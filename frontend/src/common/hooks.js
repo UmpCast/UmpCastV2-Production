@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext } from 'react'
+import React, { useRef, useState, useEffect, useContext } from "react"
 import axios from "axios"
 
 import { UserContext, DisplayContext } from "global/Context"
@@ -19,7 +19,6 @@ export const useDisplay = () => {
 }
 
 export const useFetchLeague = (pk) => {
-
     const requests = {
         fetchLeague: (league_pk) => [
             "api/leagues/",
@@ -36,10 +35,7 @@ export const useFetchLeague = (pk) => {
     const [, setLeague] = useLeague
 
     useMountEffect(() => {
-        Api.fetchLeague(pk)
-            .then(res =>
-                setLeague(res.data)
-            )
+        Api.fetchLeague(pk).then((res) => setLeague(res.data))
     })
 
     return useLeague
@@ -50,26 +46,20 @@ export const useTokenLogin = () => {
     const [, setUser] = useUser(true)
 
     return (token) => {
-        return (
-            Api.Generic(() =>
-                axios.get(
-                    myUrl("api/users/me/"),
-                    config(token)
-                )
-            )
-                .then(res => {
-                    const User = res.data
+        return Api.Generic(() =>
+            axios.get(myUrl("api/users/me/"), config(token))
+        ).then((res) => {
+            const User = res.data
 
-                    setUser({
-                        isAuthenticated: true,
-                        isConfigured: User.account_type !== "inactive",
-                        user: User,
-                        token: token
-                    })
+            setUser({
+                isAuthenticated: true,
+                isConfigured: User.account_type !== "inactive",
+                user: User,
+                token: token
+            })
 
-                    localStorage.setItem("token", token)
-                })
-        )
+            localStorage.setItem("token", token)
+        })
     }
 }
 
@@ -82,37 +72,39 @@ export const useApi = (requests) => {
     const ret = {}
 
     ret.Generic = (request, shouldLoad) => {
-        if(shouldLoad)
-            setDisplay(prevState => ({ ...prevState, loading: prevState.loading + 1 }))
+        if (shouldLoad)
+            setDisplay((prevState) => ({
+                ...prevState,
+                loading: prevState.loading + 1
+            }))
 
-        return (
-            request()
-                .finally(() => {
-                if(shouldLoad)
-                    setDisplay(prevState => ({ ...prevState, loading: prevState.loading - 1 }) )
-                })
-        )
+        return request().finally(() => {
+            if (shouldLoad)
+                setDisplay((prevState) => ({
+                    ...prevState,
+                    loading: prevState.loading - 1
+                }))
+        })
     }
 
     const basicApi = (endpoint, values, method = "get", shouldLoad = true) => {
         const { pk, params, data } = values
 
         return [
-            () => axios({
-                method: method,
-                url: myUrl(`${endpoint}${pk ? `${pk}/` : ""}`),
-                ...config(token, params),
-                data: data
-            }),
+            () =>
+                axios({
+                    method: method,
+                    url: myUrl(`${endpoint}${pk ? `${pk}/` : ""}`),
+                    ...config(token, params),
+                    data: data
+                }),
             shouldLoad
         ]
     }
 
     if (requests)
         for (const [name, fun] of Object.entries(requests)) {
-            ret[name] = (...vals) => (
-                ret.Generic(...basicApi(...fun(...vals)))
-            )
+            ret[name] = (...vals) => ret.Generic(...basicApi(...fun(...vals)))
         }
 
     ret.Submit = ApiSubmit(myDisplay)
@@ -120,17 +112,19 @@ export const useApi = (requests) => {
     return useRef(ret).current
 }
 
-const ApiSubmit = myDisplay => request => {
-
+const ApiSubmit = (myDisplay) => (request) => {
     const [display, setDisplay] = myDisplay
 
-    setDisplay({ ...display, isLoading: true })
+    setDisplay((prevState) => ({
+        ...prevState,
+        loading: prevState.loading + 1
+    }))
 
     let alertInfo = {}
 
     return request()
-        .then(res => {
-            if(!res) return
+        .then((res) => {
+            if (!res) return
 
             alertInfo.variant = "success"
 
@@ -145,14 +139,14 @@ const ApiSubmit = myDisplay => request => {
 
             return res
         })
-        .catch(err => {
+        .catch((err) => {
             alertInfo.variant = "danger"
 
             const { response } = err
 
             if (!response) {
                 alertInfo.msg = JSON.stringify(err)
-            } else{
+            } else {
                 alertInfo.msg = ((code) => {
                     switch (code) {
                         case 400:
@@ -173,22 +167,23 @@ const ApiSubmit = myDisplay => request => {
             return Promise.reject(err)
         })
         .finally(() => {
-            const updatedDisplay = { isLoading: false }
-
             const { variant, msg } = alertInfo
 
-            if (variant && msg)
-                updatedDisplay.alert = (
-                    <TimerAlert
-                        variant={alertInfo.variant}
-                        className="mb-0"
-                        delay={3000}>
-                        {alertInfo.msg}
-                    </TimerAlert>
-                )
+            setDisplay((prevState) => {
+                const updatedDisplay = { loading: prevState.loading - 1 }
 
-            setDisplay(updatedDisplay)
-
+                if (variant && msg)
+                    updatedDisplay.alert = (
+                        <TimerAlert
+                            variant={alertInfo.variant}
+                            className="mb-0"
+                            delay={3000}
+                        >
+                            {alertInfo.msg}
+                        </TimerAlert>
+                    )
+                return { ...prevState, ...updatedDisplay}
+            })
         })
 }
 

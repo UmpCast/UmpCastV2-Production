@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react"
 import dayjs from "dayjs"
-import { Container, Col } from "react-bootstrap"
+import { Container } from "react-bootstrap"
 
 import useUser, { useApi } from "common/hooks"
-import usePagination from "./usePagination"
 import GamePagination from "./GamePagination"
 import { LeagueFilter, DivisionFilter, DateFilter } from "./Filters"
 
@@ -13,7 +12,7 @@ const requests = {
         {
             params: {
                 ...filters,
-                page_size: 5,
+                page_size: 5, //TODO
                 page: page
             }
         }
@@ -141,15 +140,6 @@ export default function Search() {
         [state.filters, Api]
     )
 
-    const {
-        items,
-        itemCount,
-        pageCount,
-        pageNumber,
-        loading: page_loading,
-        nextPage
-    } = usePagination(state.loading ? null : fetchPage)
-
     const onLeagueSelect = (league) => {
         if (league.pk !== selectedLeague.pk) setSelectedLeague(league)
     }
@@ -206,24 +196,11 @@ export default function Search() {
                             onDateSelect={onDateSelect}
                         />
                     </div>
-                    <Col>
-                        {!page_loading ? (
-                            <GamePagination
-                                items={items}
-                                canNextPage={pageNumber < pageCount}
-                                nextPage={nextPage}
-                            />
-                        ) : null}
-                    </Col>
+                    {!state.loading ? (
+                        <GamePagination fetchPage={fetchPage} />
+                    ) : null}
                 </Container>
             ) : null}
         </>
     )
 }
-
-// {
-//     /* <ListGroup.Item>
-// <strong>{games.count} </strong>
-// games found
-// </ListGroup.Item> */
-// }

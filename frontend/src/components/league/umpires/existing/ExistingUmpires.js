@@ -9,6 +9,7 @@ import UmpiresContainer from "components/league/umpires/UmpiresContainer"
 import UmpireRow from "./Umpire/UmpireRow"
 import ApplyLevelDropdown from "./ApplyLevelDropdown"
 import RemoveUmpiresButton from "./RemoveUmpiresButton"
+import AdjustCastsButton from "./AdjustCastsButton"
 
 import { Row, Col, Table, Card, Button } from "react-bootstrap"
 
@@ -41,27 +42,36 @@ export default function ManageUmpires() {
         })
     }
 
-    const onStatusSelected = ({ pk }) => {
-        if (!selected.includes(pk)) setSelected(selected.concat(pk))
+    const onStatusSelected = (status) => {
+        if (!selected.some(({ pk }) => pk === status.pk))
+            setSelected(selected.concat(status))
     }
 
     const onStatusDeselected = ({ pk }) => {
-        setSelected(selected.filter((status_pk) => status_pk !== pk))
+        setSelected(selected.filter(({ pk: status_pk }) => status_pk !== pk))
     }
 
     const resetSelected = () => setSelected([])
 
-    const onStatusChange = (new_status) => {
+    const onSeveralStatusChange = (new_statuses) => {
+        console.log(new_statuses)
         const new_results = uls.results.reduce((arr, item) => {
-            if (item.pk === new_status.pk) return arr.concat(new_status)
+            const updated = new_statuses.find(({ pk }) => pk === item.pk)
+            if (updated)
+                return arr.concat({
+                    ...item,
+                    max_casts: updated.max_casts,
+                    max_backups: updated.max_backups
+                })
             return arr.concat(item)
         }, [])
         setUls({ ...uls, results: new_results })
+        resetSelected()
     }
 
     const renderedRows = (uls, league) => {
         const existing = uls.results.map((status) => {
-            const isSelected = selected.includes(status.pk)
+            const isSelected = selected.some(({ pk }) => pk === status.pk)
 
             return (
                 <UmpireRow
@@ -70,7 +80,6 @@ export default function ManageUmpires() {
                     isSelected={isSelected}
                     onStatusSelected={onStatusSelected}
                     onStatusDeselected={onStatusDeselected}
-                    onStatusChange={onStatusChange}
                     key={status.pk}
                 />
             )
@@ -81,7 +90,7 @@ export default function ManageUmpires() {
 
     const onDeleteUsers = () => {
         Api.Submit(() =>
-            Promise.all(selected.map((uls_pk) => Api.deleteUls(uls_pk))).then(
+            Promise.all(selected.map(({ pk }) => Api.deleteUls(pk))).then(
                 () => {
                     setPage(1)
                     resetSelected()
@@ -108,6 +117,10 @@ export default function ManageUmpires() {
                             }}
                         />
                     ) : null}
+                    <AdjustCastsButton
+                        selected={selected}
+                        onSeveralStatusChange={onSeveralStatusChange}
+                    />
                     <RemoveUmpiresButton
                         onDeleteUsers={onDeleteUsers}
                         umpiresCount={selected.length}

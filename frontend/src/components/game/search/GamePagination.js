@@ -1,18 +1,29 @@
 import React from "react"
-import { Row } from "react-bootstrap"
+import { ListGroup } from "react-bootstrap"
 
+import usePagination from "./usePagination"
 import GameListing from "./GameListing"
 
-const GamePagination = ({ items, canNextPage, nextPage }) => {
+const GamePagination = ({ fetchPage }) => {
+    const { items, itemCount, pageNumber, pageCount, nextPage } = usePagination(
+        fetchPage
+    )
+
     const renderedList = items.map((item) => (
         <GameListing game={item} key={item.pk} />
     ))
 
     return (
         <>
-            <Row>{renderedList}</Row>
-            <Row className="justify-content-center mt-2">
-                {canNextPage ? (
+            <ListGroup className="w-100">
+                <ListGroup.Item>
+                    <strong>{itemCount} </strong>
+                    games found
+                </ListGroup.Item>
+                {renderedList}
+            </ListGroup>
+            <div className="text-center mt-2">
+                {pageNumber < pageCount ? (
                     <p
                         className="text-primary"
                         style={{ cursor: "pointer" }}
@@ -23,7 +34,7 @@ const GamePagination = ({ items, canNextPage, nextPage }) => {
                 ) : (
                     <p className="text-muted">End of List</p>
                 )}
-            </Row>
+            </div>
         </>
     )
 }

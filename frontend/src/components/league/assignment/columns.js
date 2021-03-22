@@ -31,11 +31,11 @@ export const COLUMNS = [
         columns: [
             {
                 Header: "Umpire",
-                accessor: "umpire"
+                accessor: "name"
             },
             {
                 Header: "Game",
-                accessor: "game"
+                accessor: "game_title"
             }
         ]
     },
@@ -44,15 +44,19 @@ export const COLUMNS = [
         columns: [
             {
                 Header: "Division",
-                accessor: "division"
+                accessor: "game_division_title"
+            },
+            {
+                Header: "Location",
+                accessor: "game_location_title"
             },
             {
                 Header: "Role",
-                accessor: "role"
+                accessor: "role_title"
             },
             {
                 Header: "Date",
-                accessor: "date",
+                accessor: "game_date_time",
                 Cell: ({ value }) => dayjs(value).format("MM/DD hh:mm A")
             }
         ]

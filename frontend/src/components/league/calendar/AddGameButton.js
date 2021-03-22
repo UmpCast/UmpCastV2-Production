@@ -8,10 +8,9 @@ import AddGameForm from "./AddGameForm"
 import AddLocationForm from "./AddLocationForm"
 
 export default function AddGameButton({
-    handleNewGame,
     locations,
-    handleNewLocation,
-    handleDeleteLocation,
+    dispatchGames,
+    dispatchLocations,
     league
 }) {
     const Api = useApi(requests)
@@ -39,7 +38,7 @@ export default function AddGameButton({
 
     const onNewGame = (game) => {
         setState({...state, cached: {}})
-        handleNewGame(game)
+        dispatchGames({type: "add", payload: game})
     }
 
     const onLocationAdded = (location) => {
@@ -48,13 +47,13 @@ export default function AddGameButton({
             form: "game"
         })
 
-        handleNewLocation(location)
+        dispatchLocations({type: "add", payload: location})
     }
 
     const onLocationDelete = (location_pk, values) => {
         values.location = ""
         Api.Submit(() => Api.deleteLocation(location_pk)).then(() => {
-            handleDeleteLocation(location_pk)
+            dispatchLocations({type: "delete", payload: location_pk})
         })
     }
 

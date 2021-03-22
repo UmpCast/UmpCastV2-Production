@@ -73,13 +73,15 @@ export default function UmpireLevels(props) {
                             <Card.Body
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
-                                className="p-0 flex-row card-scroll"
+                                className="p-0 card-scroll"
                             >
-                                <ListLevels
-                                    useLevels={useLevels}
-                                    divisions={divisions}
-                                    onChange={onChange}
-                                />
+                                <div style={{marginBottom: "100px"}}>
+                                    <ListLevels
+                                        useLevels={useLevels}
+                                        divisions={divisions}
+                                        onChange={onChange}
+                                    />
+                                </div>
                                 {provided.placeholder}
                             </Card.Body>
                         )}

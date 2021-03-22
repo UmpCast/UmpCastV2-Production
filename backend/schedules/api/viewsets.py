@@ -32,7 +32,7 @@ class AssignmentViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
         permissions.IsAuthenticated & ActionBasedPermission
     ),)
     action_permissions = {
-        IsManager & InLeague: ['retrieve', 'submit']
+        IsManager: ['retrieve', 'submit']
     }
 
     @action(detail=True, methods=['post'])
@@ -63,5 +63,5 @@ class AssignmentItemViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         permissions.IsAuthenticated & ActionBasedPermission
     ),)
     action_permissions = {
-        IsManager & InLeague: ['list']
+        IsManager: ['list']
     }
