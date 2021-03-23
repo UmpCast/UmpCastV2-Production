@@ -8,10 +8,20 @@ import dayjs from "dayjs"
 export default function EditGameIcon({
     locations,
     dispatchGames,
-    dispatchLocations,
     league,
     game
 }) {
+    
+    const handleGameUpdate = (game) => {
+        setShow(false)
+        dispatchGames({type: "edit", payload: game})
+    }
+
+    const handleGameDelete = (pk) => {
+        setShow(false)
+        dispatchGames({type: "delete", payload: pk})
+    }
+
     const [show, setShow] = useState(false)
     return (
         <Fragment>
@@ -31,8 +41,8 @@ export default function EditGameIcon({
                         date_time: dayjs(game.date_time).toDate(),
                         description: game.description ?? ""
                     }}
-                    dispatchGames={dispatchGames}
-                    dispatchLocations={dispatchLocations}
+                    handleGameUpdate={handleGameUpdate}
+                    handleGameDelete={handleGameDelete}
                     locations={locations}
                     league={league}
                 />
