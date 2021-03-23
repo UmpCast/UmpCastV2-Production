@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins
 from schedules.models import TimeRange, Assignment, AssignmentItem
-from schedules.api.serializers import TimeRangeSerializer, AssignmentSerializer, LightAssignmentItemSerializer
-from schedules.api.permissions import TimeRangeFilterPermissions, TimeRangeDestroyPermissions, InLeague
+from schedules.api.serializers import TimeRangeSerializer, AssignmentSerializer, AssignmentItemSerializer
+from schedules.api.permissions import TimeRangeFilterPermissions, TimeRangeDestroyPermissions, AssignmentPermissions, AssignmentItemFilterPermissions
 from backend.permissions import IsSuperUser, ActionBasedPermission, IsManager
 from rest_framework import permissions, status
 from rest_framework.response import Response
@@ -32,7 +32,7 @@ class AssignmentViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
         permissions.IsAuthenticated & ActionBasedPermission
     ),)
     action_permissions = {
-        IsManager & InLeague: ['retrieve', 'submit']
+        IsManager & AssignmentPermissions: ['retrieve', 'submit']
     }
 
     @action(detail=True, methods=['post'])
@@ -57,11 +57,11 @@ class AssignmentViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
 class AssignmentItemViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = AssignmentItem.objects.all()
-    serializer_class = LightAssignmentItemSerializer
+    serializer_class = AssignmentItemSerializer
     filter_fields = ('assignment', )
     permission_classes = (IsSuperUser | (
         permissions.IsAuthenticated & ActionBasedPermission
     ),)
     action_permissions = {
-        IsManager & InLeague: ['list']
+        IsManager & AssignmentItemFilterPermissions: ['list']
     }

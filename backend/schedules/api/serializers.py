@@ -4,7 +4,6 @@ from rest_framework.serializers import ValidationError
 from games.api.serializers.game import GameSerializer
 from users.api.serializers.user import UserProfilePublicSerializer
 from games.api.serializers.post import PostSerializer
-import serpy
 
 
 class AssignmentSerializer(serializers.ModelSerializer):
@@ -13,32 +12,37 @@ class AssignmentSerializer(serializers.ModelSerializer):
         fields = ('pk', 'league', 'start_date', 'end_date', 'is_completed')
 
 
-class LightAssignmentItemSerializer(serpy.Serializer):
-    pk = serpy.Field()
-    name = serpy.MethodField()
-    game_title = serpy.MethodField()
-    game_division_title = serpy.MethodField()
-    game_location_title = serpy.MethodField()
-    game_date_time = serpy.MethodField()
-    role_title = serpy.MethodField()
+class AssignmentItemSerializer(serializers.ModelSerializer):
 
-    def get_name(self, obj):
-        return obj.user.get_full_name()
+    name = serializers.SerializerMethodField()
+    game_title = serializers.SerializerMethodField()
+    game_division_title = serializers.SerializerMethodField()
+    game_location_title = serializers.SerializerMethodField()
+    game_date_time = serializers.SerializerMethodField()
+    role_title = serializers.SerializerMethodField()
 
-    def get_game_title(self, obj):
-        return obj.post.game.title
+    class Meta:
+        model = AssignmentItem
+        fields = ('pk', 'name', 'game_title', 'game_division_title',
+                  'game_location_title', 'game_date_time', 'role_title')
 
-    def get_game_division_title(self, obj):
-        return obj.post.role.division.title
+    def get_name(self, instance):
+        return instance.user.get_full_name()
 
-    def get_game_location_title(self, obj):
-        return obj.post.game.location.title
+    def get_game_title(self, instance):
+        return instance.post.game.title
 
-    def get_game_date_time(self, obj):
-        return obj.post.game.date_time
+    def get_game_division_title(self, instance):
+        return instance.post.role.division.title
 
-    def get_role_title(self, obj):
-        return obj.post.role.title
+    def get_game_location_title(self, instance):
+        return instance.post.game.location.title
+
+    def get_game_date_time(self, instance):
+        return instance.post.game.date_time
+
+    def get_role_title(self, instance):
+        return instance.post.role.title
 
 
 class TimeRangeSerializer(serializers.ModelSerializer):
