@@ -9,7 +9,7 @@ import { useCountDown, useTimeout, useInterval } from "./useTask"
 
 import { useApi } from "common/hooks"
 
-const page_size = 50
+const page_size = 10
 const requests = {
     makeAssignments(league_pk, data) {
         return [
