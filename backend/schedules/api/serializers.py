@@ -14,20 +14,35 @@ class AssignmentSerializer(serializers.ModelSerializer):
 
 class AssignmentItemSerializer(serializers.ModelSerializer):
 
-    game = serializers.SerializerMethodField()
-    post = PostSerializer(many=False)
-    user = UserProfilePublicSerializer(many=False)
-    is_completed = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    game_title = serializers.SerializerMethodField()
+    game_division_title = serializers.SerializerMethodField()
+    game_location_title = serializers.SerializerMethodField()
+    game_date_time = serializers.SerializerMethodField()
+    role_title = serializers.SerializerMethodField()
 
     class Meta:
         model = AssignmentItem
-        fields = ('pk', 'user', 'post', 'game', 'is_completed')
+        fields = ('pk', 'name', 'game_title', 'game_division_title',
+                  'game_location_title', 'game_date_time', 'role_title')
 
-    def get_is_completed(self, instance):
-        return instance.assignment.is_completed
+    def get_name(self, instance):
+        return instance.user.get_full_name()
 
-    def get_game(self, instance):
-        return GameSerializer(instance.post.game).data
+    def get_game_title(self, instance):
+        return instance.post.game.title
+
+    def get_game_division_title(self, instance):
+        return instance.post.role.division.title
+
+    def get_game_location_title(self, instance):
+        return instance.post.game.location.title
+
+    def get_game_date_time(self, instance):
+        return instance.post.game.date_time
+
+    def get_role_title(self, instance):
+        return instance.post.role.title
 
 
 class TimeRangeSerializer(serializers.ModelSerializer):

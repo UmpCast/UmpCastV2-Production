@@ -67,12 +67,18 @@ class AutoAssign(object):
             post__game__date_time__lt=post.game.date_time + timedelta(hours=2)
         ).count() == 0
 
+    def get_day_of_week(self, date_time):
+        week = ["monday", "tuesday", "wednesday",
+                "thursday", "friday", "saturday", "sunday"]
+        return week[date_time.weekday()]
+
     def is_valid_uls_post_match(self, uls, post):
         game = post.game
 
         is_time_available = TimeRange.objects.filter(
             start__lte=game.date_time.time(),
             end__gte=game.date_time.time(),
+            day_type=self.get_day_of_week(game.date_time),
             user=uls.user
         ).count() != 0
 

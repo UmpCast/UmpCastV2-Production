@@ -1,55 +1,35 @@
-import React, { useState } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
 import dayjs from "dayjs"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 
-import useUser, { useApi } from "common/hooks"
+import useUser from "common/hooks"
 
 import { AppPicture } from "common/components"
-import { BasicConfirm } from "common/forms"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Card } from "react-bootstrap"
 
 dayjs.extend(localizedFormat)
 
-export default function CalendarGame({ game, handleDeleteGame }) {
+export default function CalendarGame({ game, EditGameIcon }) {
     const { user } = useUser()
-    const Api = useApi(requests)
-
-    const useShow = useState(false)
-    const [, setShow] = useShow
 
     const { date_time } = game
     const game_over = dayjs(date_time) < dayjs()
 
     const style = { opacity: game_over ? 0.8 : 1 }
 
-    const onDeleteConfirm = () =>
-        // TODO Manager does not have permission to delete game
-        Api.Submit(() => Api.deleteGame(game))
-            .then(() => setShow(false))
-            .finally(() => handleDeleteGame(game))
-
     return (
         <Card className="mb-2 mx-0 w-100" style={style}>
             <GameHeader {...{ game }} />
 
             <Card.Body className="pb-2 px-3 pt-3">
-                <TitleLink {...{ game, user, setShow }} />
+                <TitleLink {...{ game, user, EditGameIcon }} />
 
                 <GameDetails {...{ game }} />
 
                 <CastGallery {...{ game }} />
             </Card.Body>
-
-            <BasicConfirm
-                action="Delete Game"
-                consequences="Any umpires currently signed up will be removed"
-                action_text="Delete"
-                useShow={useShow}
-                onConfirm={onDeleteConfirm}
-            />
         </Card>
     )
 }
@@ -91,7 +71,7 @@ const headerStyles = (num_casts, num_posts) => {
     }
 }
 
-const TitleLink = ({ game, user, setShow }) => (
+const TitleLink = ({ game, user, EditGameIcon }) => (
     <Card.Title className="mb-0 d-flex justify-content-between">
         <Link to={`/game/${game.pk}/`}>
             <h6 className="mb-0 text-secondary">
@@ -99,20 +79,14 @@ const TitleLink = ({ game, user, setShow }) => (
             </h6>
         </Link>
         {user.account_type === "manager" ? (
-            <span
-                className="float-right text-warning"
-                style={{ cursor: "pointer" }}
-                onClick={() => setShow(true)}
-            >
-                <FontAwesomeIcon icon="ban" className="ml-1 mb-1 fa-xs" />
-            </span>
+            <span className="float-right text-warning">{EditGameIcon}</span>
         ) : null}
     </Card.Title>
 )
 
 const GameDetails = ({ game }) => (
     <p className="text-muted small my-1" style={{ lineHeight: 1.2 }}>
-        {game.location} · {game.division.title}
+        {game.location.title} · {game.division.title}
     </p>
 )
 
@@ -137,14 +111,4 @@ const CastGallery = ({ game }) => {
     })
 
     return <div className="d-flex justify-content-end mt-1">{gallery}</div>
-}
-
-const requests = {
-    deleteGame: (game) => [
-        "api/games/",
-        {
-            pk: game.pk
-        },
-        "DELETE"
-    ]
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import FilterToggle from "./FilterToggle"
+import FilterToggle from "../FilterToggle"
 
 import { Form, Dropdown } from "react-bootstrap"
 

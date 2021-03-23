@@ -26,21 +26,20 @@ const steps = {
 const initialState = {
     step: steps.SELECT_DATE_RANGE,
     assignments: [],
+    assignment_pk: undefined,
     rejected: [],
     loading: false
 }
 
 const requests = {
-    gameSignup: (user_pk, post_pk) => [
-        "api/applications/",
+    resolveAssignments: (assignment_pk, assignments) => [
+        `api/assignments/${assignment_pk}/submit/`,
         {
             data: {
-                user: user_pk,
-                post: post_pk
+                accepted_assignment_items: assignments.map((item) => item.pk)
             }
         },
-        "POST",
-        false
+        "POST"
     ]
 }
 
@@ -68,10 +67,11 @@ const Assignment = () => {
                     })
                 }
 
-                const onAssignmentComplete = (data) => {
+                const onAssignmentComplete = (assignment_pk, assignments) => {
                     setState({
                         step: steps.RESOLVE_ASSIGNMENTS,
-                        assignments: data,
+                        assignment_pk,
+                        assignments,
                         loading: false
                     })
                 }
@@ -101,13 +101,9 @@ const Assignment = () => {
                 if (state.loading) return <AssignmentsLoading />
                 else return <DateRangeMissing />
             case steps.RESOLVE_ASSIGNMENTS:
-                const onAssign = async (assignments) => {
-                    await Api.Submit(
-                        () => Promise.all(
-                            assignments.map(({ user, post }) =>
-                                Api.gameSignup(user.pk, post.pk)
-                            )
-                        )
+                const resolveAssignments = async (assignments) => {
+                    await Api.Submit(() =>
+                        Api.resolveAssignments(state.assignment_pk, assignments)
                     )
 
                     setState({ ...state, step: steps.ASSIGNMENTS_COMPLETE })
@@ -117,7 +113,7 @@ const Assignment = () => {
                     <AssignmentTable
                         assignments={state.assignments}
                         league={league}
-                        onAssign={onAssign}
+                        onAssign={resolveAssignments}
                     />
                 )
             case steps.ASSIGNMENTS_COMPLETE:

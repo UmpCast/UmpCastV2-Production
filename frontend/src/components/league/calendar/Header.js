@@ -18,10 +18,9 @@ export default function CalendarHeader(props) {
     const {
         week_start,
         handleGames,
-        handleNewGame,
         locations,
-        handleNewLocation,
-        handleDeleteLocation,
+        dispatchGames,
+        dispatchLocations,
         league
     } = props
 
@@ -74,9 +73,8 @@ export default function CalendarHeader(props) {
                         ) : null}
                         <AddGameButton
                             league={league}
-                            handleNewGame={handleNewGame}
-                            handleNewLocation={handleNewLocation}
-                            handleDeleteLocation={handleDeleteLocation}
+                            dispatchGames={dispatchGames}
+                            dispatchLocations={dispatchLocations}
                             locations={locations}
                         />
                     </div>
