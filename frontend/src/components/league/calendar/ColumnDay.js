@@ -1,14 +1,13 @@
 import React from "react"
 import dayjs from "dayjs"
 
-import CalendarGame from "./Game"
 import NoGame from "./NoGame"
 
 import { Row, Col } from "react-bootstrap"
 
 export default function Day(props) {
 
-    const { games, date, handleDeleteGame } = props
+    const { games, date } = props
 
     const today = dayjs().startOf("day")
 
@@ -16,7 +15,7 @@ export default function Day(props) {
 
     const formatted_games = games.map(game =>
         <Row className="px-2 mb-2" key={game.pk}>
-            <CalendarGame game={game} handleDeleteGame= {handleDeleteGame} />
+            {game.component}
         </Row>
     )
 

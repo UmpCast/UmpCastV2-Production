@@ -6,30 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { COLUMNS } from "./columns"
 
-const AssignmentTable = ({ assignments, league, onAssign }) => {
+const AssignmentTable = ({ assignments, onAssign }) => {
     const columns = useMemo(() => COLUMNS, [])
 
     const data = useMemo(
-        () =>
-            assignments.map((assignment) => {
-                const { user, post, game } = assignment
-
-                const division = league.divisions.find(
-                    ({ pk }) => pk === game.division
-                )
-                const role = division.roles.find(({ pk }) => pk === post.role)
-
-                return {
-                    umpire: `${user.first_name} ${user.last_name}`,
-                    game: game.title,
-                    division: division.title,
-                    role: role.title,
-                    date: game.date_time,
-                    user: user,
-                    post: post
-                }
-            }),
-        [assignments, league]
+        () => assignments,
+        [assignments]
     )
 
     const {

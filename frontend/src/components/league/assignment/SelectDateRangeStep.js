@@ -9,7 +9,7 @@ import { useCountDown, useTimeout, useInterval } from "./useTask"
 
 import { useApi } from "common/hooks"
 
-const page_size = 10
+const page_size = 50
 const requests = {
     makeAssignments(league_pk, data) {
         return [
@@ -23,15 +23,15 @@ const requests = {
     },
     checkAssignmentsComplete(assignment_pk) {
         return [
-            "api/assignment-items/",
+            "api/assignments/",
             {
-                params: { assignment: assignment_pk, page_size: 1 }
+                pk: assignment_pk
             },
             "GET",
             false
         ]
     },
-    fetchAssignments(assignment_pk, page) {
+    fetchAssignments(assignment_pk, page, page_size) {
         return [
             "api/assignment-items/",
             {
@@ -65,7 +65,7 @@ const SelectDateRangeStep = ({
         onAssignmentBegin()
 
         const {
-            data: { pk }
+            data: { pk: assignment_pk }
         } = await Api.makeAssignments(league.pk, data)
         let checking = false
 
@@ -76,18 +76,23 @@ const SelectDateRangeStep = ({
                 checking = true
 
                 const {
-                    data: { results, count }
-                } = await Api.checkAssignmentsComplete(pk)
+                    data: { is_completed }
+                } = await Api.checkAssignmentsComplete(assignment_pk)
 
-                if (results.length && results[0].is_completed) {
+                if (is_completed) {
+                    const {
+                        data: { count }
+                    } = await Api.fetchAssignments(assignment_pk, 1, 1)
+
                     const pages = Math.ceil(count / page_size)
                     const all_res = await Promise.all(
                         [...Array(pages).keys()].map((i) =>
-                            Api.fetchAssignments(pk, i + 1)
+                            Api.fetchAssignments(assignment_pk, i + 1, page_size)
                         )
                     )
 
                     onAssignmentComplete(
+                        assignment_pk,
                         all_res.reduce(
                             (arr, res) => arr.concat(res.data.results),
                             []
@@ -147,7 +152,7 @@ const SelectDateRangeStep = ({
             <Card.Subtitle className="mb-2 text-muted">
                 <strong>Step 1: </strong>Make Assignments
             </Card.Subtitle>
-            <ol style={{paddingLeft: "1em"}}>
+            <ol style={{ paddingLeft: "1em" }}>
                 <li>
                     Games within the date range will be matched to available
                     umpires.

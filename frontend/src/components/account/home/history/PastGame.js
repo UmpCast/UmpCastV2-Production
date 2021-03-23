@@ -24,7 +24,7 @@ const PastGame = ({ msg }) => {
                     </div>
                     <h5 className="mb-auto flex-shrink-0">
                         <small className="text-muted mr-1">
-                            {dayjs(msg.date_time).format("h:m A")} ·
+                            {dayjs(msg.date_time).format("h:mm A")} ·
                         </small>
                         <strong className="">{dayjs(msg.date_time).format("MMM D")}</strong>
                     </h5>
