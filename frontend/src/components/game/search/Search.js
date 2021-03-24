@@ -17,7 +17,7 @@ const requests = {
         {
             params: {
                 ...filters,
-                page_size: 5, //TODO
+                page_size: 25,
                 page: page
             }
         }
