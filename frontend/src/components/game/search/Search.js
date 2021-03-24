@@ -96,7 +96,7 @@ export default function Search() {
             const locations = res[1].data.results
             const visibilities = isManager
                 ? []
-                : res[2].data.division_visibilities
+                : res[2].data.results[0].division_visibilities
 
             const _divisions = divisions.map((division) => {
                 const can_toggle = isManager
