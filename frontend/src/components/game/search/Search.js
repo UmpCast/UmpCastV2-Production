@@ -97,11 +97,11 @@ export default function Search() {
             const visibilities = isManager
                 ? []
                 : res[2].data.results[0].division_visibilities
-
+            
             const _divisions = divisions.map((division) => {
                 const can_toggle = isManager
                     ? true
-                    : visibilities.includes(division)
+                    : visibilities.includes(division.pk)
                 return { ...division, toggle: can_toggle ? true : undefined }
             })
 
