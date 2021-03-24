@@ -22,7 +22,8 @@ export default function DisplayContainer({ children }) {
                     <div className="ump-loading-spinner">
                         <ClipLoader
                             size={75}
-                            color={"#2375DF"} />
+                            color={"#2375DF"}
+                            style={{zIndex: "100"}} />
                     </div>
                 </Loader>
             </Container >

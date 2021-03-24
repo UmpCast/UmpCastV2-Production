@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react"
 import dayjs from "dayjs"
-import { Container } from "react-bootstrap"
+import { Container, Button } from "react-bootstrap"
 
 import useUser, { useApi } from "common/hooks"
 import GamePagination from "./GamePagination"
-import { LeagueFilter, DivisionFilter, DateFilter } from "./Filters"
+import {
+    LeagueFilter,
+    DivisionFilter,
+    DateFilter,
+    LocationFilter
+} from "./Filters"
 
 const requests = {
     fetchGames: (page, filters) => [
@@ -48,6 +53,15 @@ const requests = {
     ]
 }
 
+const list_pks = (list) => {
+    return list
+        .reduce(
+            (arr, { pk, toggle }) => arr.concat(toggle === true ? pk : []),
+            []
+        )
+        .join(", ")
+}
+
 export default function Search() {
     const Api = useApi(requests)
 
@@ -57,10 +71,8 @@ export default function Search() {
     const [selectedLeague, setSelectedLeague] = useState(accepted_leagues?.[0])
 
     const [state, setState] = useState({
-        filters: {
-            divisions: undefined,
-            start_date: undefined
-        },
+        filters: undefined,
+        applied_filters: undefined,
         loading: true
     })
 
@@ -74,15 +86,17 @@ export default function Search() {
             const isManager = account_type === "manager"
 
             const res = await Promise.all(
-                [Api.fetchLeague(league_pk)].concat(
-                    isManager ? [] : Api.fetchUls(user_pk, league_pk)
-                )
+                [
+                    Api.fetchLeague(league_pk),
+                    Api.fetchLocations(league_pk)
+                ].concat(isManager ? [] : Api.fetchUls(user_pk, league_pk))
             )
 
             const divisions = res[0].data.divisions
+            const locations = res[1].data.results
             const visibilities = isManager
                 ? []
-                : res[1].data.division_visibilities
+                : res[2].data.division_visibilities
 
             const _divisions = divisions.map((division) => {
                 const can_toggle = isManager
@@ -91,11 +105,23 @@ export default function Search() {
                 return { ...division, toggle: can_toggle ? true : undefined }
             })
 
+            const _locations = locations.map((location) => {
+                return {
+                    ...location,
+                    toggle: true
+                }
+            })
+
+            const filters = {
+                divisions: _divisions,
+                locations: _locations,
+                start_date: dayjs(),
+                end_date: dayjs().add(1, "M")
+            }
+
             setState({
-                filters: {
-                    divisions: _divisions,
-                    start_date: dayjs()
-                },
+                filters,
+                applied_filters: filters,
                 loading: false
             })
         })()
@@ -103,19 +129,21 @@ export default function Search() {
 
     const fetchPage = useCallback(
         async (page) => {
-            const { divisions, start_date } = state.filters
+            const {
+                divisions,
+                locations,
+                start_date,
+                end_date
+            } = state.applied_filters
 
-            const division_pks = divisions
-                .reduce(
-                    (arr, { pk, toggle }) =>
-                        arr.concat(toggle === true ? pk : []),
-                    []
-                )
-                .join(", ")
+            const division_pks = list_pks(divisions)
+            const location_pks = list_pks(locations)
 
             const filters = {
                 division__in: division_pks,
-                date_time_after: start_date.toISOString()
+                location__in: location_pks,
+                date_time_after: start_date.toISOString(),
+                date_time_before: end_date.toISOString()
             }
 
             const {
@@ -127,6 +155,9 @@ export default function Search() {
                     ...game,
                     division: divisions.find(
                         (item) => item.pk === game.division
+                    ),
+                    location: locations.find(
+                        (item) => item.pk === game.location
                     )
                 }
             })
@@ -137,35 +168,40 @@ export default function Search() {
                 items
             }
         },
-        [state.filters, Api]
+        [state.applied_filters, Api]
     )
 
     const onLeagueSelect = (league) => {
         if (league.pk !== selectedLeague.pk) setSelectedLeague(league)
     }
 
-    const onDateSelect = (date) => {
-        if (!date.isSame(state.filters.start_date))
+    const onDateSelect = (field) => (date) => {
+        if (!date.isSame(state.filters[field]))
             setState({
                 ...state,
                 filters: {
                     ...state.filters,
-                    start_date: date
+                    [field]: date
                 }
             })
     }
 
-    const onDivisionToggled = ({ pk: division_pk }) => {
+    const onListToggle = (field) => (pk) => {
         setState({
             ...state,
             filters: {
                 ...state.filters,
-                divisions: state.filters.divisions.map((item) =>
-                    item.pk === division_pk
-                        ? { ...item, toggle: !item.toggle }
-                        : item
+                [field]: state.filters[field].map((item) =>
+                    item.pk === pk ? { ...item, toggle: !item.toggle } : item
                 )
             }
+        })
+    }
+
+    const onApplyFilters = () => {
+        setState({
+            ...state,
+            applied_filters: state.filters
         })
     }
 
@@ -181,20 +217,42 @@ export default function Search() {
             </div>
             {!state.loading ? (
                 <Container>
-                    <div className="d-inline-flex justify-content-between w-100 mb-3">
+                    <div
+                        className="d-inline-flex justify-content-between w-100 mb-3"
+                    >
                         <LeagueFilter
                             allLeagues={accepted_leagues}
                             selectedLeague={selectedLeague}
                             onLeagueSelect={onLeagueSelect}
                         />
                         <DivisionFilter
+                            className="d-none d-md-block"
                             allDivisions={state.filters.divisions}
-                            onDivisionToggled={onDivisionToggled}
+                            onDivisionToggled={onListToggle("divisions")}
+                        />
+                        <LocationFilter
+                            className="d-none d-md-block"
+                            allLocations={state.filters.locations}
+                            onLocationToggled={onListToggle("locations")}
                         />
                         <DateFilter
+                            text="After"
                             selectedDate={state.filters.start_date}
-                            onDateSelect={onDateSelect}
+                            onDateSelect={onDateSelect("start_date")}
                         />
+                        <DateFilter
+                            text="Before"
+                            className="d-none d-sm-block"
+                            selectedDate={state.filters.end_date}
+                            onDateSelect={onDateSelect("end_date")}
+                        />
+                        <Button
+                            className="mx-2 rounded"
+                            variant="success"
+                            onClick={onApplyFilters}
+                        >
+                            Apply
+                        </Button>
                     </div>
                     {!state.loading ? (
                         <GamePagination fetchPage={fetchPage} />

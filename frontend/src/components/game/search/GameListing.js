@@ -65,7 +65,7 @@ const GameDetails = ({ game }) => (
         </p>
         <p className="mb-0">
             <strong>Location: </strong>
-            {game.location}
+            {game.location.title}
         </p>
     </div>
 )
