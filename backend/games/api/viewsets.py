@@ -140,7 +140,7 @@ class LocationViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.
     }
 
 
-class GameViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+class GameViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     Provide Create, Retrieve, Destroy, List, List-Filter functionality for Game Model
@@ -172,7 +172,7 @@ class GameViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
         # manager of league requirement enforced on serializer level
         IsManager: ["create"],
         IsGameLeague: ["retrieve"],
-        IsManager & IsGameLeague: ["destroy"],
+        IsManager & IsGameLeague: ["destroy", "update", "partial_update"],
         (IsManager & (GameFilterDivisionManager | GameFilterDivisionInManager)) |
         GameFilterDivision | GameFilterDivisionIn | GameFilterUser: ["list"],
     }

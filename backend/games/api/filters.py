@@ -14,11 +14,12 @@ class NumberInFilter(filters.BaseInFilter, filters.NumberFilter):
 class GameFilter(filters.FilterSet):
     date_time = filters.IsoDateTimeFromToRangeFilter()
     division__in = NumberInFilter(field_name='division__pk', lookup_expr='in')
+    location__in = NumberInFilter(field_name='location__pk', lookup_expr='in')
     user = filters.CharFilter(method='game_filter_by_user')
 
     class Meta:
         model = Game
-        fields = ['division', 'date_time']
+        fields = ['division', 'date_time', 'location']
 
     def game_filter_by_user(self, queryset, name, value):
         game_ids = Application.objects.filter(

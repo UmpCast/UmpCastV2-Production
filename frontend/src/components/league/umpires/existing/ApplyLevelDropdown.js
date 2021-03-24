@@ -10,7 +10,7 @@ export default function ApplyLevelDropdown(props) {
     const Api = useApi(requests)
 
     const onLevelClick = (level) => {
-        const promises = selected.map((status_pk) =>
+        const promises = selected.map(({pk: status_pk}) =>
             Api.applyLevel(status_pk, level)
         )
         Api.Submit(() => Promise.all(promises).finally(onLevelApplied))
@@ -25,7 +25,7 @@ export default function ApplyLevelDropdown(props) {
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
             {"Go to Settings -> Umpires and add a level!"}
-        </Tooltip>
+    </Tooltip>
     )
 
     return (

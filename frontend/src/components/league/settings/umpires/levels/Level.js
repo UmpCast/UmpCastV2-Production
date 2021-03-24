@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState } from "react"
 
 import { useApi } from "common/hooks"
 
@@ -11,7 +11,6 @@ import { ListGroup, Badge, Button } from "react-bootstrap"
 import { Draggable } from "react-beautiful-dnd"
 
 export default function Level(props) {
-
     const { level, divisions, useLevels, onChange, index } = props
 
     const { pk } = level
@@ -22,48 +21,44 @@ export default function Level(props) {
     const useShowRename = useState(false)
 
     const onDelete = () => {
-        Api.Submit(() =>
-            Api.deleteLevel(pk)
-        ).then(() =>
-            setLevels(levels.filter(level => level.pk !== pk))
+        Api.Submit(() => Api.deleteLevel(pk)).then(() =>
+            setLevels(levels.filter((level) => level.pk !== pk))
         )
     }
 
     return (
-        <Draggable
-            draggableId={pk.toString()}
-            index={index}>
-            {provided => (
+        <Draggable draggableId={pk.toString()} index={index}>
+            {(provided) => (
                 <ListGroup.Item
-                    className="border-top-0 d-inline-flex"
+                    className="border-top-0 d-inline-flex justify-content-between ump-max-width"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                 >
-                        <div className="d-inline-flex">
-                            <LevelName
-                                level={level}
-                                provided={provided} />
+                    <div className="d-inline-flex">
+                        <LevelName level={level} provided={provided} />
 
-                            <LevelRename
-                                level={level}
-                                useLevels={useLevels}
-                                useShowRename={useShowRename} />
-                        </div>
-
-                        {/* <UmpiresBadge /> */}
-
-                        <LevelVis
+                        <LevelRename
                             level={level}
-                            divisions={divisions}
-                            onChange={onChange} />
+                            useLevels={useLevels}
+                            useShowRename={useShowRename}
+                        />
+                    </div>
 
-                        <DeleteButton
-                            setShow={useShow[1]} />
+                    {/* <UmpiresBadge /> */}
 
-                        <ConfirmDelete
-                            level={level}
-                            useShow={useShow}
-                            onDelete={onDelete} />
+                    <LevelVis
+                        level={level}
+                        divisions={divisions}
+                        onChange={onChange}
+                    />
+
+                    <DeleteButton setShow={useShow[1]} />
+
+                    <ConfirmDelete
+                        level={level}
+                        useShow={useShow}
+                        onDelete={onDelete}
+                    />
                 </ListGroup.Item>
             )}
         </Draggable>
@@ -72,12 +67,8 @@ export default function Level(props) {
 
 export const LevelName = ({ level, provided }) => {
     return (
-        <div
-            {...provided.dragHandleProps}
-            className="my-auto flex-shrink-0">
-            <FontAwesomeIcon
-                icon={'bars'}
-                className="mr-3" />
+        <div {...provided.dragHandleProps} className="my-auto flex-shrink-0">
+            <FontAwesomeIcon icon={"bars"} className="mr-3" />
             {level.title}
         </div>
     )
@@ -87,26 +78,24 @@ export const LevelRename = ({ level, useShowRename, useLevels }) => (
     <Fragment>
         <Button
             className="bg-white border-0 my-auto ml-2 p-0"
-            onClick={() => useShowRename[1](true)}>
-            <FontAwesomeIcon
-                icon="pen"
-                className="text-muted fa-sm" />
+            onClick={() => useShowRename[1](true)}
+        >
+            <FontAwesomeIcon icon="pen" className="text-muted fa-sm" />
         </Button>
         <RenameListItem
             action="Rename Level"
             useShow={useShowRename}
             useList={useLevels}
             item={level}
-            endpoint="api/levels/" />
+            endpoint="api/levels/"
+        />
     </Fragment>
 )
 
 export const UmpiresBadge = () => (
     <Badge variant="primary my-auto">
         5
-        <FontAwesomeIcon
-            icon={'user'}
-            className="ml-1" />
+        <FontAwesomeIcon icon={"user"} className="ml-1" />
     </Badge>
 )
 
@@ -121,17 +110,17 @@ export const LevelVis = ({ level, divisions, onChange }) => {
             className="d-flex"
             divisions={divisions}
             onChange={onChange}
-            status={status} />
+            status={status}
+        />
     )
 }
 
 export const DeleteButton = ({ setShow }) => (
     <Button
         className="p-0 bg-white border-0 my-auto"
-        onClick={() => setShow(true)}>
-        <FontAwesomeIcon
-            className="text-muted"
-            icon={'times'} />
+        onClick={() => setShow(true)}
+    >
+        <FontAwesomeIcon className="text-muted" icon={"times"} />
     </Button>
 )
 
@@ -141,9 +130,9 @@ export const ConfirmDelete = ({ level, useShow, onDelete }) => (
         consequences={
             <span>
                 <strong>{level.title}</strong>
-                will no longer be assignable to umpires. All umpires
-                with this level will retain their role visibility,
-                but will have the custom level label.
+                will no longer be assignable to umpires. All umpires with this
+                level will retain their role visibility, but will have the
+                custom level label.
             </span>
         }
         action_text="I understand, please delete this level."

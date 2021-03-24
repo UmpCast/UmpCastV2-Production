@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from schedules.models import TimeRange
+from schedules.models import TimeRange, Assignment
 from users.models import User
 
 
@@ -22,3 +22,18 @@ class TimeRangeFilterPermissions(permissions.BasePermission):
                 if league in request.user.leagues.accepted():  # if manager of correct league
                     return True
         return False
+
+
+class AssignmentPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        assignment = Assignment.objects.get(pk=view.kwargs['pk'])
+        return assignment.league in request.user.leagues.accepted()
+
+
+class AssignmentItemFilterPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        assignment_pk = request.query_params.get('assignment', None)
+        if assignment_pk is None:
+            return False
+        assignment = Assignment.objects.get(pk=assignment_pk)
+        return assignment.league in request.user.leagues.accepted()

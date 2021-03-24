@@ -4,8 +4,6 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import Loader from "common/components"
 
-import { expandGames } from "common/Utils"
-
 import ListDay from "./ListDay"
 import ColumnDay from "./ColumnDay"
 import NoGame from "./NoGame"
@@ -15,19 +13,9 @@ import { Row, Col } from "react-bootstrap"
 dayjs.extend(localizedFormat)
 
 export default function Week(props) {
-    const { league, start, games, handleDeleteGame, locations } = props
+    const { start, games } = props
 
-    const formattedGames = games.map((game) => {
-        const loc = locations.find((loc) => loc.pk === game.location)
-        return {
-            ...game,
-            location: loc ? loc.title : ""
-        }
-    })
-
-    const { divisions } = league
-
-    const weekGames = binByDay(expandGames(formattedGames, divisions))
+    const weekGames = binByDay(games)
 
     const weekViews = [ColumnDay, ListDay].map((component) =>
         weekGames.map((day_games, index) =>
@@ -35,7 +23,6 @@ export default function Week(props) {
                 games: day_games,
                 date: start.add(index, "day"),
                 key: index,
-                handleDeleteGame: handleDeleteGame
             })
         )
     )
@@ -51,7 +38,7 @@ export default function Week(props) {
             </div>
             <div className="d-lg-none">
                 <Col>{weekViews[1]}</Col>
-                <Loader dep={!thisWeek && formattedGames.length === 0}>
+                <Loader dep={!thisWeek && games.length === 0}>
                     <NoGame>No Games This Week</NoGame>
                 </Loader>
             </div>

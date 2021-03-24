@@ -1,15 +1,18 @@
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useState, useReducer } from "react"
 import { useParams } from "react-router-dom"
 import dayjs from "dayjs"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 
 import useUser, { useApi, useMountEffect } from "common/hooks"
-
 import Loader from "common/components"
+import { expandGames } from "common/Utils"
 
+import { gamesReducer, locationsReducer } from "./reducers"
 import Header from "./Header"
 import Week from "./Week"
+import CalendarGame from "./Game"
+import EditGameIcon from "./EditGameIcon"
 
 dayjs.extend(customParseFormat, localizedFormat)
 
@@ -26,35 +29,13 @@ export default function Calendar() {
     const { user } = User
 
     const [league, setLeague] = useState()
-    const [games, setGames] = useState()
-    const [locations, setLocations] = useState()
+
+    const [games, dispatchGames] = useReducer(gamesReducer(week_start))
+    const [locations, dispatchLocations] = useReducer(locationsReducer)
 
     const [handleGames, setHandleGames] = useState(() =>
-        basicHandleGames(Api, setGames)
+        basicHandleGames(Api, dispatchGames)
     )
-
-    const handleNewGame = (game) => {
-        const game_time = dayjs(game.date_time)
-        if (week_start < game_time && game_time < week_start.add(7, "days")) {
-            setGames(games.concat(game))
-        }
-    }
-
-    const handleNewLocation = (location) => {
-        const new_locations = locations
-            .concat(location)
-            .sort((el1, el2) => el1.title.localeCompare(el2.title))
-        
-        setLocations(new_locations)
-    }
-
-    const handleDeleteLocation = (location_pk) => {
-        setLocations(locations.filter(({ pk }) => pk !== location_pk))
-    }
-
-    const handleDeleteGame = ({ pk }) => {
-        setGames(games.filter((game) => game.pk !== pk))
-    }
 
     useMountEffect(() => {
         ;(async () => {
@@ -66,7 +47,12 @@ export default function Calendar() {
             ] = await Promise.all([Api.fetchLeague(pk), Api.fetchLocations(pk)])
 
             setLeague(myLeague)
-            setLocations(myLocations.sort((el1, el2) => el1.title.localeCompare(el2.title)))
+            dispatchLocations({
+                type: "set",
+                payload: myLocations.sort((el1, el2) =>
+                    el1.title.localeCompare(el2.title)
+                )
+            })
 
             const divVis =
                 user.account_type === "umpire"
@@ -81,15 +67,28 @@ export default function Calendar() {
         })()
     })
 
+    let formattedGames
+    if (games) {
+        formattedGames = expandGames(
+            games.map((game) => {
+                const loc = locations.find((loc) => loc.pk === game.location)
+                return {
+                    ...game,
+                    location: loc
+                }
+            }),
+            league.divisions
+        )
+    }
+
     return (
         <Fragment>
             <Loader dep={[league]}>
                 <Header
                     week_start={week_start}
                     handleGames={handleGames}
-                    handleNewGame={handleNewGame}
-                    handleNewLocation={handleNewLocation}
-                    handleDeleteLocation={handleDeleteLocation}
+                    dispatchGames={dispatchGames}
+                    dispatchLocations={dispatchLocations}
                     locations={locations}
                     league={league}
                 />
@@ -98,10 +97,30 @@ export default function Calendar() {
                 <div className="px-5 mt-3">
                     <Week
                         start={week_start}
-                        games={games}
+                        games={formattedGames?.map((game) => {
+                            return {
+                                component: (
+                                    <CalendarGame
+                                        game={game}
+                                        EditGameIcon={
+                                            <EditGameIcon
+                                                locations={locations}
+                                                dispatchGames={dispatchGames}
+                                                dispatchLocations={
+                                                    dispatchLocations
+                                                }
+                                                league={league}
+                                                game={game}
+                                            />
+                                        }
+                                    />
+                                ),
+                                ...game
+                            }
+                        })}
                         locations={locations}
                         league={league}
-                        handleDeleteGame={handleDeleteGame}
+                        dispatchGames={dispatchGames}
                     />
                 </div>
             </Loader>
@@ -118,15 +137,17 @@ const getWeekStart = (date) => {
     return day.startOf("week")
 }
 
-const basicHandleGames = (Api, setGames) => (vis) => (week_start) => {
+const basicHandleGames = (Api, dispatchGames) => (vis) => (week_start) => {
     if (vis.length > 0) {
         return Api.fetchGames(
             week_start,
             week_start.endOf("week"),
             vis
-        ).then((res) => setGames(res.data.results))
+        ).then((res) =>
+            dispatchGames({ type: "set", payload: res.data.results })
+        )
     } else {
-        return setGames([])
+        return dispatchGames({ type: "set", payload: [] })
     }
 }
 
