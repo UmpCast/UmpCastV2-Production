@@ -23,20 +23,28 @@ export default function EditGameForm({
             date_time: values.date_time,
             description: values.description
         }
-        
+
         Api.Submit(() => Api.editGame(initialValues.pk, new_values))
             .then((res) => {
+                setSubmitting(false)
                 handleGameUpdate(res.data)
             })
             .catch((err) => {
-                setErrors(err.response.data)
-            })
-            .finally(() => {
                 setSubmitting(false)
+                setErrors(err.response.data)
             })
     }
 
-    
+    const onDelete = async ({ setSubmitting }) => {
+        setSubmitting(true)
+        try {
+            await Api.Submit(() => Api.deleteGame(initialValues.pk))
+            setSubmitting(false)
+            handleGameDelete(initialValues.pk)
+        } catch {
+            setSubmitting(false)
+        }
+    }
 
     const divisionOptions = league.divisions.map((div) => (
         <option value={div.pk} key={div.pk}>
@@ -80,11 +88,11 @@ export default function EditGameForm({
                             {divisionOptions}
                         </SelectionInput>
                         <SelectionInput
-                            label="Location"
+                            label="Location (Cannot Edit)"
                             name="location"
                             className="rounded"
+                            disabled
                         >
-                            <option value="">Select Location</option>
                             {locationOptions}
                         </SelectionInput>
                         <TextInput
@@ -101,7 +109,7 @@ export default function EditGameForm({
                                     disabled={formik.isSubmitting}
                                     variant="danger"
                                     className="rounded py-1"
-                                    onClick={handleGameDelete}
+                                    onClick={() => onDelete(formik)}
                                     block
                                 >
                                     Delete
@@ -117,7 +125,7 @@ export default function EditGameForm({
                                 >
                                     Update
                                 </Button>
-                                </Col>
+                            </Col>
                         </Row>
                     </Modal.Footer>
                 </FormikForm>
@@ -141,5 +149,12 @@ const requests = {
             data: values
         },
         "PATCH"
+    ],
+    deleteGame: (game_pk) => [
+        "api/games/",
+        {
+            pk: game_pk
+        },
+        "DELETE"
     ]
 }

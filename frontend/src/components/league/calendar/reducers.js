@@ -20,7 +20,7 @@ export const gamesReducer = (week_start) => (state, action) => {
             })
         }
         case "delete": {
-            return state.filter((game) => game.pk !== action.payload.pk)
+            return state.filter((game) => game.pk !== action.payload)
         }
         default:
             return state

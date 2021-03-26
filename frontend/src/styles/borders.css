@@ -1,35 +1,34 @@
 .border-custom {
     border-width: 1px;
     border-style: dashed;
-    border-color: #F8F9FA;
+    border-color: #f8f9fa;
     border-radius: 1px;
 }
 
 .border-primary-custom {
     border-width: 2px;
     border-style: solid;
-    border-color: #3D80DC;
+    border-color: #3d80dc;
     border-radius: 5px;
 }
 
 .border-secondary-custom {
     border-width: 2px;
     border-style: solid;
-    border-color: #DFE2E6;
+    border-color: #dfe2e6;
     border-radius: 5px;
 }
 .border-secondary-thick {
     border-width: 5px;
     border-style: solid;
-    border-color: #383A3C;
+    border-color: #383a3c;
     border-radius: 5px;
 }
-
 
 .border-secondary-dashed {
     border-width: 1px;
     border-style: dashed;
-    border-color: #DFE2E6;
+    border-color: #dfe2e6;
     border-radius: 5px;
 }
 
@@ -38,30 +37,39 @@
 }
 
 .ump-visibility-empty {
-    background: #E2E4E8 !important;
-    border: 1px solid #E2E4E8 !important;
+    background: #e2e4e8 !important;
+    border: 1px solid #e2e4e8 !important;
     line-height: 1.7;
     color: white !important;
 }
 
 .ump-visibility-partial {
-    background: #98BDEB !important;
-    border: 1px solid #98BDEB !important;
+    background: #98bdeb !important;
+    border: 1px solid #98bdeb !important;
     line-height: 1.7;
 }
 
 .ump-visibility-full {
-    background: #3D80DC !important;
-    border: 1px solid #3D80DC !important;
+    background: #3d80dc !important;
+    border: 1px solid #3d80dc !important;
     line-height: 1.7;
 }
 
 tr.ump-head-border-0 > th {
-    border: none
+    border: none;
 }
 
 .card-scroll {
     overflow-x: scroll;
     white-space: nowrap;
     padding: 1rem;
+}
+
+.dropdown-scroll {
+    width: 100px;
+    display: none;
+    padding: 50px;
+    background: black;
+    z-index: 1000;
+    position: absolute;
 }
