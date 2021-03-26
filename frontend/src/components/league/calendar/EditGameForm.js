@@ -88,11 +88,11 @@ export default function EditGameForm({
                             {divisionOptions}
                         </SelectionInput>
                         <SelectionInput
-                            label="Location (Cannot Edit)"
+                            label="Location"
                             name="location"
                             className="rounded"
-                            disabled
                         >
+                            <option value="">Select Location</option>
                             {locationOptions}
                         </SelectionInput>
                         <TextInput
