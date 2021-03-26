@@ -103,7 +103,7 @@ const CastGallery = ({ game }) => {
             <AppPicture
                 className={className}
                 casted={casted}
-                role={role}
+                role={role.title}
                 size={25}
                 key={pk}
             />
