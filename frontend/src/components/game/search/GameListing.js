@@ -7,7 +7,6 @@ import { AppPicture } from "common/components"
 import { ListGroup } from "react-bootstrap"
 
 export default function GameListing({ game }) {
-
     return (
         <ListGroup.Item
             className="d-inline-flex pl-0"
