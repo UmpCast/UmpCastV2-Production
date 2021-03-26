@@ -11,8 +11,7 @@ class GameSerializer(serializers.ModelSerializer):
         model = Game
         fields = ('pk', 'title', 'division', 'posts', 'date_time',
                   'is_active', 'location', 'description', 'league')
-        read_only_fields = ('pk', 'league', 'location',
-                            'division', 'posts', 'is_active')
+        read_only_fields = ('pk', 'league')
 
     def get_league(self, instance):
         return instance.division.league.pk

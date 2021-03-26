@@ -74,7 +74,8 @@ export default function Calendar() {
                 const loc = locations.find((loc) => loc.pk === game.location)
                 return {
                     ...game,
-                    location: loc
+                    location: loc,
+                    
                 }
             }),
             league.divisions

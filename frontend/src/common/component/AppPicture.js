@@ -17,7 +17,7 @@ const AppPicture = ({ casted, role, className, size }) => {
         new Name(casted.user.first_name, casted.user.last_name).fullName:
         "Empty"
 
-    const roleTip = `${role.title}: ${umpire_name}`
+    const roleTip = `${role}: ${umpire_name}`
 
     return (
         <ToolTip tip={roleTip}>
