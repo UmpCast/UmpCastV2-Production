@@ -97,7 +97,7 @@ export default function Search() {
             const visibilities = isManager
                 ? []
                 : res[2].data.results[0].division_visibilities
-            
+
             const _divisions = divisions.map((division) => {
                 const can_toggle = isManager
                     ? true
@@ -112,9 +112,14 @@ export default function Search() {
                 }
             })
 
+            const _roles = divisions.reduce((arr, division) => {
+                return arr.concat(division.roles)
+            }, [])
+
             const filters = {
                 divisions: _divisions,
                 locations: _locations,
+                roles: _roles,
                 start_date: dayjs(),
                 end_date: dayjs().add(1, "M")
             }
@@ -132,6 +137,7 @@ export default function Search() {
             const {
                 divisions,
                 locations,
+                roles,
                 start_date,
                 end_date
             } = state.applied_filters
@@ -158,7 +164,11 @@ export default function Search() {
                     ),
                     location: locations.find(
                         (item) => item.pk === game.location
-                    )
+                    ),
+                    posts: game.posts.map(post => ({
+                        ...post,
+                        role: roles.find(role => role.pk === post.role).title
+                    }))
                 }
             })
 
@@ -217,9 +227,7 @@ export default function Search() {
             </div>
             {!state.loading ? (
                 <Container>
-                    <div
-                        className="d-inline-flex justify-content-between w-100 mb-3"
-                    >
+                    <div className="d-inline-flex justify-content-between w-100 mb-3">
                         <LeagueFilter
                             allLeagues={accepted_leagues}
                             selectedLeague={selectedLeague}
