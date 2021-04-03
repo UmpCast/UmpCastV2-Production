@@ -50,10 +50,13 @@ class AssignmentViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewse
                 pk=accepted
             ).exists():
                 assignment_item = AssignmentItem.objects.get(pk=accepted)
-                Application.objects.create(
-                    post=assignment_item.post,
-                    user=assignment_item.user
-                )
+                if not Application.objects.filter(
+                    post=assignment_item.post
+                ).exists():
+                    Application.objects.create(
+                        post=assignment_item.post,
+                        user=assignment_item.user
+                    )
         return Response(status=status.HTTP_200_OK)
 
 
