@@ -92,25 +92,6 @@ export default function AddGameForm({
                                         </Button>
                                     </InputGroup.Prepend>
                                     {formControl}
-                                    {formik.values.location !== "" ? (
-                                        <InputGroup.Append>
-                                            <Button
-                                                variant="outline-danger"
-                                                className="rounded-right"
-                                                onClick={() =>
-                                                    onLocationDelete(
-                                                        parseInt(
-                                                            formik.values
-                                                                .location
-                                                        ),
-                                                        formik.values
-                                                    )
-                                                }
-                                            >
-                                                Delete
-                                            </Button>
-                                        </InputGroup.Append>
-                                    ) : null}
                                 </InputGroup>
                             )}
                             className={
