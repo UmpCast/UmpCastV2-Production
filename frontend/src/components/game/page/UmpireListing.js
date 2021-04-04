@@ -2,7 +2,7 @@ import React from "react"
 
 import { ListGroup } from "react-bootstrap"
 
-export default function UmpireListing({ user, handleApply }) {
+export default function UmpireListing({ user, canApply, handleApply }) {
     return (
         <ListGroup.Item
             className="d-inline-flex justify-content-between align-items-center"
