@@ -36,4 +36,4 @@ class AssignmentItem(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['post__game__date_time', 'post__role__pk']
+        ordering = ['post__game__date_time', 'post__game__pk']
