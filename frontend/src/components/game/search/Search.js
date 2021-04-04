@@ -186,14 +186,22 @@ export default function Search() {
     }
 
     const onDateSelect = (field) => (date) => {
-        if (!date.isSame(state.filters[field]))
+        if (!date.isSame(state.filters[field])) {
+            const dateUpdates = {[field]: date}
+
+            if (field === "start_date" && state.filters.end_date <= date)
+                dateUpdates.end_date = date.add(1, "w")
+            else if (field === "end_date" && date <= state.filters.start_date)
+                dateUpdates.start_date = date.add(-1, "w")
+            
             setState({
                 ...state,
                 filters: {
                     ...state.filters,
-                    [field]: date
+                    ...dateUpdates
                 }
             })
+        }
     }
 
     const onListToggle = (field) => (pk) => {
