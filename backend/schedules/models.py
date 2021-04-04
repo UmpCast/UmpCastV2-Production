@@ -29,6 +29,9 @@ class Assignment(models.Model):
     end_date = models.DateTimeField()
     is_completed = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['-pk', ]
+
 
 class AssignmentItem(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
