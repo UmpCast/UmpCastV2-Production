@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins
 from schedules.models import TimeRange, Assignment, AssignmentItem
 from schedules.api.serializers import TimeRangeSerializer, AssignmentSerializer, AssignmentItemSerializer
-from schedules.api.permissions import TimeRangeFilterPermissions, TimeRangeDestroyPermissions, AssignmentPermissions, AssignmentItemFilterPermissions
+from schedules.api.permissions import TimeRangeFilterPermissions, TimeRangeDestroyPermissions, AssignmentPermissions, AssignmentItemFilterPermissions, AssignmentFilterPermissions
 from backend.permissions import IsSuperUser, ActionBasedPermission, IsManager
 from rest_framework import permissions, status
 from rest_framework.response import Response
@@ -25,14 +25,16 @@ class TimeRangeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
     }
 
 
-class AssignmentViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class AssignmentViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Assignment.objects.all()
+    filter_fields = ('league', )
     serializer_class = AssignmentSerializer
     permission_classes = (IsSuperUser | (
         permissions.IsAuthenticated & ActionBasedPermission
     ),)
     action_permissions = {
-        IsManager & AssignmentPermissions: ['retrieve', 'submit']
+        IsManager & AssignmentPermissions: ['retrieve', 'submit'],
+        IsManager & AssignmentFilterPermissions: ['list']
     }
 
     @action(detail=True, methods=['post'])
@@ -48,10 +50,13 @@ class AssignmentViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
                 pk=accepted
             ).exists():
                 assignment_item = AssignmentItem.objects.get(pk=accepted)
-                Application.objects.create(
-                    post=assignment_item.post,
-                    user=assignment_item.user
-                )
+                if not Application.objects.filter(
+                    post=assignment_item.post
+                ).exists():
+                    Application.objects.create(
+                        post=assignment_item.post,
+                        user=assignment_item.user
+                    )
         return Response(status=status.HTTP_200_OK)
 
 
