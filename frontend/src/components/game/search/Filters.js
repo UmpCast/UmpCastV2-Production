@@ -121,7 +121,6 @@ const DateFilter = ({ text, selectedDate, onDateSelect, className }) => {
             </FilterToggle>
             <Dropdown.Menu className="mt-1">
                 <Calendar
-                    minDate={dayjs().toDate()}
                     date={selectedDate.toDate()}
                     onChange={onDateChange}
                 />
