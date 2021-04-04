@@ -25,7 +25,7 @@ const SubNavItem = ({ league, subject, active }) => (
         key={subject}
         variant="light"
         className={`mx-1 px-auto text-muted 
-        ${subject === "umpires" ? " d-none d-lg-block" : null}`}>
+        ${["umpires", "assignment"].includes(subject) ? " d-none d-lg-block" : null}`}>
         <Nav.Link
             as={Link}
             to={`/league/${league.pk}/${subject}`}
