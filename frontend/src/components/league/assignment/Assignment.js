@@ -6,7 +6,7 @@ import Loader from "common/components"
 import { useApi, useFetchLeague } from "common/hooks"
 import LeagueContainer from "components/league/LeagueContainer"
 import StartAssignmentStep from "./StartAssignmentStep"
-import SelectDateRangeStep from "./SelectDateRangeStep"
+import SelectDateRangeStep from "./CreateAssignmentsStep"
 import ResolveAssignmentsStep from "./ResolveAssignmentsStep"
 import AssignmentsCompleteStep from "./AssignmentsCompleteStep"
 
