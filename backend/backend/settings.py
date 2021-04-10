@@ -124,12 +124,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
+        # local development db
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': config('AWS_DB_HOST'),
-        'PORT': '5432'
+        'HOST': 'db',
     }
 }
 
@@ -307,4 +307,4 @@ TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = config('TWILIO_PHONE_NUMBER')
 
 
-django_heroku.settings(locals(), databases=False)
+django_heroku.settings(locals(), databases=True)
