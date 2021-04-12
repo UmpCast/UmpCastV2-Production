@@ -63,8 +63,8 @@ class AutoAssign(object):
         return AssignmentItem.objects.filter(
             assignment=self.assignment,
             user=uls.user,
-            post__game__date_time__gt=post.game.date_time - timedelta(hours=2),
-            post__game__date_time__lt=post.game.date_time + timedelta(hours=2)
+            post__game__date_time__gt=post.game.date_time - timedelta(hours=4),
+            post__game__date_time__lt=post.game.date_time + timedelta(hours=4)
         ).count() == 0
 
     def get_day_of_week(self, date_time):
@@ -90,8 +90,8 @@ class AutoAssign(object):
 
         is_game_conflicts = Application.objects.filter(
             user=uls.user,
-            post__game__date_time__gt=game.date_time - timedelta(hours=2),
-            post__game__date_time__lt=game.date_time + timedelta(hours=2)
+            post__game__date_time__gt=game.date_time - timedelta(hours=4),
+            post__game__date_time__lt=game.date_time + timedelta(hours=4)
         ).count() != 0
 
         if is_game_conflicts:  # check if conflicting application
