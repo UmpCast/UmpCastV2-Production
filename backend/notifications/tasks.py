@@ -61,7 +61,7 @@ def game_reminders_task():
             if application.user.email_notifications:
                 send_notification_email_task.delay(
                     application.user.email,
-                    f"Reminder for game {application.game.title} within 24 hours",
+                    f"Reminder for game {application.post.game.title} within 24 hours",
                     "Log on to your UmpireCast account for more details",
                     0
                 )
