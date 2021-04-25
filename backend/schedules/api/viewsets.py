@@ -7,6 +7,7 @@ from rest_framework import viewsets, mixins
 from schedules.models import TimeRange, Assignment, AssignmentItem, SpecialBlock
 from schedules.api.serializers import TimeRangeSerializer, AssignmentSerializer, AssignmentItemSerializer, SpecialBlockSerializer
 from schedules.api.permissions import TimeRangeFilterPermissions, TimeRangeDestroyPermissions, AssignmentPermissions, AssignmentItemFilterPermissions, AssignmentFilterPermissions, SpecialBlockDestroyPermissions, SpecialBlockFilterPermissions
+from schedules.api.filters import SpecialBlockFilter
 
 
 class TimeRangeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
@@ -28,7 +29,7 @@ class TimeRangeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
 class SpecialBlockViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
                           mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = SpecialBlock.objects.all()
-    filter_fields = ('user', )
+    filterset_class = SpecialBlockFilter
     serializer_class = SpecialBlockSerializer
     permission_classes = (IsSuperUser | (
         permissions.IsAuthenticated & ActionBasedPermission), )
