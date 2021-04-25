@@ -28,6 +28,9 @@ class SpecialBlock(models.Model):
     start = models.DateTimeField(blank=False, null=False)
     end = models.DateTimeField(blank=False, null=False)
 
+    class Meta:
+        ordering = ['start', ]
+
 
 class Assignment(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE)
