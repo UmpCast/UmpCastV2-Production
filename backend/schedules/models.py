@@ -23,6 +23,12 @@ class TimeRange(models.Model):
         max_length=9, choices=DAY_CHOICES, blank=False, null=False)
 
 
+class SpecialBlock(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start = models.DateTimeField(blank=False, null=False)
+    end = models.DateTimeField(blank=False, null=False)
+
+
 class Assignment(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
