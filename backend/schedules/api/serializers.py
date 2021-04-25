@@ -1,4 +1,4 @@
-from schedules.models import TimeRange, AssignmentItem, Assignment
+from schedules.models import TimeRange, AssignmentItem, Assignment, SpecialBlock
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from games.api.serializers.game import GameSerializer
@@ -43,6 +43,20 @@ class AssignmentItemSerializer(serializers.ModelSerializer):
 
     def get_role_title(self, instance):
         return instance.post.role.title
+
+
+class SpecialBlockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpecialBlock
+        fields = ('pk', 'user', 'start', 'end')
+
+    def create(self, validated_data):
+        user = validated_data.get('user', None)
+        if not user:
+            raise ValidationError('missing parameters')
+        if user != self.context['request'].user:
+            raise ValidationError('SpecialBlock can only be created by user')
+        return super().create(validated_data)
 
 
 class TimeRangeSerializer(serializers.ModelSerializer):

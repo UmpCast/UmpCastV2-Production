@@ -1,12 +1,12 @@
-from rest_framework import viewsets, mixins
-from schedules.models import TimeRange, Assignment, AssignmentItem
-from schedules.api.serializers import TimeRangeSerializer, AssignmentSerializer, AssignmentItemSerializer
-from schedules.api.permissions import TimeRangeFilterPermissions, TimeRangeDestroyPermissions, AssignmentPermissions, AssignmentItemFilterPermissions, AssignmentFilterPermissions
-from backend.permissions import IsSuperUser, ActionBasedPermission, IsManager
-from rest_framework import permissions, status
-from rest_framework.response import Response
-from games.models import Application
 from rest_framework.decorators import action
+from games.models import Application
+from rest_framework.response import Response
+from rest_framework import permissions, status
+from backend.permissions import IsSuperUser, ActionBasedPermission, IsManager
+from rest_framework import viewsets, mixins
+from schedules.models import TimeRange, Assignment, AssignmentItem, SpecialBlock
+from schedules.api.serializers import TimeRangeSerializer, AssignmentSerializer, AssignmentItemSerializer, SpecialBlockSerializer
+from schedules.api.permissions import TimeRangeFilterPermissions, TimeRangeDestroyPermissions, AssignmentPermissions, AssignmentItemFilterPermissions, AssignmentFilterPermissions, SpecialBlockDestroyPermissions, SpecialBlockFilterPermissions
 
 
 class TimeRangeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
@@ -22,6 +22,22 @@ class TimeRangeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
 
         TimeRangeDestroyPermissions: ['destroy'],
         TimeRangeFilterPermissions: ['list']
+    }
+
+
+class SpecialBlockViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                          mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = SpecialBlock.objects.all()
+    filter_fields = ('user', )
+    serializer_class = SpecialBlockSerializer
+    permission_classes = (IsSuperUser | (
+        permissions.IsAuthenticated & ActionBasedPermission), )
+    action_permissions = {
+        # user restriction enforced on serializer level
+        permissions.IsAuthenticated: ['create'],
+
+        SpecialBlockDestroyPermissions: ['destroy'],
+        SpecialBlockFilterPermissions: ['list']
     }
 
 
