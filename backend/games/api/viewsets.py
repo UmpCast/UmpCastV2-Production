@@ -177,5 +177,5 @@ class GameViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
         GameFilterDivision | GameFilterDivisionIn | GameFilterUser: ["list"],
     }
 
-    queryset = Game.objects.all()
+    queryset = Game.objects.filter(is_active=True)
     filterset_class = GameFilter
