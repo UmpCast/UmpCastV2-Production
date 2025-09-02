@@ -37,6 +37,7 @@ CORS_ORIGIN_WHITELIST = [
     "https://localhost:8000",
     "https://localhost:3000",
     "http://localhost:8000",
+    "http://localhost:3000",
     "http://localhost:2000",
     "https://localhost:2000",
     "https://umpcast-test.web.app",
@@ -186,6 +187,19 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # CUSTOM SETTINGS
 AUTH_USER_MODEL = 'users.User'
+
+# OAuth2 Provider Configuration
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+    },
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
+    'REFRESH_TOKEN_EXPIRE_SECONDS': 86400,
+    'ROTATE_REFRESH_TOKEN': True,
+    'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
+    'CLIENT_SECRET_GENERATOR_CLASS': 'oauth2_provider.generators.ClientSecretGenerator',
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
