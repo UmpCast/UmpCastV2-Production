@@ -3,13 +3,13 @@ import { Link } from "react-router-dom"
 import { Formik } from "formik"
 import * as Yup from "yup"
 
-import { useTokenLogin, useApi } from "common/hooks"
+import { useTokenLogin, useApi } from "common/hooks.js"
 
-import { FocusContainer } from "common/components"
-import { OauthUserValidate } from "common/Api"
+import { FocusContainer } from "common/components.js"
+import { OauthUserValidate } from "common/Api.js"
 
-// import Social from "./Social"
-import LoginForm from "./LoginForm"
+// import Social from "./Social.js"
+import LoginForm from "./LoginForm.js"
 
 import { Card } from "react-bootstrap"
 
@@ -94,7 +94,10 @@ export const requests = {
     fetchToken: ({ username, password }) => {
         return [
             "api/auth/token/",
-            { data: OauthUserValidate(username.toLowerCase(), password) },
+            { 
+                data: OauthUserValidate(username.toLowerCase(), password),
+                content_type: "application/x-www-form-urlencoded"
+            },
             "POST"
         ]
     }

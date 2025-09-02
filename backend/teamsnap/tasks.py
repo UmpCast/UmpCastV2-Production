@@ -1,7 +1,7 @@
 from teamsnap.teamsnap import TeamSnapSyncer
 from leagues.models import League
 from teamsnap.models import TeamSnapNote, TeamSnapNoteItem
-from celery.decorators import task
+from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from django.core.mail import send_mail
@@ -11,7 +11,7 @@ from django.conf import settings
 logger = get_task_logger(__name__)
 
 
-@task(name='sync_teamsnap')
+@shared_task(name='sync_teamsnap')
 def sync_teamsnap():
     for league in League.objects.all():
         ts = TeamSnapSyncer(league.api_key, league)

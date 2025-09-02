@@ -1,18 +1,18 @@
 import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import { useApi, useMountEffect } from "common/hooks"
-import { TsRedirect } from "common/Api"
+import { useApi, useMountEffect } from "common/hooks.js"
+import { TsRedirect } from "common/Api.js"
 
-import Loader from "common/components"
-import SettingsContainer from "../SettingsContainer"
+import Loader from "common/components.js"
+import SettingsContainer from "../SettingsContainer.js"
 
-import TsDivisions from "./teamsnap/TsDivisions"
-import DivisionsCol from "./divisions/SortDivisions"
-import AddDivisionButton from "./divisions/AddDivisionButton"
+import TsDivisions from "./teamsnap/TsDivisions.js"
+import DivisionsCol from "./divisions/SortDivisions.js"
+import AddDivisionButton from "./divisions/AddDivisionButton.js"
 
 import { Row, Col, Button } from "react-bootstrap"
-import { LeagueSyncFeatures } from "components/league/settings/Text"
+import { LeagueSyncFeatures } from "components/league/settings/Text.js"
 
 export default function DivisionsSettings() {
     const { pk } = useParams()

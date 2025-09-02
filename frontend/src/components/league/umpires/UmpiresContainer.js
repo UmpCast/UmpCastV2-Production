@@ -1,8 +1,8 @@
 import React from 'react'
 
-import Loader, { SettingsHeader, SettingsNav } from "common/components"
+import Loader, { SettingsHeader, SettingsNav } from "common/components.js"
 
-import LeagueContainer from "components/league/LeagueContainer"
+import LeagueContainer from "components/league/LeagueContainer.js"
 
 import { Row, Col, Nav } from "react-bootstrap"
 

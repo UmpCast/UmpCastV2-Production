@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-import { useDisplay } from "common/hooks"
+import { useDisplay } from "common/hooks.js"
 
 import { Alert } from "react-bootstrap"
 

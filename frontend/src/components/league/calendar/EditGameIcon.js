@@ -2,7 +2,7 @@ import React, { useState, Fragment } from "react"
 
 import { Modal } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import EditGameForm from "./EditGameForm"
+import EditGameForm from "./EditGameForm.js"
 import dayjs from "dayjs"
 
 export default function EditGameIcon({

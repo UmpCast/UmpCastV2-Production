@@ -2,14 +2,14 @@ import React, { useState, useEffect, useCallback } from "react"
 import dayjs from "dayjs"
 import { Container, Button } from "react-bootstrap"
 
-import useUser, { useApi } from "common/hooks"
-import GamePagination from "./GamePagination"
+import useUser, { useApi } from "common/hooks.js"
+import GamePagination from "./GamePagination.js"
 import {
     LeagueFilter,
     DivisionFilter,
     DateFilter,
     LocationFilter
-} from "./Filters"
+} from "./Filters.js"
 
 const requests = {
     fetchGames: (page, filters) => [
@@ -80,102 +80,115 @@ export default function Search() {
         ;(async () => {
             if (!selectedLeague) return
 
-            const { pk: user_pk, account_type } = user
-            const { pk: league_pk } = selectedLeague
+            try {
+                const { pk: user_pk, account_type } = user
+                const { pk: league_pk } = selectedLeague
 
-            const isManager = account_type === "manager"
+                const isManager = account_type === "manager"
 
-            const res = await Promise.all(
-                [
-                    Api.fetchLeague(league_pk),
-                    Api.fetchLocations(league_pk)
-                ].concat(isManager ? [] : Api.fetchUls(user_pk, league_pk))
-            )
+                const res = await Promise.all(
+                    [
+                        Api.fetchLeague(league_pk),
+                        Api.fetchLocations(league_pk)
+                    ].concat(isManager ? [] : Api.fetchUls(user_pk, league_pk))
+                )
 
-            const divisions = res[0].data.divisions
-            const locations = res[1].data.results
-            const visibilities = isManager
-                ? []
-                : res[2].data.results[0].division_visibilities
+                const divisions = res[0].data.divisions
+                const locations = res[1].data.results
+                const visibilities = isManager
+                    ? []
+                    : res[2].data.results[0].division_visibilities
 
-            const _divisions = divisions.map((division) => {
-                const can_toggle = isManager
-                    ? true
-                    : visibilities.includes(division.pk)
-                return { ...division, toggle: can_toggle ? true : undefined }
-            })
+                const _divisions = divisions.map((division) => {
+                    const can_toggle = isManager
+                        ? true
+                        : visibilities.includes(division.pk)
+                    return { ...division, toggle: can_toggle ? true : undefined }
+                })
 
-            const _locations = locations.map((location) => {
-                return {
-                    ...location,
-                    toggle: true
+                const _locations = locations.map((location) => {
+                    return {
+                        ...location,
+                        toggle: true
+                    }
+                })
+
+                const _roles = divisions.reduce((arr, division) => {
+                    return arr.concat(division.roles)
+                }, [])
+
+                const filters = {
+                    divisions: _divisions,
+                    locations: _locations,
+                    roles: _roles,
+                    start_date: dayjs(),
+                    end_date: dayjs().add(1, "M")
                 }
-            })
 
-            const _roles = divisions.reduce((arr, division) => {
-                return arr.concat(division.roles)
-            }, [])
-
-            const filters = {
-                divisions: _divisions,
-                locations: _locations,
-                roles: _roles,
-                start_date: dayjs(),
-                end_date: dayjs().add(1, "M")
+                setState({
+                    filters,
+                    applied_filters: filters,
+                    loading: false
+                })
+            } catch (err) {
+                console.warn('Error loading search filters:', err)
+                setState({
+                    loading: false,
+                    error: true
+                })
             }
-
-            setState({
-                filters,
-                applied_filters: filters,
-                loading: false
-            })
         })()
     }, [selectedLeague, user, Api])
 
     const fetchPage = useCallback(
         async (page) => {
-            const {
-                divisions,
-                locations,
-                roles,
-                start_date,
-                end_date
-            } = state.applied_filters
+            try {
+                const {
+                    divisions,
+                    locations,
+                    roles,
+                    start_date,
+                    end_date
+                } = state.applied_filters
 
-            const division_pks = list_pks(divisions)
-            const location_pks = list_pks(locations)
+                const division_pks = list_pks(divisions)
+                const location_pks = list_pks(locations)
 
-            const filters = {
-                division__in: division_pks,
-                location__in: location_pks,
-                date_time_after: start_date.toISOString(),
-                date_time_before: end_date.toISOString()
-            }
-
-            const {
-                data: { count, page_size, results }
-            } = await Api.fetchGames(page, filters)
-
-            const items = results.map((game) => {
-                return {
-                    ...game,
-                    division: divisions.find(
-                        (item) => item.pk === game.division
-                    ),
-                    location: locations.find(
-                        (item) => item.pk === game.location
-                    ),
-                    posts: game.posts.map(post => ({
-                        ...post,
-                        role: roles.find(role => role.pk === post.role).title
-                    }))
+                const filters = {
+                    division__in: division_pks,
+                    location__in: location_pks,
+                    date_time_after: start_date.toISOString(),
+                    date_time_before: end_date.toISOString()
                 }
-            })
 
-            return {
-                count,
-                page_size,
-                items
+                const {
+                    data: { count, page_size, results }
+                } = await Api.fetchGames(page, filters)
+
+                const items = results.map((game) => {
+                    return {
+                        ...game,
+                        division: divisions.find(
+                            (item) => item.pk === game.division
+                        ),
+                        location: locations.find(
+                            (item) => item.pk === game.location
+                        ),
+                        posts: game.posts.map(post => ({
+                            ...post,
+                            role: roles.find(role => role.pk === post.role).title
+                        }))
+                    }
+                })
+
+                return {
+                    count,
+                    page_size,
+                    items
+                }
+            } catch (err) {
+                console.warn('Error fetching games page:', err)
+                throw err // Re-throw so the pagination component can handle it
             }
         },
         [state.applied_filters, Api]

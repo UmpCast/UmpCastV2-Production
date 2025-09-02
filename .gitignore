@@ -129,11 +129,19 @@ GitHub.sublime-settings
 /.pnp
 .pnp.js
 
+# Package manager files
+yarn.lock
+yarn-error.log
+.npm
+
 # testing
 /coverage
 
 # production
 /build
+frontend/build/
+frontend/dist/
+frontend/out/
 
 # misc
 .DS_Store
@@ -158,3 +166,12 @@ firebase.json
 .firebase/*
 
 .env
+
+# Temporary scripts and files
+frontend/fix_*.py
+frontend/revert_*.py
+backend/update_*.sh
+
+# Django static files (generated)
+backend/staticfiles/
+backend/static/

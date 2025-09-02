@@ -2,11 +2,11 @@ import React from 'react'
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from "yup"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import Loader from "common/components"
-import { SubmitButtons } from "common/forms"
-import { TextInput } from "common/Input"
+import Loader from "common/components.js"
+import { SubmitButtons } from "common/forms.js"
+import { TextInput } from "common/Input.js"
 
 import { ListGroup } from "react-bootstrap"
 

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useParams } from "react-router-dom"
 
-import useUser, { useApi, useMountEffect } from "common/hooks"
-import Loader from "common/components"
+import useUser, { useApi, useMountEffect } from "common/hooks.js"
+import Loader from "common/components.js"
 
-import LeagueContainer from "components/league/LeagueContainer"
-import JoinCard from "./JoinCard"
-import StatusCard from "./StatusCard"
+import LeagueContainer from "components/league/LeagueContainer.js"
+import JoinCard from "./JoinCard.js"
+import StatusCard from "./StatusCard.js"
 
 import { Card } from "react-bootstrap"
 

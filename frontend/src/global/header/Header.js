@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from "react"
 import { Link } from "react-router-dom"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
-import LeagueLinks from "./LeagueLinks"
-import UserLinks from "./UserLinks"
+import LeagueLinks from "./LeagueLinks.js"
+import UserLinks from "./UserLinks.js"
 
 import { Navbar, Nav } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

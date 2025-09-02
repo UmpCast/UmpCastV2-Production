@@ -1,12 +1,12 @@
 import React, { useState, Fragment } from "react"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import Feed from "./feed/Feed"
-import History from "./history/History"
-import Visibility from "./visibility/Visibility"
-import Upcoming from "./upcoming/Upcoming"
-import Availability from "./availability/Availability"
+import Feed from "./feed/Feed.js"
+import History from "./history/History.js"
+import Visibility from "./visibility/Visibility.js"
+import Upcoming from "./upcoming/Upcoming.js"
+import Availability from "./availability/Availability.js"
 
 import { Container, Row, Col, Tab, Nav } from "react-bootstrap"
 

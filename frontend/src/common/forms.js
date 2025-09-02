@@ -1,9 +1,9 @@
-import BasicConfirm from "common/forms/BasicConfirm"
-import InputConfirm from "common/forms/InputConfirm"
-import ProfileCrop from "common/forms/ProfileCrop"
-import RenameListItem from "common/forms/RenameListItem"
-import SubmitButtons from "common/forms/SubmitButtons"
-import TitleInput from "common/forms/TitleInput"
+import BasicConfirm from "common/forms/BasicConfirm.js"
+import InputConfirm from "common/forms/InputConfirm.js"
+import ProfileCrop from "common/forms/ProfileCrop.js"
+import RenameListItem from "common/forms/RenameListItem.js"
+import SubmitButtons from "common/forms/SubmitButtons.js"
+import TitleInput from "common/forms/TitleInput.js"
 
 export {
     BasicConfirm,

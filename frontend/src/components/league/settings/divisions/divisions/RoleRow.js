@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from 'react'
 
-import { useApi } from "common/hooks"
-import { RenameListItem } from "common/forms"
+import { useApi } from "common/hooks.js"
+import { RenameListItem } from "common/forms.js"
 
-import { InputConfirm } from "common/forms"
+import { InputConfirm } from "common/forms.js"
 
 import { ListGroup, Badge, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { DeleteRoleConseq } from "components/league/settings/Text"
+import { DeleteRoleConseq } from "components/league/settings/Text.js"
 
 export default function RoleRow(props) {
 

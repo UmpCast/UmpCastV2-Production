@@ -1,8 +1,8 @@
 import React from "react"
 
-import useUser, { useApi } from "common/hooks"
-import LeagueCard from "../visibility/LeagueCard"
-import LocationToggle from "./LocationToggle"
+import useUser, { useApi } from "common/hooks.js"
+import LeagueCard from "../visibility/LeagueCard.js"
+import LocationToggle from "./LocationToggle.js"
 
 export default function LocationAvailability({ user_locations, setLocation }) {
     const {

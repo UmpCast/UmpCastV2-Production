@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import { BasicConfirm } from "common/forms"
+import { BasicConfirm } from "common/forms.js"
 
 import { ListGroup } from "react-bootstrap"
-import { SyncDivisionConseq } from "components/league/settings/Text"
+import { SyncDivisionConseq } from "components/league/settings/Text.js"
 
 export default function UnusedDivision({ division, useLeague }) {
 

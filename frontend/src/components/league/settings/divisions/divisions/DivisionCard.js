@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import { Draggable } from "react-beautiful-dnd"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import RoleRow from "./RoleRow"
-import AddRole from "./AddRole"
-import { InputConfirm } from "common/forms"
+import RoleRow from "./RoleRow.js"
+import AddRole from "./AddRole.js"
+import { InputConfirm } from "common/forms.js"
 
 import { Badge, Card, Button, ListGroup } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

@@ -1,10 +1,10 @@
 // import React, { useState } from 'react'
 // import { useParams } from "react-router-dom"
 
-// import { useApi, useFetchLeague } from "common/hooks"
+// import { useApi, useFetchLeague } from "common/hooks.js"
 
-// import LeagueContainer from "components/league/LeagueContainer"
-// import SearchGame from "components/game/search/listings/GameListing"
+// import LeagueContainer from "components/league/LeagueContainer.js"
+// import SearchGame from "components/game/search/listings/GameListing.js"
 
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { Card } from "react-bootstrap"
@@ -54,3 +54,7 @@
 //     }
 // ]
 // TODO
+
+export default function Urgent() {
+    return null; // Placeholder component
+}

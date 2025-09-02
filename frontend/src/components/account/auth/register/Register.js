@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react"
 import { Link } from "react-router-dom"
 
-import { UserContext } from "global/Context"
-import Loader, { FocusContainer } from "common/components"
+import { UserContext } from "global/Context.js"
+import Loader, { FocusContainer } from "common/components.js"
 
-import RegisterEmail from "./Email";
-import RegisterDetail from "./Details";
+import RegisterEmail from "./Email.js";
+import RegisterDetail from "./Details.js";
 
 import { Card } from "react-bootstrap"
 

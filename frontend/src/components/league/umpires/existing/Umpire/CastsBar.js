@@ -1,8 +1,8 @@
 import React from 'react'
 
-import Loader, { CustomToggle } from "common/components"
+import Loader, { CustomToggle } from "common/components.js"
 
-import UpdateCasts from "./UpdateCasts"
+import UpdateCasts from "./UpdateCasts.js"
 
 import { Dropdown, Badge } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

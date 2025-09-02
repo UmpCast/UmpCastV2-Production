@@ -2,12 +2,12 @@ import React from 'react'
 
 import { Redirect, Switch } from "react-router-dom"
 
-import AuthRoute from "common/auth/AuthRoute"
+import AuthRoute from "common/auth/AuthRoute.js"
 
-import UserProfile from "./profile/UserProfile"
-import UserSecurity from "./security/UserSecurity"
-import UserNotifications from "./UserNotifications"
-import UserLeagues from "./leagues/UserLeagues"
+import UserProfile from "./profile/UserProfile.js"
+import UserSecurity from "./security/UserSecurity.js"
+import UserNotifications from "./UserNotifications.js"
+import UserLeagues from "./leagues/UserLeagues.js"
 
 export default function SettingsRouter() {
     return (

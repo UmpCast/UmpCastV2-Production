@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import dayjs from "dayjs"
 
-import useUser, { useApi, useMountEffect } from "common/hooks"
+import useUser, { useApi, useMountEffect } from "common/hooks.js"
 
-import Loader from "common/components"
-import WeekBar from "./WeekBar";
-import UpcomingGame from "./UpcomingGame";
+import Loader from "common/components.js"
+import WeekBar from "./WeekBar.js";
+import UpcomingGame from "./UpcomingGame.js";
 
 import { ListGroup } from "react-bootstrap"
 
@@ -22,6 +22,9 @@ export default function Upcoming() {
             .then(res => {
                 setGames(res[0].data.results)
                 setLeagues(res[1].data.results)
+            })
+            .catch((err) => {
+                console.warn('Error loading upcoming games:', err)
             })
     })
 

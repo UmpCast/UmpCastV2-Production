@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Loader, { ProfilePicture } from "common/components"
+import Loader, { ProfilePicture } from "common/components.js"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import darkMeteor from "assets/dark_meteor.png"

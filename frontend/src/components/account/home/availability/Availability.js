@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 
-import useUser, { useMountEffect, useApi } from "common/hooks"
+import useUser, { useMountEffect, useApi } from "common/hooks.js"
 
 import { Accordion, Card, Button, Tab, Nav } from "react-bootstrap"
 
-import TimeAvailability from "./TimeAvailability"
-import LocationAvailability from "./LocationAvailability"
-import AvailabilityStatus from "./AvailabilityStatus"
+import TimeAvailability from "./TimeAvailability.js"
+import LocationAvailability from "./LocationAvailability.js"
+import AvailabilityStatus from "./AvailabilityStatus.js"
 
 const requests = {
     getTimeRanges(user_pk) {
@@ -80,6 +80,9 @@ export default function Availability() {
             Api.getUserLocations(user.pk)
         ]).then(([res1, res2]) => {
             const current = res1.data.results
+            
+            // The API already filters by user, so we should trust the results
+            const userTimeRanges = current
             const user_locations = res2.data.results.reduce(
                 (
                     obj,
@@ -124,11 +127,18 @@ export default function Availability() {
             setState({
                 ...state,
                 schedule: {
-                    current,
+                    current: userTimeRanges,
                     adding: false
                 },
                 user_locations,
                 loading: false
+            })
+        }).catch((err) => {
+            console.warn('Error loading availability data:', err)
+            setState({
+                ...state,
+                loading: false,
+                error: true
             })
         })
     })

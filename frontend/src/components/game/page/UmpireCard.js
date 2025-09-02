@@ -1,10 +1,10 @@
 import React from "react"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import Loader, { ProfilePicture } from "common/components"
+import Loader, { ProfilePicture } from "common/components.js"
 
-import CancelButton from "./CancelButton"
+import CancelButton from "./CancelButton.js"
 
 import { Card } from "react-bootstrap"
 import PrimaryBaseball from "assets/primary_baseball.png"

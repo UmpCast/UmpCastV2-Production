@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import SocialLogin from "react-social-login"
 
-import { useApi, useTokenLogin } from "common/hooks"
+import { useApi, useTokenLogin } from "common/hooks.js"
 
-import { OauthConvertToken } from "common/Api"
+import { OauthConvertToken } from "common/Api.js"
 
 import { Row, Col, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

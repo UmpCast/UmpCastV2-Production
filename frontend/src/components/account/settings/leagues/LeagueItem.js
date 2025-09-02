@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 
-import { ProfilePicture } from "common/components"
+import { ProfilePicture } from "common/components.js"
 
 import { ListGroup } from "react-bootstrap"
 import darkMeteor from "assets/dark_meteor.png"

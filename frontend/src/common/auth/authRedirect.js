@@ -1,7 +1,7 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
 export default function useAuthRedirect(data, auth_start, auth_end) {
     const User = useUser()

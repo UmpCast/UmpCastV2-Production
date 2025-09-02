@@ -3,11 +3,11 @@ import { Formik } from "formik"
 import { useHistory } from "react-router-dom"
 import * as Yup from "yup"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import ResetPasswordForm from "./ResetPasswordForm"
+import ResetPasswordForm from "./ResetPasswordForm.js"
 
-import { FocusContainer } from "common/components"
+import { FocusContainer } from "common/components.js"
 import { Card } from "react-bootstrap"
 
 const initialValues = {

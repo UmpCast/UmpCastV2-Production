@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import { NewPfpButton, ProfilePicture } from "common/components"
+import { NewPfpButton, ProfilePicture } from "common/components.js"
 
 import primaryBaseball from "assets/primary_baseball.png"
 import { Row, Col } from "react-bootstrap"

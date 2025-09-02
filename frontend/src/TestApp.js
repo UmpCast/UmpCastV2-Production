@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react"
-import ListPagination from "components/game/search/usePagination"
+import ListPagination from "components/game/search/usePagination.js"
 
 const TestApp = () => {
     const [plusOne, setPlusOne] = useState(false)

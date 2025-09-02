@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom"
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from "yup"
 
-import { useApi, useMountEffect } from "common/hooks"
+import { useApi, useMountEffect } from "common/hooks.js"
 
-import SubNav from "../../LeagueContainer"
-import SettingsNav from "../SettingsContainer"
+import SubNav from "../../LeagueContainer.js"
+import SettingsNav from "../SettingsContainer.js"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card, ListGroup, Row, Col, Button, InputGroup, Form } from "react-bootstrap"

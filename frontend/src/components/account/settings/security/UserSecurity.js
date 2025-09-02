@@ -2,12 +2,12 @@ import React from 'react'
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from "yup"
 
-import useUser, { useApi } from "common/hooks"
+import useUser, { useApi } from "common/hooks.js"
 
-import { OauthUserValidate } from "common/Api"
+import { OauthUserValidate } from "common/Api.js"
 
-import UserSettingsContainer from "../SettingsContainer"
-import PasswordForm from "./PasswordForm"
+import UserSettingsContainer from "../SettingsContainer.js"
+import PasswordForm from "./PasswordForm.js"
 
 import { Row, Col, Button } from "react-bootstrap"
 

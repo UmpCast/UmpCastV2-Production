@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import LeagueItem from "./LeagueItem"
+import LeagueItem from "./LeagueItem.js"
 
 import { Modal, ListGroup, Form, InputGroup } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

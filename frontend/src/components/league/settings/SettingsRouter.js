@@ -2,12 +2,12 @@ import React from 'react'
 
 import { Switch, Route, Redirect } from "react-router-dom"
 
-import AuthRoute from "common/auth/AuthRoute"
+import AuthRoute from "common/auth/AuthRoute.js"
 
-import LeagueProfile from "./profile/LeagueProfile"
-import UmpireDefaults from "./umpires/UmpireDefaults"
-import DivisionSettings from "./divisions/DivisionsSettings"
-import Payouts from "./report/Payouts"
+import LeagueProfile from "./profile/LeagueProfile.js"
+import UmpireDefaults from "./umpires/UmpireDefaults.js"
+import DivisionSettings from "./divisions/DivisionsSettings.js"
+import Payouts from "./report/Payouts.js"
 
 export default function settingsRouter() {
 

@@ -1,7 +1,7 @@
 from datetime import timedelta
 from games.models import Game, Application
 from django.utils import timezone
-from celery.decorators import task
+from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from django.core.mail import send_mail
@@ -13,7 +13,7 @@ logger = get_task_logger(__name__)
 ADVANCED_NOTIFICATION_DAYS = 1
 
 
-@task(name='send_notification_sms_task')
+@shared_task(name='send_notification_sms_task')
 def send_notification_sms_task(sms, subject, notification_pk):
     try:
         send_sms(
@@ -27,7 +27,7 @@ def send_notification_sms_task(sms, subject, notification_pk):
         return f"SMS Failed Notification: {sms}, {notification_pk}"
 
 
-@task(name='send_notification_email_task')
+@shared_task(name='send_notification_email_task')
 def send_notification_email_task(email, subject, message, notification_pk):
     try:
         send_mail(
@@ -42,7 +42,7 @@ def send_notification_email_task(email, subject, message, notification_pk):
         return f"Email Failed Notification: {email}, {notification_pk}"
 
 
-@task(name='game_reminders_task')
+@shared_task(name='game_reminders_task')
 def game_reminders_task():
     time = timezone.now()
     applications = Application.objects.filter(

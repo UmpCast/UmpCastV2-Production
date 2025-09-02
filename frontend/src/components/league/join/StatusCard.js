@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
 import { Row, Col } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -8,7 +8,7 @@ import {
     JoinRequestPending,
     JoinRequestAccepted,
     JoinRequestRejected
-} from 'components/league/settings/Text'
+} from "components/league/settings/Text.js"
 
 export default function StatusCard({ status }) {
 

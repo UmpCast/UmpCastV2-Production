@@ -1,13 +1,13 @@
 import React from 'react'
 import { useParams } from "react-router-dom"
 
-import { useFetchLeague } from "common/hooks"
+import { useFetchLeague } from "common/hooks.js"
 
-import Loader from "common/components"
-import SettingsContainer from "components/league/settings/SettingsContainer"
+import Loader from "common/components.js"
+import SettingsContainer from "components/league/settings/SettingsContainer.js"
 
-import SignupDefaults from "./signups/SignupDefaults"
-import VisibilityLevels from "./levels/VisibilityLevels"
+import SignupDefaults from "./signups/SignupDefaults.js"
+import VisibilityLevels from "./levels/VisibilityLevels.js"
 
 
 export default function LeagueUmpires() {

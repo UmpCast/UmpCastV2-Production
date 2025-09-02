@@ -1,10 +1,10 @@
 import React, { Fragment, useState } from "react"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import { InputConfirm, RenameListItem } from "common/forms"
+import { InputConfirm, RenameListItem } from "common/forms.js"
 
-import UmpireVisibility from "components/league/umpires/existing/Visibility/UmpireVisibility"
+import UmpireVisibility from "components/league/umpires/existing/Visibility/UmpireVisibility.js"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ListGroup, Badge, Button } from "react-bootstrap"

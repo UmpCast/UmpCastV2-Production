@@ -1,11 +1,11 @@
 import React, { useState, Fragment } from "react"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
 import { Modal, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import AddGameForm from "./AddGameForm"
-import AddLocationForm from "./AddLocationForm"
+import AddGameForm from "./AddGameForm.js"
+import AddLocationForm from "./AddLocationForm.js"
 
 export default function AddGameButton({
     locations,

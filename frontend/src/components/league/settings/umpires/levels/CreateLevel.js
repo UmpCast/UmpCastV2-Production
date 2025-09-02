@@ -2,9 +2,9 @@ import React from 'react'
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from "yup"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import { TitleInput } from "common/forms"
+import { TitleInput } from "common/forms.js"
 
 import { Modal } from "react-bootstrap"
 

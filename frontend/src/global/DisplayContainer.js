@@ -1,9 +1,8 @@
 import React, { Fragment } from 'react'
-import ClipLoader from "react-spinners/ClipLoader"
 
-import { useDisplay } from "common/hooks"
+import { useDisplay } from "common/hooks.js"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
 import { Container } from "react-bootstrap"
 
@@ -13,17 +12,14 @@ export default function DisplayContainer({ children }) {
 
     return (
         <Fragment>
-            {Display.alert}
+            {/* {Display.alert && Display.alert} */}
             < Container
                 fluid
                 className={`p-0 no-select ${Display.loading > 0 ? "ump-loading-container" : null}`}>
                 {children}
                 <Loader dep={[Display.loading > 0]}>
                     <div className="ump-loading-spinner">
-                        <ClipLoader
-                            size={75}
-                            color={"#2375DF"}
-                            style={{zIndex: "100"}} />
+                        <div style={{zIndex: "100"}}>Loading...</div>
                     </div>
                 </Loader>
             </Container >

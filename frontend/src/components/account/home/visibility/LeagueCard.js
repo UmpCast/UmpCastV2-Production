@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ProfilePicture } from "common/components"
+import { ProfilePicture } from "common/components.js"
 
 import {Card } from "react-bootstrap"
 import darkMeteor from "assets/dark_meteor.png"

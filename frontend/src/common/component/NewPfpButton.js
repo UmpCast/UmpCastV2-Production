@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 
-import ProfileCrop from "common/forms/ProfileCrop"
+import ProfileCrop from "common/forms/ProfileCrop.js"
 
 import { Form, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

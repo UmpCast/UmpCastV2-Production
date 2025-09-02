@@ -1,7 +1,7 @@
 import React from "react"
 import dayjs from "dayjs"
 
-import NoGame from "./NoGame"
+import NoGame from "./NoGame.js"
 
 import { Row, Col } from "react-bootstrap"
 

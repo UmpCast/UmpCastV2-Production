@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
 import { ListGroup, useAccordionToggle } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

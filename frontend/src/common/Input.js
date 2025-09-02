@@ -2,7 +2,7 @@ import React from "react"
 import { useField } from "formik"
 import Moment from "moment"
 import momentLocalizer from "react-widgets-moment"
-import DateTimePicker from "react-widgets/lib/DateTimePicker"
+import DateTimePicker from "react-widgets/lib/DateTimePicker.js"
 
 import { Form } from "react-bootstrap"
 

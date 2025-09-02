@@ -1,6 +1,6 @@
 import React from "react"
 import dayjs from "dayjs"
-import AppStatus from "./AppStatus"
+import AppStatus from "./AppStatus.js"
 
 import {
     faCheckCircle,

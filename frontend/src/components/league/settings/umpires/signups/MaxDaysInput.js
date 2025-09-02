@@ -1,6 +1,6 @@
 import React from "react"
 
-import { RangeInput } from "common/Input"
+import { RangeInput } from "common/Input.js"
 
 import { Form } from "react-bootstrap"
 

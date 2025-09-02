@@ -1,11 +1,11 @@
 import React, { Fragment, useCallback, useState } from "react"
 
-import useUser, { useApi } from "common/hooks"
+import useUser, { useApi } from "common/hooks.js"
 
-import { ProfilePicture } from "common/components"
-import { BasicConfirm } from "common/forms"
-import { GameSignupConseq } from "components/game/Text"
-import UmpireSearch from "./UmpireSearch"
+import { ProfilePicture } from "common/components.js"
+import { BasicConfirm } from "common/forms.js"
+import { GameSignupConseq } from "components/game/Text.js"
+import UmpireSearch from "./UmpireSearch.js"
 
 import { Card } from "react-bootstrap"
 import PrimaryBaseball from "assets/primary_baseball.png"

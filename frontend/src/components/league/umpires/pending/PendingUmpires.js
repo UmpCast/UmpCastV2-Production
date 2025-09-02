@@ -1,17 +1,17 @@
 import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import { useApi, useMountEffect } from "common/hooks"
+import { useApi, useMountEffect } from "common/hooks.js"
 
-import Loader, { CustomToggle } from "common/components"
+import Loader, { CustomToggle } from "common/components.js"
 
-import UmpiresContainer from "components/league/umpires/UmpiresContainer"
+import UmpiresContainer from "components/league/umpires/UmpiresContainer.js"
 
-import PendingRow from "./PendingRow"
+import PendingRow from "./PendingRow.js"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Card, Row, Table, Dropdown } from "react-bootstrap"
-import InvitUmpiresButton from "./InviteUmpiresButton"
+import InvitUmpiresButton from "./InviteUmpiresButton.js"
 
 const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL
 

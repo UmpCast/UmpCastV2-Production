@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
 import { Form } from "react-bootstrap"
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-import { useTokenLogin, useMountEffect } from "common/hooks"
+import { useTokenLogin, useMountEffect } from "common/hooks.js"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
 export default function AuthContainer({ children }) {
 

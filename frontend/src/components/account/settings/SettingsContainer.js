@@ -1,8 +1,8 @@
 import React from 'react'
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import { SettingsHeader, SettingsNav, ProfilePicture } from "common/components"
+import { SettingsHeader, SettingsNav, ProfilePicture } from "common/components.js"
 
 import { Container, Row, Col, Nav } from "react-bootstrap"
 import PrimaryBaseball from "assets/primary_baseball.png"

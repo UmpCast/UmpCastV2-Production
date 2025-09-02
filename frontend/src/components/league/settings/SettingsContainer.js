@@ -1,7 +1,7 @@
 import React from 'react'
 
-import Loader, { SettingsHeader, SettingsNav, ProfilePicture } from "common/components"
-import LeagueContainer from "components/league/LeagueContainer"
+import Loader, { SettingsHeader, SettingsNav, ProfilePicture } from "common/components.js"
+import LeagueContainer from "components/league/LeagueContainer.js"
 
 import { Row, Col, Nav } from "react-bootstrap"
 import darkMeteor from "assets/dark_meteor.png"

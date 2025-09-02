@@ -2,11 +2,11 @@ import React, { useState } from "react"
 
 import { Card } from "react-bootstrap"
 
-import useUser, { useApi, useMountEffect } from "common/hooks"
+import useUser, { useApi, useMountEffect } from "common/hooks.js"
 
-import PastGame from "./PastGame"
-import HistoryHeader from "./HistoryHeader"
-import Loader, { NotifsPage } from "common/components"
+import PastGame from "./PastGame.js"
+import HistoryHeader from "./HistoryHeader.js"
+import Loader, { NotifsPage } from "common/components.js"
 
 const History = () => {
     const Api = useApi(requests)
@@ -24,6 +24,9 @@ const History = () => {
                 return Promise.all(fetches)
             })
             .then((res) => setLeagues(res.map(({ data }) => data)))
+            .catch((err) => {
+                console.warn('Error loading history:', err)
+            })
     })
 
     const fetchNotifs = {

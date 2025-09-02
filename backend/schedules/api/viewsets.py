@@ -24,6 +24,13 @@ class TimeRangeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,
         TimeRangeFilterPermissions: ['list']
     }
 
+    def get_queryset(self):
+        """
+        Always filter queryset to only show time ranges for the current user.
+        This ensures consistency and security for all users.
+        """
+        return TimeRange.objects.filter(user=self.request.user)
+
 
 class AssignmentViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Assignment.objects.all()

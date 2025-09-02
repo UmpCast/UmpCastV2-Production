@@ -1,6 +1,6 @@
 import React from "react"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
 import { Nav } from "react-bootstrap"
 

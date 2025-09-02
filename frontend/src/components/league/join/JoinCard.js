@@ -1,11 +1,11 @@
 import React from 'react'
 
-import useUser, { useApi } from "common/hooks"
-import Loader from "common/components"
+import useUser, { useApi } from "common/hooks.js"
+import Loader from "common/components.js"
 
 import { Row, Col, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { UserJoinDescription } from "components/league/settings/Text"
+import { UserJoinDescription } from "components/league/settings/Text.js"
 
 export default function JoinCard(props) {
 

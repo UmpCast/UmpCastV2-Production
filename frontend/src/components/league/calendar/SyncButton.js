@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { ToolTip } from "common/components"
-import { useApi } from "common/hooks"
+import { ToolTip } from "common/components.js"
+import { useApi } from "common/hooks.js"
 
 import { Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

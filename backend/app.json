@@ -1,0 +1,32 @@
+{
+  "name": "UmpCast Backend",
+  "description": "Django backend for UmpCast application",
+  "repository": "https://github.com/UmpCast/UmpCastV2-Production",
+  "stack": "heroku-24",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "env": {
+    "PYTHON_VERSION": "3.13"
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "basic"
+    },
+    "beat": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "addons": [
+    "heroku-postgresql",
+    "heroku-redis"
+  ]
+}

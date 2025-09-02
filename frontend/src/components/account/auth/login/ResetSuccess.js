@@ -1,6 +1,6 @@
 import React from "react"
 
-import { FocusContainer } from "common/components"
+import { FocusContainer } from "common/components.js"
 
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome"
 import { Row, Col, Card } from "react-bootstrap"

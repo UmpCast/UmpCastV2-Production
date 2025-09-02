@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
-import useUser, { useApi, useMountEffect } from "common/hooks"
-import Loader from "common/components"
+import useUser, { useApi, useMountEffect } from "common/hooks.js"
+import Loader from "common/components.js"
 
-import UserSettingsContainer from "../SettingsContainer"
-import LeagueSearch from "./LeagueSearch"
-import LeagueRow from "./LeagueRow"
+import UserSettingsContainer from "../SettingsContainer.js"
+import LeagueSearch from "./LeagueSearch.js"
+import LeagueRow from "./LeagueRow.js"
 
 import { ListGroup, Button } from "react-bootstrap"
 

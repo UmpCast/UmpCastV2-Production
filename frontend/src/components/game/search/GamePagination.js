@@ -1,8 +1,8 @@
 import React from "react"
 import { ListGroup } from "react-bootstrap"
 
-import usePagination from "./usePagination"
-import GameListing from "./GameListing"
+import usePagination from "./usePagination.js"
+import GameListing from "./GameListing.js"
 
 const GamePagination = ({ fetchPage }) => {
     const { items, itemCount, pageNumber, pageCount, nextPage } = usePagination(

@@ -31,13 +31,12 @@ export const OauthConvertToken = (backend, token) => {
 }
 
 export const OauthUserValidate = (username, password) => {
-    return {
-        grant_type: "password",
-        client_id: DB_CLIENT_ID,
-        client_secret: DB_CLIENT_SECRET,
-        username,
-        password
-    }
+    const params = new URLSearchParams()
+    params.append('grant_type', 'password')
+    params.append('client_id', DB_CLIENT_ID)
+    params.append('username', username)
+    params.append('password', password)
+    return params.toString()
 }
 
 export const TsRedirect = (pk) => {

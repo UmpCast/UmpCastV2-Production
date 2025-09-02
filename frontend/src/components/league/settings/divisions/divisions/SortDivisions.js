@@ -2,8 +2,8 @@ import React from "react"
 import arrayMove from "array-move"
 import { DragDropContext, Droppable } from "react-beautiful-dnd"
 
-import { useApi } from "common/hooks"
-import DivisionCard from "./DivisionCard"
+import { useApi } from "common/hooks.js"
+import DivisionCard from "./DivisionCard.js"
 
 import { Col } from "react-bootstrap"
 

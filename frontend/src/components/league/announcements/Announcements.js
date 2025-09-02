@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import useUser, { useFetchLeague } from "common/hooks"
+import useUser, { useFetchLeague } from "common/hooks.js"
 
-import Loader, { NotifsPage } from "common/components"
-import Message from "./Message"
-import NewMessage from "./NewMessage"
+import Loader, { NotifsPage } from "common/components.js"
+import Message from "./Message.js"
+import NewMessage from "./NewMessage.js"
 
-import LeagueContainer from "components/league/LeagueContainer"
+import LeagueContainer from "components/league/LeagueContainer.js"
 
 import { Row, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

@@ -1,9 +1,9 @@
 import React, { createElement } from "react"
 import { Route, useLocation } from "react-router-dom"
 
-import useAuthRedirect from "./authRedirect"
+import useAuthRedirect from "./authRedirect.js"
 
-export default function AuthRouter(props) {
+export default function AuthRoute(props) {
     const { component, is, not, auth, ...rest } = props
     const { params } = rest.computedMatch
 

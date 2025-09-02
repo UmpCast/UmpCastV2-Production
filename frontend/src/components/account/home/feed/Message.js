@@ -1,8 +1,8 @@
 import React from "react";
 import dayjs from "dayjs"
-import relativeTime from 'dayjs/plugin/relativeTime'
+import relativeTime from "dayjs/plugin/relativeTime.js"
 
-import Loader, { ProfilePicture } from "common/components"
+import Loader, { ProfilePicture } from "common/components.js"
 
 import umpcastLogo from "assets/umpcast.png"
 

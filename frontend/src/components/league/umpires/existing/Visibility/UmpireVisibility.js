@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import DivisionVisibility from "./DivisionVisibility"
+import DivisionVisibility from "./DivisionVisibility.js"
 
 export default function UmpireVisibility(props) {
 

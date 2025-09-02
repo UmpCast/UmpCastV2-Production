@@ -1,9 +1,9 @@
 import React from 'react'
 import { Switch } from "react-router-dom"
 
-import AuthRoute from "common/auth/AuthRoute"
+import AuthRoute from "common/auth/AuthRoute.js"
 
-import Teamsnap from "./Teamsnap"
+import Teamsnap from "./Teamsnap.js"
 
 export default function CallbackRouter() {
     return (

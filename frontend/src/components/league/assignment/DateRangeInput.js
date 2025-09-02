@@ -1,7 +1,7 @@
 import React from "react"
 import { Controller } from "react-hook-form"
 
-import DateTimePicker from "react-widgets/lib/DateTimePicker"
+import DateTimePicker from "react-widgets/lib/DateTimePicker.js"
 import { Form, Col} from "react-bootstrap"
 
 import Moment from "moment"

@@ -2,12 +2,12 @@ import React, { Fragment } from "react"
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from "yup"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import { TextInput } from "common/Input"
+import { TextInput } from "common/Input.js"
 
-// import Social from "../login/Social"
-// import { HorizontalOr } from "../login/Login"
+// import Social from "../login/Social.js"
+// import { HorizontalOr } from "../login/Login.js"
 
 import { Button } from "react-bootstrap";
 

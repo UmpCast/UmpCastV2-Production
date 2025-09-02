@@ -2,7 +2,7 @@ import React from "react"
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from "yup"
 
-import { TextInput } from "common/Input"
+import { TextInput } from "common/Input.js"
 
 import { Modal, Button } from "react-bootstrap"
 

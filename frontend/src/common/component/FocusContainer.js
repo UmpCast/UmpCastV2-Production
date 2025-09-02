@@ -1,6 +1,6 @@
 import React from "react"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
 const FocusContainer = ({ children, wrap }) => (
     <div

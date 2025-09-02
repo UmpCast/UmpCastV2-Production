@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react'
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import { BasicConfirm } from "common/forms"
-import { CancelAppConseq } from "components/game/Text"
+import { BasicConfirm } from "common/forms.js"
+import { CancelAppConseq } from "components/game/Text.js"
 
 import { Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

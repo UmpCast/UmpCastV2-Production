@@ -1,6 +1,6 @@
 export const CancelAppConseq = ({ status }) => (
     status === "Cast" ?
-        "Manger's will be notified. The next umpire in-line will replace your cast." :
+        "Managers will be notified. The next umpire in line will replace your cast." :
         "You will be removed from the backup line for this role."
 )
 

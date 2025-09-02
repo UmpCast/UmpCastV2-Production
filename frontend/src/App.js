@@ -1,42 +1,42 @@
 import React, { useState } from "react"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 
-import AuthContainer from "global/AuthContainer"
-import DisplayContainer from "global/DisplayContainer"
-import Header from "global/header/Header"
+import AuthContainer from "global/AuthContainer.js"
+import DisplayContainer from "global/DisplayContainer.js"
+import Header from "global/header/Header.js"
 
-import { UserContext, DisplayContext } from "global/Context"
+import { UserContext, DisplayContext } from "global/Context.js"
 
-import AccountRouter from "components/account/AccountRouter"
-import CallbackRouter from "components/callback/CallbackRouter"
-import GameRouter from "components/game/GameRouter"
-import LeagueRouter from "components/league/LeagueRouter"
+import AccountRouter from "components/account/AccountRouter.js"
+import CallbackRouter from "components/callback/CallbackRouter.js"
+import GameRouter from "components/game/GameRouter.js"
+import LeagueRouter from "components/league/LeagueRouter.js"
 
-import "styles/Styles"
+import "styles/Styles.js"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
-import * as icons from "global/Icons"
+import * as icons from "global/Icons.js"
 
 library.add(...Object.values(icons))
 
 const App = () => {
 
-    const useUser = useState({
+    const [user, setUser] = useState({
         user: {},
         isAuthenticated: false,
         isConfigured: false,
         token: null
     })
 
-    const useDisplay = useState({
+    const [display, setDisplay] = useState({
         loading: 0,
         alert: null
     })
 
     return (
         <Router>
-            <UserContext.Provider value={useUser}>
-                <DisplayContext.Provider value={useDisplay}>
+            <UserContext.Provider value={[user, setUser]}>
+                <DisplayContext.Provider value={[display, setDisplay]}>
                     <AuthContainer>
                         <Header />
                         <DisplayContainer>

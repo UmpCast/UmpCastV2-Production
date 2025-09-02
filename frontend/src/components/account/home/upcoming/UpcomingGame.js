@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom"
 import dayjs from "dayjs"
 
-import { ToolTip } from "common/components"
-import useUser from "common/hooks"
+import { ToolTip } from "common/components.js"
+import useUser from "common/hooks.js"
 
 import { ListGroup, Badge } from "react-bootstrap"
 

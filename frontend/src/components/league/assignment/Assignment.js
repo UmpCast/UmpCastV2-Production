@@ -2,19 +2,19 @@ import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import { Row, Col, Card } from "react-bootstrap"
 
-import Loader from "common/components"
-import { useApi, useFetchLeague } from "common/hooks"
-import LeagueContainer from "components/league/LeagueContainer"
-import StartAssignmentStep from "./StartAssignmentStep"
-import SelectDateRangeStep from "./CreateAssignmentsStep"
-import ResolveAssignmentsStep from "./ResolveAssignmentsStep"
-import AssignmentsCompleteStep from "./AssignmentsCompleteStep"
+import Loader from "common/components.js"
+import { useApi, useFetchLeague } from "common/hooks.js"
+import LeagueContainer from "components/league/LeagueContainer.js"
+import StartAssignmentStep from "./StartAssignmentStep.js"
+import SelectDateRangeStep from "./CreateAssignmentsStep.js"
+import ResolveAssignmentsStep from "./ResolveAssignmentsStep.js"
+import AssignmentsCompleteStep from "./AssignmentsCompleteStep.js"
 
 import AssignmentTable, {
     DateRangeMissing,
     AssignmentsLoading,
     AssignmentsComplete
-} from "./AssignmentTable"
+} from "./AssignmentTable.js"
 
 const steps = {
     ABORT: 0,

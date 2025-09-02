@@ -1,8 +1,8 @@
 import React from "react"
 
-import { ProfilePicture } from "common/components"
+import { ProfilePicture } from "common/components.js"
 
-import UmpireVisibility from "../Visibility/UmpireVisibility"
+import UmpireVisibility from "../Visibility/UmpireVisibility.js"
 
 import { Form } from "react-bootstrap"
 import DarkBaseball from "assets/dark_baseball.png"

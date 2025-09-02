@@ -1,9 +1,9 @@
 import React from "react"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import { ToolTip, ProfilePicture } from "common/components"
-import { Name } from "common/Utils"
+import { ToolTip, ProfilePicture } from "common/components.js"
+import { Name } from "common/Utils.js"
 
 import PrimaryBaseball from "assets/primary_baseball.png"
 import DarkBaseball from "assets/dark_baseball.png"

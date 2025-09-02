@@ -2,7 +2,7 @@ import React from "react"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
 
-import { AppPicture } from "common/components"
+import { AppPicture } from "common/components.js"
 
 import { ListGroup } from "react-bootstrap"
 

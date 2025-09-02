@@ -4,7 +4,7 @@ import { GridLoader } from "react-spinners"
 import { Row, Col, Table, Pagination, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-import { COLUMNS } from "./columns"
+import { COLUMNS } from "./columns.js"
 
 const AssignmentTable = ({ assignments, onAssign }) => {
     const columns = useMemo(() => COLUMNS, [])

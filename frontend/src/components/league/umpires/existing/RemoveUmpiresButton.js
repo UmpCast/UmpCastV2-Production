@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react"
-import { InputConfirm } from "common/forms"
+import { InputConfirm } from "common/forms.js"
 
 import {Button} from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

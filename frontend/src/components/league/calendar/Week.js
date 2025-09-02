@@ -1,12 +1,12 @@
 import React, { Fragment, createElement } from "react"
 import dayjs from "dayjs"
-import localizedFormat from "dayjs/plugin/localizedFormat"
+import localizedFormat from "dayjs/plugin/localizedFormat.js"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
-import ListDay from "./ListDay"
-import ColumnDay from "./ColumnDay"
-import NoGame from "./NoGame"
+import ListDay from "./ListDay.js"
+import ColumnDay from "./ColumnDay.js"
+import NoGame from "./NoGame.js"
 
 import { Row, Col } from "react-bootstrap"
 

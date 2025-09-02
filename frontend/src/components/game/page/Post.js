@@ -1,11 +1,11 @@
 import React from "react"
 
-import useUser from "common/hooks"
-import Loader from "common/components"
+import useUser from "common/hooks.js"
+import Loader from "common/components.js"
 
-import SignupCard from "./SignupCard"
-import UmpireCard from "./UmpireCard"
-import { statusBadges } from "./GameBadges"
+import SignupCard from "./SignupCard.js"
+import UmpireCard from "./UmpireCard.js"
+import { statusBadges } from "./GameBadges.js"
 
 import { Row, Col, Badge } from "react-bootstrap"
 

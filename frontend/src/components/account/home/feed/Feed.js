@@ -1,9 +1,9 @@
 import React from "react"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import { NotifsPage } from "common/components"
-import Message from "./Message"
+import { NotifsPage } from "common/components.js"
+import Message from "./Message.js"
 
 export default function Feed() {
     const { pk } = useUser().user

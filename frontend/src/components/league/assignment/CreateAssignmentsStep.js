@@ -3,10 +3,10 @@ import { useForm } from "react-hook-form"
 import { Card, Button, Form, Alert, Dropdown } from "react-bootstrap"
 import dayjs from "dayjs"
 
-import { useApi, useMountEffect } from "common/hooks"
-import DateRangeInput from "./DateRangeInput"
+import { useApi, useMountEffect } from "common/hooks.js"
+import DateRangeInput from "./DateRangeInput.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useCountDown, useTimeout, useInterval } from "./useTask"
+import { useCountDown, useTimeout, useInterval } from "./useTask.js"
 
 const page_size = 10
 const requests = {

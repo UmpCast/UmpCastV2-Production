@@ -2,10 +2,10 @@ import React from "react"
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from "yup"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
 import { Modal, Button, Row, Col } from "react-bootstrap"
-import { TextInput, SelectionInput, DateTimeInput } from "common/Input"
+import { TextInput, SelectionInput, DateTimeInput } from "common/Input.js"
 
 export default function EditGameForm({
     initialValues,

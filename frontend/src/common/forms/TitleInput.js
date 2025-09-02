@@ -1,6 +1,6 @@
 import React, { Fragment } from "react"
 
-import { TextInput } from "common/Input"
+import { TextInput } from "common/Input.js"
 
 import { Modal, Button } from "react-bootstrap"
 

@@ -2,10 +2,10 @@ import React, { useState } from "react"
 import arrayMove from "array-move"
 import { DragDropContext, Droppable } from "react-beautiful-dnd"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import CreateLevel from "./CreateLevel"
-import Level from "./Level"
+import CreateLevel from "./CreateLevel.js"
+import Level from "./Level.js"
 
 import { Card, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

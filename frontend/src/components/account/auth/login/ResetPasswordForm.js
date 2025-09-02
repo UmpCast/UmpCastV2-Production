@@ -1,7 +1,7 @@
 import React from "react"
 import { Form as FormikForm } from "formik"
 
-import { TextInput, SelectionInput } from "common/Input"
+import { TextInput, SelectionInput } from "common/Input.js"
 
 import { Button } from "react-bootstrap"
 

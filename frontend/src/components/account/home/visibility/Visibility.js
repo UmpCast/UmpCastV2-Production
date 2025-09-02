@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
-import useUser, { useApi, useMountEffect } from "common/hooks"
-import Loader from "common/components"
-import { searchPks } from "common/Utils"
+import useUser, { useApi, useMountEffect } from "common/hooks.js"
+import Loader from "common/components.js"
+import { searchPks } from "common/Utils.js"
 
-import LeagueCard from "./LeagueCard"
-import VisTable from "./VisTable"
+import LeagueCard from "./LeagueCard.js"
+import VisTable from "./VisTable.js"
 
 export default function Visibility() {
 

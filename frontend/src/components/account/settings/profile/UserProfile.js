@@ -3,14 +3,14 @@ import axios from "axios"
 import { Formik } from "formik"
 import * as Yup from "yup"
 
-import useUser, { useApi } from "common/hooks"
+import useUser, { useApi } from "common/hooks.js"
 
-import { formatPhone } from "common/Input"
-import { myUrl, config } from "common/Api"
+import { formatPhone } from "common/Input.js"
+import { myUrl, config } from "common/Api.js"
 
-import UserSettingsContainer from "../SettingsContainer"
-import ProfileForm from "./ProfileForm"
-import UpdatePfp from "./UpdatePfp"
+import UserSettingsContainer from "../SettingsContainer.js"
+import ProfileForm from "./ProfileForm.js"
+import UpdatePfp from "./UpdatePfp.js"
 
 import { Row, Col } from "react-bootstrap"
 

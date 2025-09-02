@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom"
 
-import useUser, { useApi, useMountEffect } from "common/hooks"
+import useUser, { useApi, useMountEffect } from "common/hooks.js"
 
-import Loader from "common/components"
-import CreateLeague from "./CreateLeague"
+import Loader from "common/components.js"
+import CreateLeague from "./CreateLeague.js"
 
 import { Nav, NavDropdown } from "react-bootstrap"
 

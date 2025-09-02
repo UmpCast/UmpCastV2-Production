@@ -1,9 +1,114 @@
 import React from "react"
-import ScheduleSelector from "react-schedule-selector"
 import dayjs from "dayjs"
-import useUser, { useApi } from "common/hooks"
+import utc from "dayjs/plugin/utc.js"
+import useUser, { useApi } from "common/hooks.js"
 
-dayjs.extend(require("dayjs/plugin/utc"))
+// Custom schedule selector component that works with React 16
+const ScheduleSelector = ({ selection, onChange, startDate, numDays, minTime, maxTime }) => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    const hours = Array.from({ length: maxTime - minTime }, (_, i) => minTime + i)
+    
+    const isSelected = (dayIndex, hour) => {
+        return selection.some(date => {
+            const dateObj = new Date(date)
+            const dayOfWeek = dateObj.getDay()
+            const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1 // Convert Sunday=0 to Sunday=6
+            const hourOfDay = dateObj.getHours()
+            return adjustedDay === dayIndex && hourOfDay === hour
+        })
+    }
+    
+    const toggleSlot = (dayIndex, hour) => {
+        const newDate = new Date(startDate)
+        newDate.setDate(newDate.getDate() + dayIndex)
+        newDate.setHours(hour, 0, 0, 0)
+        
+        const newSelection = isSelected(dayIndex, hour)
+            ? selection.filter(date => {
+                const dateObj = new Date(date)
+                const dayOfWeek = dateObj.getDay()
+                const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+                const hourOfDay = dateObj.getHours()
+                return !(adjustedDay === dayIndex && hourOfDay === hour)
+            })
+            : [...selection, newDate]
+        
+        // Convert the selection to the format expected by handleChange
+        // handleChange expects an array of Date objects that can be JSON.stringify'd
+        const formattedSelection = newSelection.map(date => {
+            // Ensure we're passing Date objects that can be properly serialized
+            return new Date(date.getTime())
+        })
+        
+        onChange(formattedSelection)
+    }
+    
+    return (
+        <div style={{ border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
+            <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '60px repeat(7, 1fr)', 
+                gap: '1px',
+                backgroundColor: '#f5f5f5'
+            }}>
+                {/* Header row */}
+                <div style={{ padding: '10px', backgroundColor: '#fff', fontWeight: 'bold' }}>
+                    Time
+                </div>
+                {days.map(day => (
+                    <div key={day} style={{ 
+                        padding: '10px', 
+                        backgroundColor: '#fff', 
+                        fontWeight: 'bold',
+                        textAlign: 'center'
+                    }}>
+                        {day}
+                    </div>
+                ))}
+                
+                {/* Time slots */}
+                {hours.map(hour => (
+                    <React.Fragment key={hour}>
+                        <div style={{ 
+                            padding: '8px', 
+                            backgroundColor: '#fff',
+                            borderRight: '1px solid #eee',
+                            fontSize: '12px',
+                            color: '#666'
+                        }}>
+                            {hour}:00
+                        </div>
+                        {days.map((day, dayIndex) => (
+                            <div 
+                                key={`${day}-${hour}`} 
+                                style={{ 
+                                    height: '30px', 
+                                    backgroundColor: isSelected(dayIndex, hour) ? '#4CAF50' : '#fff',
+                                    cursor: 'pointer',
+                                    border: '1px solid #eee',
+                                    transition: 'background-color 0.2s'
+                                }}
+                                onClick={() => toggleSlot(dayIndex, hour)}
+                                onMouseEnter={(e) => {
+                                    if (!isSelected(dayIndex, hour)) {
+                                        e.target.style.backgroundColor = '#e8f5e8'
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!isSelected(dayIndex, hour)) {
+                                        e.target.style.backgroundColor = '#fff'
+                                    }
+                                }}
+                            />
+                        ))}
+                    </React.Fragment>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+dayjs.extend(utc)
 
 function getMonday(d) {
     d.setHours(0);
@@ -102,6 +207,14 @@ export default function TimeAvailability({ schedule, setSchedule }) {
                 current: [...currentRanges, ...newRanges],
                 adding: false
             })
+        }).catch((err) => {
+            console.warn('Error adding time ranges:', err)
+            // Revert the UI change if the API call fails
+            setSchedule({
+                ...schedule,
+                current: currentRanges,
+                adding: false
+            })
         })
     }
 
@@ -123,17 +236,49 @@ export default function TimeAvailability({ schedule, setSchedule }) {
             addRanges(added)
         } else if (updatedRanges.length < currentRanges.length) {
             const removed = rangeDifference(currentRanges, updatedRanges)
-            const removed_pks = removed.map((range) => range.pk)
+            
+            // Only try to delete ranges that have a pk (are saved in database)
+            const rangesToDelete = removed.filter(range => range.pk)
 
+            // Remove ALL removed ranges from UI immediately (both with and without pk)
+            const newCurrentRanges = currentRanges.filter(
+                (range) => !removed.some(r => 
+                    r.start === range.start && r.end === range.end && r.day_type === range.day_type
+                )
+            )
+
+            // Update UI immediately for all removals
             setSchedule({
                 ...schedule,
-                current: currentRanges.filter(
-                    ({ pk }) => !removed_pks.includes(pk)
-                )
+                current: newCurrentRanges
             })
 
-            Promise.all(removed_pks.map(Api.deleteTimeRange))
+            // Only make API calls for ranges that exist in the database
+            if (rangesToDelete.length > 0) {
+                const removed_pks = rangesToDelete.map((range) => range.pk)
+                
+                Promise.all(removed_pks.map(Api.deleteTimeRange))
+                    .then(() => {
+                        // Successfully deleted time ranges from DB
+                    })
+                    .catch((err) => {
+                        console.warn('Error deleting time ranges:', err)
+                        // Revert UI change if deletion fails
+                        setSchedule({
+                            ...schedule,
+                            current: currentRanges
+                        })
+                        if (err.response && err.response.status === 403) {
+                            console.error('Permission denied - these time ranges may not belong to the current user')
+                        }
+                    })
+            }
         }
+    }
+
+    // Safety check to ensure schedule is properly initialized
+    if (!schedule || !schedule.current) {
+        return <div className="mt-3">Loading...</div>
     }
 
     return (

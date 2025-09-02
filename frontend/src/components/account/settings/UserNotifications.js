@@ -1,10 +1,10 @@
 import React from 'react'
 import { Formik, Form as FormikForm } from "formik"
 
-import useUser, { useApi } from "common/hooks"
-import { ToggleInput } from "common/Input"
+import useUser, { useApi } from "common/hooks.js"
+import { ToggleInput } from "common/Input.js"
 
-import UserSettingsNav from "./SettingsContainer"
+import UserSettingsNav from "./SettingsContainer.js"
 
 import { Row, Col, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

@@ -1,11 +1,11 @@
 import React from "react"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
-import BannerSubNav from "./BannerSubNav"
-import LeagueDetails from "./BannerDetails"
+import BannerSubNav from "./BannerSubNav.js"
+import LeagueDetails from "./BannerDetails.js"
 
 import { Container, Row } from "react-bootstrap"
 

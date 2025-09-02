@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { Form as FormikForm } from "formik"
 
-import { TextInput } from "common/Input"
+import { TextInput } from "common/Input.js"
 
 import { Button } from "react-bootstrap"
 

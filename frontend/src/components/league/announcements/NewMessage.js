@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom"
 import { Formik, Form as FormikForm } from "formik"
 import * as Yup from "yup"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
-import { SubmitButtons } from "common/forms"
-import { TextInput } from "common/Input"
+import { SubmitButtons } from "common/forms.js"
+import { TextInput } from "common/Input.js"
 
 import { Row, Col, Card } from "react-bootstrap"
 

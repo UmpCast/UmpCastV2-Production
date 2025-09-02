@@ -19,14 +19,23 @@ const usePagination = (fetchPage) => {
     const appendNextPage = useCallback(
         async (state, pageNumber) => {
             if (fetchPage) {
-                const { count, page_size, items } = await fetchPage(pageNumber)
+                try {
+                    const { count, page_size, items } = await fetchPage(pageNumber)
 
-                setState({
-                    pageCount: Math.ceil(count / page_size),
-                    itemCount: count,
-                    items: state.items.concat(items),
-                    loading: false
-                })
+                    setState({
+                        pageCount: Math.ceil(count / page_size),
+                        itemCount: count,
+                        items: state.items.concat(items),
+                        loading: false
+                    })
+                } catch (err) {
+                    console.warn('Error fetching page:', err)
+                    setState({
+                        ...state,
+                        loading: false,
+                        error: true
+                    })
+                }
             }
         },
         [fetchPage, setState]

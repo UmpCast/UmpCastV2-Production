@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import { InputConfirm } from "common/forms"
+import { InputConfirm } from "common/forms.js"
 
 import { ListGroup } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { UnsyncDivisionConseq } from 'components/league/settings/Text'
+import { UnsyncDivisionConseq } from "components/league/settings/Text.js"
 
 export default function UsedDivison({ division, useLeague }) {
 

@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react"
 import { Button, Modal } from "react-bootstrap"
-import AddUmpireForm from './AddUmpireForm'
+import AddUmpireForm from './AddUmpireForm.js'
 
 export default function AddUmpireButton({ league_pk }) {
     const [show, setShow] = useState(false)

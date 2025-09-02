@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
 import { Table } from "react-bootstrap"
 

@@ -2,10 +2,10 @@ import React from 'react'
 
 import { Route, Redirect, Switch } from "react-router-dom"
 
-import AuthRoute from "common/auth/AuthRoute"
+import AuthRoute from "common/auth/AuthRoute.js"
 
-import ExistingUmpires from "./existing/ExistingUmpires"
-import PendingUmpires from "./pending/PendingUmpires"
+import ExistingUmpires from "./existing/ExistingUmpires.js"
+import PendingUmpires from "./pending/PendingUmpires.js"
 
 export default function accountRouter() {
     return (

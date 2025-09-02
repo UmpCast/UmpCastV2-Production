@@ -37,7 +37,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/notifications/', include('notifications.urls')),
-    path('api/auth/', include('rest_framework_social_oauth2.urls')),
+    path('api/auth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('api/teamsnap/', include('teamsnap.urls')),
     path('api/', include(router.urls)),
     path('', schema_view.with_ui('swagger', cache_timeout=0),
@@ -46,4 +46,8 @@ urlpatterns = [
 
 
 urlpatterns += (path('admin/email-status/', include('django_ses.urls')),)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Media files - S3 handles these automatically in production
+if settings.DEBUG:
+    # In development, serve from local media directory
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

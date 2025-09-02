@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import UpdateCasts from "./Umpire/UpdateCasts"
+import UpdateCasts from "./Umpire/UpdateCasts.js"
 import { Dropdown, Button } from "react-bootstrap"
 
 export default function AdjustCastsButton(props) {

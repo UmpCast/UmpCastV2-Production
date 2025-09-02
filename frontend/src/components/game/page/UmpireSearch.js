@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 import { ListGroup } from "react-bootstrap"
 
-import SearchBar from "./SearchBar"
-import UmpireListing from "./UmpireListing"
+import SearchBar from "./SearchBar.js"
+import UmpireListing from "./UmpireListing.js"
 
 import { Modal } from "react-bootstrap"
 

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
-import TsHeader from "./TsHeader"
-import UsedDivision from "./UsedDivison"
-import UnusedDivision from "./UnusedDivision"
+import TsHeader from "./TsHeader.js"
+import UsedDivision from "./UsedDivison.js"
+import UnusedDivision from "./UnusedDivision.js"
 
 import { Accordion, Card } from "react-bootstrap"
 

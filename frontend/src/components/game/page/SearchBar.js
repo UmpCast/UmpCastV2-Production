@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react"
-import useFocus from "../hooks/useFocus"
+import useFocus from "../hooks/useFocus.js"
 
 import { Form } from "react-bootstrap"
 

@@ -1,18 +1,18 @@
 import React, { Fragment, useState, useReducer } from "react"
 import { useParams } from "react-router-dom"
 import dayjs from "dayjs"
-import localizedFormat from "dayjs/plugin/localizedFormat"
-import customParseFormat from "dayjs/plugin/customParseFormat"
+import localizedFormat from "dayjs/plugin/localizedFormat.js"
+import customParseFormat from "dayjs/plugin/customParseFormat.js"
 
-import useUser, { useApi, useMountEffect } from "common/hooks"
-import Loader from "common/components"
-import { expandGames } from "common/Utils"
+import useUser, { useApi, useMountEffect } from "common/hooks.js"
+import Loader from "common/components.js"
+import { expandGames } from "common/Utils.js"
 
-import { gamesReducer, locationsReducer } from "./reducers"
-import Header from "./Header"
-import Week from "./Week"
-import CalendarGame from "./Game"
-import EditGameIcon from "./EditGameIcon"
+import { gamesReducer, locationsReducer } from "./reducers.js"
+import Header from "./Header.js"
+import Week from "./Week.js"
+import CalendarGame from "./Game.js"
+import EditGameIcon from "./EditGameIcon.js"
 
 dayjs.extend(customParseFormat, localizedFormat)
 

@@ -2,16 +2,16 @@ import React from "react"
 
 import { Switch } from "react-router-dom"
 
-import AuthRoute from "common/auth/AuthRoute"
+import AuthRoute from "common/auth/AuthRoute.js"
 
-import Announcements from "./announcements/Announcements"
-import JoinLeague from "./join/JoinLeague"
-import Calendar from "./calendar/Calendar"
-import AutoAssign from "./assignment/Assignment"
-import Urgent from "./urgent/Urgent"
+import Announcements from "./announcements/Announcements.js"
+import JoinLeague from "./join/JoinLeague.js"
+import Calendar from "./calendar/Calendar.js"
+import AutoAssign from "./assignment/Assignment.js"
+import Urgent from "./urgent/Urgent.js"
 
-import UmpiresRouter from "./umpires/UmpiresRouter"
-import SettingsRouter from "./settings/SettingsRouter"
+import UmpiresRouter from "./umpires/UmpiresRouter.js"
+import SettingsRouter from "./settings/SettingsRouter.js"
 
 export default function LeagueRouter() {
     return (

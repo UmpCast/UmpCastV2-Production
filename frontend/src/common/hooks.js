@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect, useContext } from "react"
 import axios from "axios"
 
-import { UserContext, DisplayContext } from "global/Context"
+import { UserContext, DisplayContext } from "global/Context.js"
 
-import { TimerAlert } from "common/components"
+import { TimerAlert } from "common/components.js"
 
-import { myUrl, config } from "common/Api"
+import { myUrl, config } from "common/Api.js"
 
+// eslint-disable-next-line react-hooks/exhaustive-deps
 export const useMountEffect = (fun, dep = []) => useEffect(fun, dep)
 
 const useUser = (full = false) => {
@@ -64,7 +65,7 @@ export const useTokenLogin = () => {
 }
 
 export const useApi = (requests) => {
-    const { token } = useUser()
+    const user = useUser()
     const myDisplay = useDisplay()
 
     const [, setDisplay] = myDisplay
@@ -88,15 +89,35 @@ export const useApi = (requests) => {
     }
 
     const basicApi = (endpoint, values, method = "get", shouldLoad = true) => {
-        const { pk, params, data } = values
+        const { pk, params, data, content_type } = values
 
         return [
             () =>
                 axios({
                     method: method,
                     url: myUrl(`${endpoint}${pk ? `${pk}/` : ""}`),
-                    ...config(token, params),
+                    ...config(user.token, params, content_type),
                     data: data
+                }).catch((err) => {
+                    const { response } = err
+                    if (response) {
+                        switch (response.status) {
+                            case 403:
+                                console.warn('Permission denied:', response.data)
+                                break
+                            case 401:
+                                console.warn('Authentication required')
+                                break
+                            case 400:
+                                console.warn('Bad request:', response.data)
+                                break
+                            default:
+                                console.warn('API error:', response.status, response.data)
+                        }
+                    } else {
+                        console.warn('Network error:', err.message)
+                    }
+                    return Promise.reject(err) // Reject but don't throw uncaught error
                 }),
             shouldLoad
         ]
@@ -113,7 +134,7 @@ export const useApi = (requests) => {
 }
 
 const ApiSubmit = (myDisplay) => (request) => {
-    const [display, setDisplay] = myDisplay
+    const [, setDisplay] = myDisplay
 
     setDisplay((prevState) => ({
         ...prevState,

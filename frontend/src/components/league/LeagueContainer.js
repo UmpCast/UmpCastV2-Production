@@ -1,8 +1,8 @@
 import React, { Fragment } from "react"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
-import LeagueBanner from "./banner/LeagueBanner"
+import LeagueBanner from "./banner/LeagueBanner.js"
 
 import { Container } from "react-bootstrap"
 

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import axios from "axios"
 import { Redirect, useLocation } from "react-router-dom"
 
-import { useApi, useMountEffect } from "common/hooks"
-import { OauthTsToken, TsCallbackUri } from "common/Api"
+import { useApi, useMountEffect } from "common/hooks.js"
+import { OauthTsToken, TsCallbackUri } from "common/Api.js"
 
 export default function Teamsnap() {
 

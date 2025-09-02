@@ -1,6 +1,6 @@
 import React from "react"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
 import { Dropdown, Tooltip, OverlayTrigger } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

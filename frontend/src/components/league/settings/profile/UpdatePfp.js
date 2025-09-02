@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react'
 import axios from "axios"
 
-import useUser, { useApi } from "common/hooks"
+import useUser, { useApi } from "common/hooks.js"
 
-import { ProfilePicture, NewPfpButton } from "common/components"
-import { myUrl, config } from "common/Api"
+import { ProfilePicture, NewPfpButton } from "common/components.js"
+import { myUrl, config } from "common/Api.js"
 
 import { Row, Col } from "react-bootstrap"
 import darkMeteor from "assets/dark_meteor.png"

@@ -1,0 +1,23 @@
+{
+  "name": "UmpCast Frontend",
+  "description": "React frontend for UmpCast application",
+  "repository": "https://github.com/UmpCast/UmpCastV2-Production",
+  "stack": "heroku-24",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-static"
+    }
+  ],
+  "env": {
+    "NODE_VERSION": "18"
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  }
+}

@@ -2,12 +2,12 @@ import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import dayjs from "dayjs"
 
-import useUser, { useApi, useMountEffect } from "common/hooks"
+import useUser, { useApi, useMountEffect } from "common/hooks.js"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
-import GameBanner from "./GameBanner"
-import Post from "./Post"
+import GameBanner from "./GameBanner.js"
+import Post from "./Post.js"
 
 import { Row, Col, Tabs, Tab } from "react-bootstrap"
 

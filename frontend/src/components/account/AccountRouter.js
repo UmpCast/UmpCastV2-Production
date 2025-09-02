@@ -1,18 +1,18 @@
 import React from 'react'
 import { Route, Switch } from "react-router-dom"
 
-import AuthRoute from "common/auth/AuthRoute"
+import AuthRoute from "common/auth/AuthRoute.js"
 
-import Login from "./auth/login/Login"
-import Register from "./auth/register/Register"
-import Configure from "./auth/register/Configure"
-import ResetPassword from './auth/login/ResetPassword'
-import ResetSuccess from './auth/login/ResetSuccess'
-import Home from "./home/Home"
+import Login from "./auth/login/Login.js"
+import Register from "./auth/register/Register.js"
+import Configure from "./auth/register/Configure.js"
+import ResetPassword from './auth/login/ResetPassword.js'
+import ResetSuccess from './auth/login/ResetSuccess.js'
+import Home from "./home/Home.js"
 
-import SettingsRouter from "./settings/SettingsRouter"
+import SettingsRouter from "./settings/SettingsRouter.js"
 
-export default function accountRouter() {
+export default function AccountRouter() {
     return (
         <Switch>
             <AuthRoute

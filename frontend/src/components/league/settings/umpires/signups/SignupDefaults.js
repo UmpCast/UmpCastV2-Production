@@ -1,9 +1,9 @@
 import React from 'react'
 import { Formik, Form as FormikForm } from "formik"
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import MaxDaysInput from "./MaxDaysInput"
+import MaxDaysInput from "./MaxDaysInput.js"
 
 import { Row, Col, Button } from "react-bootstrap"
 

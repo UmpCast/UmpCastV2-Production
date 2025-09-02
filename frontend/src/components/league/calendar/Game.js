@@ -1,11 +1,11 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import dayjs from "dayjs"
-import localizedFormat from "dayjs/plugin/localizedFormat"
+import localizedFormat from "dayjs/plugin/localizedFormat.js"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import { AppPicture } from "common/components"
+import { AppPicture } from "common/components.js"
 
 import { Card } from "react-bootstrap"
 

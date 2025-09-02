@@ -1,8 +1,8 @@
 import React, { useState, createElement, useEffect } from "react"
 
-import { useApi, useMountEffect } from "common/hooks"
+import { useApi, useMountEffect } from "common/hooks.js"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
 import { Col } from "react-bootstrap"
 

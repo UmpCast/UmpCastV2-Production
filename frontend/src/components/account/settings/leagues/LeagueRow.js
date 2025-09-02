@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { useApi } from "common/hooks"
+import { useApi } from "common/hooks.js"
 
-import LeagueItem from "./LeagueItem"
+import LeagueItem from "./LeagueItem.js"
 
 import { Button } from "react-bootstrap"
 

@@ -3,13 +3,13 @@ import { useParams } from "react-router-dom"
 import { Formik } from "formik"
 import * as Yup from "yup"
 
-import { useApi, useFetchLeague } from "common/hooks"
+import { useApi, useFetchLeague } from "common/hooks.js"
 
-import Loader from "common/components"
-import SettingsContainer from "../SettingsContainer"
+import Loader from "common/components.js"
+import SettingsContainer from "../SettingsContainer.js"
 
-import LeagueForm from "./LeagueForm"
-import UpdatePfp from "./UpdatePfp"
+import LeagueForm from "./LeagueForm.js"
+import UpdatePfp from "./UpdatePfp.js"
 
 import { Row, Col } from "react-bootstrap"
 

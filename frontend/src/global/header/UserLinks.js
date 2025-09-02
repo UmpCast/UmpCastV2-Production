@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 
-import useUser from "common/hooks"
+import useUser from "common/hooks.js"
 
-import { CustomToggle, ProfilePicture } from "common/components"
+import { CustomToggle, ProfilePicture } from "common/components.js"
 import PrimaryBaseball from "assets/primary_baseball.png"
 
 import { Nav, Dropdown } from "react-bootstrap"

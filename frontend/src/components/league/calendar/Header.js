@@ -1,11 +1,11 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
-import Loader from "common/components"
-import useUser from "common/hooks"
+import Loader from "common/components.js"
+import useUser from "common/hooks.js"
 
-import SyncButton from "./SyncButton"
-import AddGameButton from "./AddGameButton"
+import SyncButton from "./SyncButton.js"
+import AddGameButton from "./AddGameButton.js"
 
 import { Nav, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

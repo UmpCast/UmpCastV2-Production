@@ -1,6 +1,6 @@
 import React from 'react'
 
-import RoleVisibility from "./RoleVisibility"
+import RoleVisibility from "./RoleVisibility.js"
 
 import { Dropdown } from "react-bootstrap"
 

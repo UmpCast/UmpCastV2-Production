@@ -1,15 +1,15 @@
 import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 
-import { useApi, useMountEffect } from "common/hooks"
-import Loader, { PageNav } from "common/components"
+import { useApi, useMountEffect } from "common/hooks.js"
+import Loader, { PageNav } from "common/components.js"
 
-import UmpiresContainer from "components/league/umpires/UmpiresContainer"
+import UmpiresContainer from "components/league/umpires/UmpiresContainer.js"
 
-import UmpireRow from "./Umpire/UmpireRow"
-import ApplyLevelDropdown from "./ApplyLevelDropdown"
-import RemoveUmpiresButton from "./RemoveUmpiresButton"
-import AdjustCastsButton from "./AdjustCastsButton"
+import UmpireRow from "./Umpire/UmpireRow.js"
+import ApplyLevelDropdown from "./ApplyLevelDropdown.js"
+import RemoveUmpiresButton from "./RemoveUmpiresButton.js"
+import AdjustCastsButton from "./AdjustCastsButton.js"
 
 import { Row, Col, Table, Card, Button } from "react-bootstrap"
 

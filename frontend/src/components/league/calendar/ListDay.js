@@ -1,9 +1,9 @@
 import React from "react"
 import dayjs from "dayjs"
 
-import Loader from "common/components"
+import Loader from "common/components.js"
 
-import NoGame from "./NoGame"
+import NoGame from "./NoGame.js"
 
 import { Row } from "react-bootstrap"
 
