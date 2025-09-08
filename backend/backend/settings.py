@@ -200,7 +200,9 @@ OAUTH2_PROVIDER = {
     'ROTATE_REFRESH_TOKEN': True,
     'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
     'CLIENT_SECRET_GENERATOR_CLASS': 'oauth2_provider.generators.ClientSecretGenerator',
-    'ALLOWED_GRANT_TYPES': ['password', 'authorization_code', 'refresh_token'],
+    'EXTRA_SERVER_KWARGS': {
+        'grant_types': ['password', 'authorization_code', 'refresh_token']
+    },
 }
 
 REST_FRAMEWORK = {
