@@ -34,6 +34,7 @@ export const OauthUserValidate = (username, password) => {
     const params = new URLSearchParams()
     params.append('grant_type', 'password')
     params.append('client_id', DB_CLIENT_ID)
+    params.append('client_secret', DB_CLIENT_SECRET)
     params.append('username', username)
     params.append('password', password)
     return params.toString()
