@@ -30,7 +30,7 @@ export default function UserSecurity() {
             .catch(err => {
                 const errors = err.response.data
 
-                if (errors.error === "invalid_grant") {
+                if (errors.error === "incorrect password" || errors.valid === false) {
                     setErrors({ old_password: "incorrect password" })
                 } else {
                     setErrors(errors)
@@ -101,8 +101,13 @@ const validationSchema =
 
 const requests = {
     validatePassword: (user, old_password) => [
-        "api/auth/token/",
-        { data: OauthUserValidate(user.email, old_password) },
+        "api/users/verify_password/",
+        { 
+            data: {
+                email: user.email,
+                password: old_password
+            }
+        },
         "POST"
     ],
     updatePassword: (user, values) => [

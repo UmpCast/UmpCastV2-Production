@@ -114,6 +114,24 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
             reset_password_email_task.delay(user.email, password)
             return Response({"success": user.email}, status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=['post'])
+    def verify_password(self, request):
+        """Verify user's current password without OAuth2"""
+        email = request.data.get('email', None)
+        password = request.data.get('password', None)
+        
+        if not email or not password:
+            return Response({"error": "email and password required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(email=email)
+            if user.check_password(password):
+                return Response({"valid": True}, status=status.HTTP_200_OK)
+            else:
+                return Response({"valid": False, "error": "incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"valid": False, "error": "user not found"}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=True, methods=['patch'])
     def toggle_location(self, request, pk):
         user = self.get_object()
