@@ -104,7 +104,6 @@ const requests = {
         "api/users/verify_password/",
         { 
             data: {
-                email: user.email,
                 password: old_password
             }
         },

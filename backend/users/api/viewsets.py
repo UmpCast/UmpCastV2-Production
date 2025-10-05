@@ -76,6 +76,7 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
     permission_classes = (IsSuperUser | ActionBasedPermission,)
     action_permissions = {
         permissions.AllowAny: ['create', 'reset_password'],
+        permissions.IsAuthenticated: ['verify_password'],
         permissions.IsAuthenticated & IsLeagueMember: ['list'],
         permissions.IsAuthenticated & IsUserOwner: ['update', 'partial_update', 'retrieve', 'locations', 'toggle_location'],
     }
@@ -116,21 +117,18 @@ class UserViewSet(ActionBaseSerializerMixin, mixins.CreateModelMixin, mixins.Ret
 
     @action(detail=False, methods=['post'])
     def verify_password(self, request):
-        """Verify user's current password without OAuth2"""
-        email = request.data.get('email', None)
+        """Verify user's current password - user must be authenticated"""
         password = request.data.get('password', None)
         
-        if not email or not password:
-            return Response({"error": "email and password required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not password:
+            return Response({"error": "password required"}, status=status.HTTP_400_BAD_REQUEST)
         
-        try:
-            user = User.objects.get(email=email)
-            if user.check_password(password):
-                return Response({"valid": True}, status=status.HTTP_200_OK)
-            else:
-                return Response({"valid": False, "error": "incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
-        except User.DoesNotExist:
-            return Response({"valid": False, "error": "user not found"}, status=status.HTTP_400_BAD_REQUEST)
+        # Verify the authenticated user's password
+        user = request.user
+        if user.check_password(password):
+            return Response({"valid": True}, status=status.HTTP_200_OK)
+        else:
+            return Response({"valid": False, "error": "incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['patch'])
     def toggle_location(self, request, pk):
